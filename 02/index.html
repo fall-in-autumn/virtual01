@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가상공간 메타버스 라운지: 인스타그램 DM 스타일</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
@@ -191,65 +192,65 @@
             <!-- Instagram DM Sidebar Profile & Ethics Info (Restored width & padding for zero clipping) -->
             <div class="w-full md:w-80 lg:w-96 bg-slate-50 p-4 sm:p-5 flex flex-col justify-between border-r border-slate-200 overflow-y-auto flex-shrink-0">
                 <div class="space-y-4">
-                    <!-- Firefighter Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Firefighter Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/소방관.png" alt="소방관 강민호" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Firefighter';">
                         </div>
                     </div>
 
-                    <!-- Police Officer Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Police Officer Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-police-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/경찰관.png" alt="경찰관 박지은" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Police';">
                         </div>
                     </div>
 
-                    <!-- Doctor Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Doctor Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-doctor-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/의사.png" alt="의사 닥터 민" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Doctor';">
                         </div>
                     </div>
 
-                    <!-- Idol Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Idol Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-idol-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/아이돌.png" alt="가상 아이돌 루미" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Idol';">
                         </div>
                     </div>
 
-                    <!-- Developer Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Developer Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-developer-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/AI개발자.png" alt="AI 개발자 도현" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Developer';">
                         </div>
                     </div>
 
-                    <!-- Creator Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Creator Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-creator-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/유튜버.png" alt="영상 크리에이터 지우" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Creator';">
                         </div>
                     </div>
 
-                    <!-- Writer Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Writer Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-writer-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/작가.png" alt="작가 한서진" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Writer';">
                         </div>
                     </div>
 
-                    <!-- Lawyer Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Lawyer Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-lawyer-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/변호사.png" alt="윤지훈 변호사" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Lawyer';">
                         </div>
                     </div>
 
-                    <!-- Researcher Dedicated Photo Box (1:1 square ratio) -->
+                    <!-- Researcher Dedicated Photo Box (1:1 square ratio, 3x enlarged) -->
                     <div id="sidebar-photo-researcher-container" class="hidden">
-                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                        <div class="w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
                             <img src="./images/연구원.png" alt="생명과학연구원 서연" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Researcher';">
                         </div>
                     </div>
@@ -677,7 +678,7 @@
             chatHistory.push({ role: 'user', parts: [{ text: text }] });
 
             try {
-                const apiKey = "";
+                const apiKey = "AQ.Ab8RN6LvRwAdZ9e8daNwP6xxd2YOQ_zXTcJ0_ONcC1ABDCoNSQ";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
                 
                 const payload = { contents: chatHistory };
