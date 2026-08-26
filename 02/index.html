@@ -1,340 +1,317 @@
-<!-- ... existing code ... -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>가상공간 메타버스 라운지: 다양한 인물과 대화하기</title>
+    <title>가상공간 메타버스 라운지: 인스타그램 DM 스타일</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
         .glass-panel {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(12px);
         }
         .chat-bubble {
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.25s ease-in-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(100,100,100,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 min-h-screen text-slate-100 flex flex-col items-center justify-center p-3 sm:p-6">
+<body class="bg-gradient-to-tr from-purple-900 via-slate-900 to-indigo-950 min-h-screen text-slate-100 flex flex-col items-center justify-center p-2 sm:p-4 md:p-6">
 
-    <div class="w-full max-w-4xl glass-panel text-slate-800 rounded-3xl shadow-2xl overflow-hidden border border-white/20 flex flex-col h-[90vh] max-h-[850px]">
+    <div class="w-full max-w-5xl glass-panel text-slate-800 rounded-3xl shadow-2xl overflow-hidden border border-white/20 flex flex-col h-[94vh] max-h-[920px]">
         
         <!-- TOP HEADER -->
-        <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-white/10">
+        <div class="bg-white border-b border-slate-200 px-6 py-3.5 flex justify-between items-center shadow-xs">
             <div class="flex items-center space-x-3">
-                <span class="w-3 h-3 bg-emerald-400 rounded-full animate-ping"></span>
-                <span class="text-xs sm:text-sm tracking-wider uppercase font-bold text-emerald-400">Metaverse Hub v3.2 (Detailed Pros & Cons Edition)</span>
+                <span class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></span>
+                <span class="text-xs sm:text-sm tracking-wider uppercase font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Instagram DM • Metaverse Hub</span>
             </div>
-            <div id="header-title" class="text-sm font-semibold text-purple-300 hidden sm:block">
-                가상공간 직업·캐릭터 시뮬레이터
+            <div id="header-title" class="text-xs sm:text-sm font-semibold text-slate-700 hidden sm:block">
+                가상공간 직업인과의 인터뷰
             </div>
             <div>
-                <button onclick="goToSelectScreen()" id="back-btn" class="hidden text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition font-medium shadow">
-                    ⬅️ 인물 다시 선택하기
+                <button onclick="goToSelectScreen()" id="back-btn" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-1.5 rounded-xl transition font-semibold shadow-xs border border-slate-200">
+                    ⬅️ DM 목록으로
                 </button>
             </div>
         </div>
 
-        <!-- SCREEN 1: CHARACTER SELECTION (9 Characters) -->
-        <div id="select-screen" class="flex-grow p-4 sm:p-6 overflow-y-auto flex flex-col justify-center">
+        <!-- SCREEN 1: CHARACTER SELECTION (Instagram DM List Style) -->
+        <div id="select-screen" class="flex-grow p-4 sm:p-6 overflow-y-auto flex flex-col">
             <div class="text-center mb-6">
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">가상공간에서 누구를 만날까요?</h1>
-                <p class="text-slate-600 text-sm sm:text-base">
-                    인물을 선택해 대화를 나누고, 각 직업군이 가상공간에서 활용되는 장단점과 디지털 도덕성을 깊이 있게 배워보세요!
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">가상공간 직업인과의 인터뷰</h1>
+                <p class="text-slate-500 text-xs sm:text-sm">
+                    인스타그램 DM으로 대화할 직업인 친구를 선택하고 메타버스의 장단점을 생생하게 알아보세요!
                 </p>
             </div>
 
             <!-- Character Grid (9 characters) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 max-w-4xl mx-auto w-full">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 max-w-4xl mx-auto w-full pb-4">
                 
                 <!-- 1. Firefighter -->
-                <div onclick="selectCharacter('firefighter')" class="bg-white hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            🚒
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">소방관 강민호</h3>
-                        <p class="text-xs text-red-600 font-medium mb-1.5">안전과 생명을 지키는 영웅</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "화재 대피 시뮬레이션의 장점과 한계에 대해 무엇이든 물어보세요!"
-                        </p>
+                <div onclick="selectCharacter('firefighter')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-red-50 flex items-center justify-center">🚒</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-red-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">소방관 강민호</h3>
+                            <span class="text-[10px] text-slate-400">활성 1분 전</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">화재 대피 시뮬레이션의 명암을 물어보세요!</p>
                     </div>
                 </div>
 
                 <!-- 2. Police Officer -->
-                <div onclick="selectCharacter('police')" class="bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            👮
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">경찰관 박지은</h3>
-                        <p class="text-xs text-blue-600 font-medium mb-1.5">사이버 보안 및 질서 수호자</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "사이버 순찰과 익명 범죄 대응의 장단점을 이야기해봐요."
-                        </p>
+                <div onclick="selectCharacter('police')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-blue-50 flex items-center justify-center">👮</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-blue-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">경찰관 박지은</h3>
+                            <span class="text-[10px] text-slate-400">활동 중</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">사이버 순찰과 익명 범죄 대응 이야기</p>
                     </div>
                 </div>
 
                 <!-- 3. Doctor -->
-                <div onclick="selectCharacter('doctor')" class="bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            🩺
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">의사 닥터 민</h3>
-                        <p class="text-xs text-emerald-600 font-medium mb-1.5">디지털 헬스케어 전문가</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "원격 진료와 VR 수술 시뮬레이션의 명암을 상담해 드려요."
-                        </p>
+                <div onclick="selectCharacter('doctor')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-emerald-50 flex items-center justify-center">🩺</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-emerald-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">의사 닥터 민</h3>
+                            <span class="text-[10px] text-slate-400">활성 5분 전</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">원격 진료와 VR 수술 시뮬레이션 상담</p>
                     </div>
                 </div>
 
                 <!-- 4. Virtual Idol -->
-                <div onclick="selectCharacter('idol')" class="bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            ✨
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">가상 아이돌 루미</h3>
-                        <p class="text-xs text-purple-600 font-medium mb-1.5">시공간을 초월한 버추얼 아티스트</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "버추얼 콘서트의 한계 없는 장점과 정서적 거리감의 단점!"
-                        </p>
+                <div onclick="selectCharacter('idol')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-purple-50 flex items-center justify-center">✨</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-purple-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">가상 아이돌 루미</h3>
+                            <span class="text-[10px] text-slate-400">활동 중</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">버추얼 콘서트와 무한한 장점의 소통</p>
                     </div>
                 </div>
 
                 <!-- 5. AI Developer -->
-                <div onclick="selectCharacter('developer')" class="bg-white hover:bg-cyan-50 border border-slate-200 hover:border-cyan-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            💻
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">AI 개발자 도현</h3>
-                        <p class="text-xs text-cyan-600 font-medium mb-1.5">메타버스와 인공지능 창조자</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "메타버스 플랫폼 구축의 확장성과 보안 취약성 단점 이야기!"
-                        </p>
+                <div onclick="selectCharacter('developer')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-cyan-50 flex items-center justify-center">💻</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-cyan-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">AI 개발자 도현</h3>
+                            <span class="text-[10px] text-slate-400">활성 10분 전</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">메타버스 플랫폼 구축과 보안 취약성</p>
                     </div>
                 </div>
 
                 <!-- 6. Video Creator -->
-                <div onclick="selectCharacter('creator')" class="bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            🎥
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">영상 크리에이터 지우</h3>
-                        <p class="text-xs text-rose-600 font-medium mb-1.5">디지털 콘텐츠 스토리텔러</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "랜선 콘텐츠 전파의 엄청난 파급력과 가짜 뉴스 부작용!"
-                        </p>
+                <div onclick="selectCharacter('creator')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-rose-50 flex items-center justify-center">🎥</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-rose-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">영상 크리에이터 지우</h3>
+                            <span class="text-[10px] text-slate-400">활동 중</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">랜선 콘텐츠 전파력과 가짜 뉴스 부작용</p>
                     </div>
                 </div>
 
                 <!-- 7. Writer -->
-                <div onclick="selectCharacter('writer')" class="bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            📚
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">작가 한서진</h3>
-                        <p class="text-xs text-amber-600 font-medium mb-1.5">상상력과 이야기를 엮는 스토리텔러</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "가상 세계관 창작의 무한한 장점과 저작권 침해 단점!"
-                        </p>
+                <div onclick="selectCharacter('writer')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-amber-50 flex items-center justify-center">📚</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-amber-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">작가 한서진</h3>
+                            <span class="text-[10px] text-slate-400">활성 30분 전</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">가상 세계관 창작과 저작권 침해 문제</p>
                     </div>
                 </div>
 
                 <!-- 8. Lawyer -->
-                <div onclick="selectCharacter('lawyer')" class="bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            ⚖️
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">변호사 윤지훈</h3>
-                        <p class="text-xs text-indigo-600 font-medium mb-1.5">디지털 권리와 법률 전문가</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "가상 법률 상담의 접근성 장점과 법적 규제 공백 단점!"
-                        </p>
+                <div onclick="selectCharacter('lawyer')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-indigo-50 flex items-center justify-center">⚖️</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-indigo-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">변호사 윤지훈</h3>
+                            <span class="text-[10px] text-slate-400">활동 중</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">가상 법률 상담의 장점과 규제 공백 단점</p>
                     </div>
                 </div>
 
                 <!-- 9. Life Science Researcher -->
-                <div onclick="selectCharacter('researcher')" class="bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-300 rounded-2xl p-4 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
-                    <div>
-                        <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold mb-2.5 group-hover:scale-110 transition">
-                            🔬
-                        </div>
-                        <h3 class="font-bold text-base text-slate-800">생명과학연구원 서연</h3>
-                        <p class="text-xs text-teal-600 font-medium mb-1.5">바이오와 가상 시뮬레이션 연구자</p>
-                        <p class="text-xs text-slate-600 leading-relaxed">
-                            "가상 실험으로 비용 절감 장점과 실제 세포 반응 한계 단점!"
-                        </p>
+                <div onclick="selectCharacter('researcher')" class="bg-white hover:bg-slate-50 border border-slate-200 hover:border-pink-300 rounded-2xl p-4 shadow-xs hover:shadow-md transition cursor-pointer flex items-center space-x-3.5 group">
+                    <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold flex-shrink-0 group-hover:scale-105 transition border-2 border-pink-500 p-0.5">
+                        <span class="w-full h-full rounded-full bg-teal-50 flex items-center justify-center">🔬</span>
                     </div>
-                    <div class="mt-3 text-right">
-                        <span class="text-xs text-teal-600 font-bold group-hover:translate-x-1 inline-block transition">대화 시작 &rarr;</span>
+                    <div class="flex-grow overflow-hidden">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-bold text-sm text-slate-900 truncate">생명과학연구원 서연</h3>
+                            <span class="text-[10px] text-slate-400">활성 2시간 전</span>
+                        </div>
+                        <p class="text-xs text-slate-500 truncate">가상 실험 시뮬레이션과 윤리적 장단점</p>
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- SCREEN 2: CHAT SCREEN -->
-        <div id="chat-screen" class="hidden flex-grow flex flex-col md:flex-row h-full overflow-hidden">
+        <!-- SCREEN 2: CHAT SCREEN (Instagram DM Chat Interface) -->
+        <div id="chat-screen" class="hidden flex-grow flex flex-col md:flex-row h-full overflow-hidden bg-white">
             
-            <!-- Sidebar: Character Profile & Ethics Guard Notice -->
-            <div class="w-full md:w-1/3 bg-slate-900/40 p-5 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200/20 text-white overflow-y-auto">
-                <div>
+            <!-- Instagram DM Sidebar Profile & Ethics Info (Restored width & padding for zero clipping) -->
+            <div class="w-full md:w-80 lg:w-96 bg-slate-50 p-4 sm:p-5 flex flex-col justify-between border-r border-slate-200 overflow-y-auto flex-shrink-0">
+                <div class="space-y-4">
                     <!-- Firefighter Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/소방관.png" alt="소방관 강민호" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Firefighter';">
+                    <div id="sidebar-photo-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/소방관.png" alt="소방관 강민호" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Firefighter';">
                         </div>
                     </div>
 
                     <!-- Police Officer Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-police-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/경찰관.png" alt="경찰관 박지은" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Police';">
+                    <div id="sidebar-photo-police-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/경찰관.png" alt="경찰관 박지은" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Police';">
                         </div>
                     </div>
 
                     <!-- Doctor Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-doctor-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/의사.png" alt="의사 닥터 민" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Doctor';">
+                    <div id="sidebar-photo-doctor-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/의사.png" alt="의사 닥터 민" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Doctor';">
                         </div>
                     </div>
 
                     <!-- Idol Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-idol-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/아이돌.png" alt="가상 아이돌 루미" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Idol';">
+                    <div id="sidebar-photo-idol-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/아이돌.png" alt="가상 아이돌 루미" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Idol';">
                         </div>
                     </div>
 
                     <!-- Developer Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-developer-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/AI개발자.png" alt="AI 개발자 도현" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Developer';">
+                    <div id="sidebar-photo-developer-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/AI개발자.png" alt="AI 개발자 도현" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Developer';">
                         </div>
                     </div>
 
                     <!-- Creator Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-creator-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/유튜버.png" alt="영상 크리에이터 지우" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Creator';">
+                    <div id="sidebar-photo-creator-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/유튜버.png" alt="영상 크리에이터 지우" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Creator';">
                         </div>
                     </div>
 
                     <!-- Writer Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-writer-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/작가.png" alt="작가 한서진" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Writer';">
+                    <div id="sidebar-photo-writer-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/작가.png" alt="작가 한서진" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Writer';">
                         </div>
                     </div>
 
                     <!-- Lawyer Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-lawyer-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/변호사.png" alt="변호사 윤지훈" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Lawyer';">
+                    <div id="sidebar-photo-lawyer-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/변호사.png" alt="윤지훈 변호사" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Lawyer';">
                         </div>
                     </div>
 
                     <!-- Researcher Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-researcher-container" class="mb-3.5 hidden">
-                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/연구원.png" alt="생명과학연구원 서연" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Researcher';">
+                    <div id="sidebar-photo-researcher-container" class="hidden">
+                        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-pink-500 shadow-md bg-slate-800 flex items-center justify-center p-0.5">
+                            <img src="./images/연구원.png" alt="생명과학연구원 서연" class="w-full h-full rounded-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Researcher';">
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-3 mb-4 bg-white/10 p-3.5 rounded-2xl border border-white/10 items-center">
-                        <div id="char-avatar-box" class="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center font-bold shadow-md bg-gradient-to-tr from-purple-500 to-indigo-500 flex-shrink-0 text-xl">
+                    <div class="text-center">
+                        <div id="char-avatar-box" class="w-20 h-20 mx-auto rounded-full overflow-hidden flex items-center justify-center font-bold shadow-md bg-gradient-to-tr from-purple-500 to-pink-500 text-3xl text-white mb-2 border-2 border-pink-500">
                             <!-- Dynamic Avatar Content -->
                         </div>
-                        <div class="overflow-hidden">
-                            <h3 id="char-name-display" class="font-bold text-base truncate">가상 인물</h3>
-                            <p id="char-role-display" class="text-xs text-purple-300 truncate">직업 / 역할</p>
-                        </div>
+                        <h3 id="char-name-display" class="font-bold text-base text-slate-900 break-keep">가상 인물</h3>
+                        <p id="char-role-display" class="text-xs text-slate-500 break-keep mt-0.5">직업 / 역할</p>
                     </div>
-                    <p id="char-desc-display" class="text-xs text-slate-300 leading-relaxed mb-4">
+                    <p id="char-desc-display" class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200 leading-relaxed text-center break-keep shadow-xs">
                         캐릭터 설명란
                     </p>
                 </div>
 
                 <!-- Guidance Info with Ethics reminder -->
-                <div class="bg-indigo-950/60 p-3.5 rounded-xl text-xs text-indigo-200 space-y-1.5 border border-indigo-500/30">
-                    <p class="font-bold text-indigo-300 mb-1">🛡️ 디지털 윤리 가이드:</p>
-                    <p>• 익명성 뒤에 숨어 욕설이나 비하 표현을 쓰면 캐릭터가 올바른 예절을 지도합니다.</p>
-                    <p>• 각 직업의 가상공간 활용 장단점에 대해 자유롭게 질문해보세요!</p>
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1.5 border border-pink-200 mt-4">
+                    <p class="font-bold text-pink-600 mb-1">🛡️ 인스타 DM 윤리 가이드:</p>
+                    <p class="break-keep">• 익명성 뒤에 숨어 비하 표현을 쓰면 올바른 디지털 예절로 지도합니다.</p>
+                    <p class="break-keep">• 각 직업의 가상공간 장단점을 자유롭게 질문해보세요!</p>
                 </div>
             </div>
 
-            <!-- Chat Main Area -->
-            <div class="w-full md:w-2/3 flex flex-col bg-slate-50/50 flex-grow h-full">
+            <!-- Chat Main Area (Instagram DM Conversation Window) -->
+            <div class="w-full md:flex-grow flex flex-col bg-white h-full overflow-hidden">
                 
                 <!-- Chat Header Bar -->
-                <div class="p-3.5 bg-white/90 border-b border-slate-200 flex justify-between items-center shadow-sm">
+                <div class="p-3.5 bg-white border-b border-slate-200 flex justify-between items-center shadow-xs flex-shrink-0">
                     <div class="flex items-center space-x-3">
-                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        <span id="chat-status-name" class="font-bold text-slate-700 text-sm">대화 상대</span>
+                        <div id="chat-header-avatar" class="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm shadow-xs overflow-hidden flex-shrink-0">
+                            <!-- Avatar mini -->
+                        </div>
+                        <div class="overflow-hidden">
+                            <span id="chat-status-name" class="font-bold text-slate-900 text-sm block leading-tight truncate">대화 상대</span>
+                            <span class="text-[10px] text-emerald-500 font-medium flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Instagram Direct 활동 중
+                            </span>
+                        </div>
                     </div>
-                    <button onclick="resetChat()" class="text-xs px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg transition font-medium">
-                        대화 초기화
+                    <button onclick="resetChat()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition font-medium border border-slate-200 flex-shrink-0">
+                        대화 지우기
                     </button>
                 </div>
 
                 <!-- Chat Messages Log -->
-                <div id="chat-container" class="flex-grow p-4 overflow-y-auto space-y-3.5 flex flex-col">
+                <div id="chat-container" class="flex-grow p-4 overflow-y-auto space-y-3.5 flex flex-col bg-slate-50/50">
                     <!-- Dynamic messages -->
                 </div>
 
                 <!-- Quick Suggestions -->
-                <div id="quick-suggestions" class="px-4 py-2 bg-white/60 border-t border-slate-200 flex gap-2 overflow-x-auto text-xs whitespace-nowrap">
+                <div id="quick-suggestions" class="px-4 py-2.5 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto text-xs whitespace-nowrap flex-shrink-0">
                     <!-- Dynamic suggestions -->
                 </div>
 
-                <!-- Input Box -->
-                <div class="p-3.5 bg-white border-t border-slate-200 flex gap-2">
-                    <input type="text" id="user-input" placeholder="메시지를 입력하세요..." 
-                        class="flex-grow px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm text-slate-800"
+                <!-- Input Box (Instagram DM style) -->
+                <div class="p-3.5 bg-white border-t border-slate-200 flex gap-2 items-center flex-shrink-0">
+                    <input type="text" id="user-input" placeholder="메시지 보내기..." 
+                        class="flex-grow px-4 py-3 bg-slate-100 border border-slate-200 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-slate-800"
                         onkeypress="if(event.key === 'Enter') handleSend()">
-                    <button onclick="handleSend()" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-xl font-medium text-sm transition shadow-md flex items-center justify-center">
-                        전송
+                    <button onclick="handleSend()" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white px-5 py-3 rounded-full font-semibold text-sm transition shadow-md flex items-center justify-center flex-shrink-0">
+                        보내기
                     </button>
                 </div>
 
@@ -343,8 +320,8 @@
         </div>
 
         <!-- SITE FOOTER COPYRIGHT -->
-        <div class="bg-slate-900 text-slate-400 py-3 px-6 text-center text-xs border-t border-white/10 tracking-wide">
-            &copy; 2026 의리T의 디지털 도덕·윤리 교육 교실. All Rights Reserved. (중·고등학교 가상공간 메타버스 교육 프로젝트)
+        <div class="bg-white text-slate-500 py-3 px-6 text-center text-xs border-t border-slate-200 tracking-wide font-medium flex-shrink-0">
+            &copy; 2026 의리의 디지털 도덕·윤리 교육 교실. All Rights Reserved. (중·고등학교 가상공간 메타버스 교육 프로젝트)
         </div>
 
     </div>
@@ -358,6 +335,7 @@
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const charAvatarBox = document.getElementById('char-avatar-box');
+        const chatHeaderAvatar = document.getElementById('chat-header-avatar');
         const charNameDisplay = document.getElementById('char-name-display');
         const charRoleDisplay = document.getElementById('char-role-display');
         const charDescDisplay = document.getElementById('char-desc-display');
@@ -367,7 +345,7 @@
         let currentCharacterKey = '';
         let chatHistory = [];
 
-        // Character definitions with ~300 character response rules and pros/cons focus
+        // Character definitions with non-redundant, unique pros/cons questions and ~300 character answers
         const characters = {
             firefighter: {
                 name: "소방관 강민호",
@@ -383,12 +361,12 @@
                 isWriter: false,
                 isLawyer: false,
                 isResearcher: false,
-                systemPrompt: "너는 가상의 소방관 '강민호'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 가상공간 화재 대피 시뮬레이션 활용 시 장점은 '실제 위험 없이 반복적인 대피 경로 숙달이 가능하고 비용이 절감된다는 점'이며, 단점은 '실제 화재 현장의 뜨거운 열기나 짙은 연기, 극심한 공포감을 100% 온전하게 체감하기에는 한계가 있다는 점'이야. 만약 욕설을 하면 따끔하게 훈육해.",
+                systemPrompt: "너는 가상의 소방관 '강민호'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 가상공간 화재 대피 시뮬레이션 활용 시 장점은 '실제 위험 없이 반복적인 대피 경로 숙달이 가능하고 훈련 비용이 절감된다는 점'이며, 단점은 '실제 화재 현장의 뜨거운 열기나 짙은 연기, 극심한 공포감을 100% 온전하게 체감하기에는 한계가 있다는 점'이야. 만약 욕설이나 무례한 말을 하면 따끔하게 올바른 예절을 지도해.",
                 initialMessage: "반가워! 소방관 강민호야. 가상 훈련을 통해 안전 대피 요령을 연습할 수 있지. 화재 대피 시뮬레이션의 명암에 대해 궁금한 점을 편하게 물어보렴!",
                 suggestions: [
                     "가상 화재 대피 훈련의 장점과 단점은?",
                     "시뮬레이션만으로 실제 재난에 대처할 수 있나요?",
-                    "아바타한테 함부로 하면 어떻게 되나요?"
+                    "안전 훈련 시 가상현실의 한계는 무엇인가요?"
                 ]
             },
             police: {
@@ -405,12 +383,12 @@
                 isWriter: false,
                 isLawyer: false,
                 isResearcher: false,
-                systemPrompt: "너는 가상의 경찰관 '박지은'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 메타버스 및 가상공간 사이버 순찰의 장점은 '시공간의 제약 없이 24시간 감시와 디지털 증거 확보가 용이하다는 것'이며, 단점은 '철저한 익명성과 가짜 계정 뒤에 숨는 경우 실제 범인을 특정하고 검거하는 과정이 현실보다 훨씬 복잡하다는 것'이야. 욕설을 하면 단호하게 지도해.",
+                systemPrompt: "너는 가상의 경찰관 '박지은'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 메타버스 및 가상공간 사이버 순찰의 장점은 '시공간의 제약 없이 24시간 감시와 디지털 증거 확보가 용이하다는 것'이며, 단점은 '철저한 익명성과 가짜 계정 뒤에 숨는 경우 실제 범인을 특정하고 검거하는 과정이 현실보다 훨씬 복잡하다는 것'이야. 욕설이나 무례한 말에는 단호하게 지도해.",
                 initialMessage: "안녕! 경찰관 박지은이야. 메타버스 공간에서 이루어지는 사이버 순찰과 범죄 대응의 명암에 대해 이야기해볼까?",
                 suggestions: [
                     "메타버스 사이버 순찰의 장단점이 뭔가요?",
-                    "익명성 뒤에 숨은 범죄 잡기가 왜 어렵죠?",
-                    "가상공간 악성 채팅의 법적 책임은?"
+                    "익명성 뒤에 숨은 사이버 범죄 잡기가 왜 어렵죠?",
+                    "가상공간 악성 채팅의 법적 책임은 무엇인가요?"
                 ]
             },
             doctor: {
@@ -431,8 +409,8 @@
                 initialMessage: "안녕! 닥터 민이야. 원격 의료와 가상 시뮬레이션 진료가 가져다주는 긍정적 측면과 한계에 대해 자세히 설명해 줄게!",
                 suggestions: [
                     "원격 진료와 수술 시뮬레이션의 장단점은?",
-                    "디지털 과몰입이 건강에 미치는 악영향은?",
-                    "가상현실이 정신 건강에 주는 도움은?"
+                    "디지털 과몰입이 신체 건강에 미치는 악영향은?",
+                    "가상현실이 정신 건강 치료에 주는 도움은?"
                 ]
             },
             idol: {
@@ -449,11 +427,11 @@
                 isWriter: false,
                 isLawyer: false,
                 isResearcher: false,
-                systemPrompt: "너는 가상의 아이돌 '루미'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 버추얼 콘서트 및 가상 아이돌 활동의 장점은 '전 세계 팬들이 시공간 제약 없이 동시에 접속해 화려하고 환상적인 시각 효과를 즐길 수 있다는 것'이며, 단점은 '아티스트와 팬 사이의 물리적인 온전한 교감이나 현장의 생생한 체온을 느끼기 어렵다는 것'이야. 욕설에는 밝게 일깨워줘.",
+                systemPrompt: "너는 가상의 아이돌 '루미'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 버추얼 콘서트 및 가상 아이돌 활동의 장점은 '전 세계 팬들이 시공간 제약 없이 동시에 접속해 화려하고 환상적인 시각 효과를 즐길 수 있다는 것'이며, 단점은 '아티스트와 팬 사이의 물리적인 온전한 교감이나 현장의 생생한 체온을 느끼기 어렵다는 것'이야. 욕설에는 밝고 친근하게 올바른 예절을 일깨워줘.",
                 initialMessage: "안녕! 가상 아이돌 루미야! 버추얼 공연과 가상 소통이 가진 무한한 매력과 아쉬운 점들을 함께 알아보자.",
                 suggestions: [
-                    "버추얼 콘서트의 장점과 한계는?",
-                    "가상 아이돌 팬 소통의 아쉬운 점은?",
+                    "버추얼 콘서트의 장점과 한계는 무엇인가요?",
+                    "가상 아이돌 팬 소통에서 아쉬운 점은?",
                     "디지털 세계에서 아티스트를 대하는 바른 태도는?"
                 ]
             },
@@ -471,12 +449,12 @@
                 isWriter: false,
                 isLawyer: false,
                 isResearcher: false,
-                systemPrompt: "너는 가상의 개발자 '도현'이야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 메타버스 플랫폼 구축의 장점은 '현실의 물리 법칙을 뛰어넘는 무한한 확장성과 새로운 경제적 가치를 창출한다는 점'이며, 단점은 '동시 접속자 폭주 시 서버 과부하, 해킹 및 개인정보 유출 위험, 그리고 막대한 개발 비용이 든다는 점'이야. 욕설에는 개발자 관점으로 지도해.",
+                systemPrompt: "너는 가상의 개발자 '도현'이야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 메타버스 플랫폼 구축의 장점은 '현실의 물리 법칙을 뛰어넘는 무한한 확장성과 새로운 경제적 가치를 창출한다는 점'이며, 단점은 '동시 접속자 폭주 시 서버 과부하, 해킹 및 개인정보 유출 위험, 그리고 막대한 개발 비용이 든다는 점'이야. 욕설에는 개발자 관점으로 논리적으로 지도해.",
                 initialMessage: "안녕! AI 개발자 도현이야. 메타버스 기술을 설계하고 구축할 때 마주하는 기술적 빛과 그림자에 대해 이야기해줄게.",
                 suggestions: [
                     "메타버스 플랫폼 구축의 장점과 한계는?",
                     "개발 과정에서 겪는 서버 과부하와 보안 단점은?",
-                    "알고리즘 편향 문제를 해결하는 방법은?"
+                    "가상공간 알고리즘 편향 문제를 해결하는 방법은?"
                 ]
             },
             creator: {
@@ -496,9 +474,9 @@
                 systemPrompt: "너는 가상의 크리에이터 '지우'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 랜선 콘텐츠 전파의 장점은 '전 세계 수많은 사람들과 실시간으로 빠르게 소통하며 거대한 영향력을 발휘할 수 있다는 것'이며, 단점은 '자극적인 가짜 뉴스나 확인되지 않은 정보, 악성 댓글 등으로 인해 심각한 사회적 부작용이 생길 수 있다는 것'이야. 욕설에는 유쾌하게 조언해.",
                 initialMessage: "하이하이! 크리에이터 지우야! 랜선 콘텐츠 전파가 가진 폭발적인 파급력과 우리가 조심해야 할 부작용을 짚어줄게!",
                 suggestions: [
-                    "랜선 콘텐츠 전파의 장단점은?",
-                    "자극적인 콘텐츠와 가짜 뉴스의 단점은?",
-                    "크리에이터가 지켜야 할 윤리적 책임은?"
+                    "랜선 콘텐츠 전파의 장단점은 무엇인가요?",
+                    "자극적인 콘텐츠와 가짜 뉴스가 주는 단점은?",
+                    "크리에이터가 지켜야 할 윤리적 책임은 무엇인가요?"
                 ]
             },
             writer: {
@@ -518,9 +496,9 @@
                 systemPrompt: "너는 가상의 작가 '한서진'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 가상 세계관 창작의 장점은 '현실의 물리적 한계에 얽매이지 않고 상상하는 모든 것을 글로 구현할 수 있다는 점'이며, 단점은 '인터넷 공간의 특성상 무분별한 디지털 복제와 표절로 인해 원작자의 소중한 권리가 침해받기 쉽다는 점'이야. 욕설에는 따뜻하게 조언해.",
                 initialMessage: "안녕하세요! 작가 한서진이에요. 가상공간 속 문학 창작의 무한한 가능성과 저작권의 중요성에 대해 이야기해볼까요?",
                 suggestions: [
-                    "가상 세계관 창작의 장점과 한계는?",
-                    "온라인 창작물 무단 복제의 문제점은?",
-                    "인공지능 시대의 문학 창작 윤리는?"
+                    "가상 세계관 창작의 장점과 한계는 무엇인가요?",
+                    "온라인 창작물 무단 복제의 문제점은 무엇인가요?",
+                    "인공지능 시대의 문학 창작 윤리는 어떻게 되나요?"
                 ]
             },
             lawyer: {
@@ -540,9 +518,9 @@
                 systemPrompt: "너는 가상의 변호사 '윤지훈'이야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 가상 법률 상담의 장점은 '비대면 환경에서 시공간 제약 없이 신속하게 권리 구제 상담을 받을 수 있다는 점'이며, 단점은 '급변하는 메타버스 신기술의 발전 속도에 비해 관련 법적 규제나 처벌 기준이 여전히 뒤처져 있어 공백이 발생한다는 점'이야. 욕설에는 단호하게 지도해.",
                 initialMessage: "반갑습니다. 변호사 윤지훈입니다. 가상 법률 적용의 장점과 메타버스가 안고 있는 법적 규제 공백에 대해 설명해 드릴게요.",
                 suggestions: [
-                    "가상 법률 상담의 장점과 한계는?",
-                    "메타버스 법의 규제 공백 단점은?",
-                    "디지털 저작권과 초상권 침해 처벌은?"
+                    "가상 법률 상담의 장점과 한계는 무엇인가요?",
+                    "메타버스 법의 규제 공백 단점은 무엇인가요?",
+                    "디지털 저작권과 초상권 침해 처벌은 어떻게 되나요?"
                 ]
             },
             researcher: {
@@ -562,9 +540,9 @@
                 systemPrompt: "너는 가상의 생명과학연구원 '서연'야. 답변은 반드시 300자 내외(2~3문장)로 조금 더 자세하고 알기 쉽게 설명해줘. 가상 실험 시뮬레이션의 장점은 '동물 실험 등 생체 실험에 따르는 윤리적 문제를 해결하고 연구 시간과 비용을 대폭 줄일 수 있다는 점'이며, 단점은 '실제 복잡 미묘한 생물학적 변수나 예기치 않은 유기체 반응을 완벽하게 재현하기에는 기술적 한계가 있다는 점'이야. 욕설에는 엄격하게 일깨워줘.",
                 initialMessage: "안녕하세요! 생명과학연구원 서연이에요. 가상 생물 실험이 바이오 연구에 주는 혁신적 장점과 과학적 한계를 알려 줄게요!",
                 suggestions: [
-                    "가상 실험 시뮬레이션의 장점과 단점은?",
-                    "바이오 연구 시 가상 기술의 한계는?",
-                    "생명과학에서 디지털 기술이 가져올 미래는?"
+                    "가상 실험 시뮬레이션의 장점과 한계는 무엇인가요?",
+                    "바이오 연구 시 가상 기술의 한계는 무엇인가요?",
+                    "생명과학에서 디지털 기술이 가져올 미래의 윤리는?"
                 ]
             }
         };
@@ -575,6 +553,7 @@
 
             // Render avatar box
             charAvatarBox.textContent = char.avatar;
+            chatHeaderAvatar.textContent = char.avatar;
 
             // Handle dedicated sidebar photo containers
             const sidebarPhotoContainer = document.getElementById('sidebar-photo-container');
@@ -587,64 +566,31 @@
             const sidebarPhotoLawyerContainer = document.getElementById('sidebar-photo-lawyer-container');
             const sidebarPhotoResearcherContainer = document.getElementById('sidebar-photo-researcher-container');
             
-            if (char.hasSidebarPhoto) {
-                sidebarPhotoContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoContainer.classList.add('hidden');
-            }
+            // Hide all first
+            sidebarPhotoContainer.classList.add('hidden');
+            sidebarPhotoPoliceContainer.classList.add('hidden');
+            sidebarPhotoDoctorContainer.classList.add('hidden');
+            sidebarPhotoIdolContainer.classList.add('hidden');
+            sidebarPhotoDeveloperContainer.classList.add('hidden');
+            sidebarPhotoCreatorContainer.classList.add('hidden');
+            sidebarPhotoWriterContainer.classList.add('hidden');
+            sidebarPhotoLawyerContainer.classList.add('hidden');
+            sidebarPhotoResearcherContainer.classList.add('hidden');
 
-            if (char.isPolice) {
-                sidebarPhotoPoliceContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoPoliceContainer.classList.add('hidden');
-            }
-
-            if (char.isDoctor) {
-                sidebarPhotoDoctorContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoDoctorContainer.classList.add('hidden');
-            }
-
-            if (char.isIdol) {
-                sidebarPhotoIdolContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoIdolContainer.classList.add('hidden');
-            }
-
-            if (char.isDeveloper) {
-                sidebarPhotoDeveloperContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoDeveloperContainer.classList.add('hidden');
-            }
-
-            if (char.isCreator) {
-                sidebarPhotoCreatorContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoCreatorContainer.classList.add('hidden');
-            }
-
-            if (char.isWriter) {
-                sidebarPhotoWriterContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoWriterContainer.classList.add('hidden');
-            }
-
-            if (char.isLawyer) {
-                sidebarPhotoLawyerContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoLawyerContainer.classList.add('hidden');
-            }
-
-            if (char.isResearcher) {
-                sidebarPhotoResearcherContainer.classList.remove('hidden');
-            } else {
-                sidebarPhotoResearcherContainer.classList.add('hidden');
-            }
+            if (key === 'firefighter') sidebarPhotoContainer.classList.remove('hidden');
+            if (key === 'police') sidebarPhotoPoliceContainer.classList.remove('hidden');
+            if (key === 'doctor') sidebarPhotoDoctorContainer.classList.remove('hidden');
+            if (key === 'idol') sidebarPhotoIdolContainer.classList.remove('hidden');
+            if (key === 'developer') sidebarPhotoDeveloperContainer.classList.remove('hidden');
+            if (key === 'creator') sidebarPhotoCreatorContainer.classList.remove('hidden');
+            if (key === 'writer') sidebarPhotoWriterContainer.classList.remove('hidden');
+            if (key === 'lawyer') sidebarPhotoLawyerContainer.classList.remove('hidden');
+            if (key === 'researcher') sidebarPhotoResearcherContainer.classList.remove('hidden');
 
             charNameDisplay.textContent = char.name;
             charRoleDisplay.textContent = char.role;
             charDescDisplay.textContent = char.desc;
-            chatStatusName.textContent = `대화 상대: ${char.name}`;
+            chatStatusName.textContent = char.name;
             headerTitle.textContent = `현재 대화 중: ${char.name}`;
 
             selectScreen.classList.add('hidden');
@@ -668,7 +614,7 @@
             quickSuggestions.innerHTML = '';
             char.suggestions.forEach(sug => {
                 const btn = document.createElement('button');
-                btn.className = 'bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-full transition shadow-xs cursor-pointer';
+                btn.className = 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-full transition shadow-xs cursor-pointer flex-shrink-0';
                 btn.textContent = `💬 ${sug}`;
                 btn.onclick = () => sendQuickMessage(sug);
                 quickSuggestions.appendChild(btn);
@@ -679,22 +625,23 @@
             chatScreen.classList.add('hidden');
             backBtn.classList.add('hidden');
             selectScreen.classList.remove('hidden');
-            headerTitle.textContent = "가상공간 직업·캐릭터 시뮬레이터";
+            headerTitle.textContent = "가상공간 직업인과의 인터뷰";
         }
 
         function appendMessage(sender, text) {
             const isUser = sender === 'user';
             const wrapperDiv = document.createElement('div');
-            wrapperDiv.className = `flex items-start space-x-3 chat-bubble ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+            wrapperDiv.className = `flex items-end space-x-2 chat-bubble ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
             
             const char = characters[currentCharacterKey];
             const avatar = document.createElement('div');
-            avatar.className = `w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shadow text-white overflow-hidden flex-shrink-0 ${isUser ? 'bg-indigo-600' : 'bg-purple-600'}`;
+            avatar.className = `w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-xs text-white overflow-hidden flex-shrink-0 mb-1 ${isUser ? 'bg-pink-600' : 'bg-gradient-to-tr from-purple-500 to-pink-500'}`;
             
             avatar.textContent = isUser ? '나' : char.avatar;
 
             const bubble = document.createElement('div');
-            bubble.className = `p-3.5 rounded-2xl shadow-sm max-w-[80%] text-sm border ${isUser ? 'bg-indigo-600 text-white rounded-tr-none border-indigo-500' : 'bg-white text-slate-800 rounded-tl-none border-slate-100'}`;
+            // Instagram DM bubble style (User: gradient/blue-purple or pink, Model: light grey/white with border)
+            bubble.className = `p-3 rounded-2xl shadow-xs max-w-[75%] text-sm ${isUser ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-br-none' : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200'}`;
             bubble.textContent = text;
 
             wrapperDiv.appendChild(avatar);
@@ -714,14 +661,14 @@
             const loadingId = 'loading-' + Date.now();
             const loadingDiv = document.createElement('div');
             loadingDiv.id = loadingId;
-            loadingDiv.className = 'flex items-start space-x-3 chat-bubble';
+            loadingDiv.className = 'flex items-end space-x-2 chat-bubble';
             
-            const loadingAvatarHTML = `<div class="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shadow flex-shrink-0">${char.avatar}</div>`;
+            const loadingAvatarHTML = `<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 mb-1">${char.avatar}</div>`;
 
             loadingDiv.innerHTML = `
                 ${loadingAvatarHTML}
-                <div class="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm text-slate-500 text-sm border border-slate-100 animate-pulse">
-                    ${char.name.split(' ')[0]}이(가) 자세한 답변을 준비 중이에요...
+                <div class="bg-slate-100 p-3 rounded-2xl rounded-bl-none shadow-xs text-slate-400 text-sm border border-slate-200 animate-pulse">
+                    ${char.name.split(' ')[0]}이(가) 답변 입력 중...
                 </div>
             `;
             chatContainer.appendChild(loadingDiv);
@@ -787,13 +734,13 @@
 
         function resetChat() {
             const char = characters[currentCharacterKey];
-            const avatarHTML = `<div class="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm shadow flex-shrink-0">${char.avatar}</div>`;
+            const avatarHTML = `<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 mb-1">${char.avatar}</div>`;
 
             chatContainer.innerHTML = `
-                <div class="flex items-start space-x-3 chat-bubble">
+                <div class="flex items-end space-x-2 chat-bubble">
                     ${avatarHTML}
-                    <div class="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] text-slate-800 text-sm border border-slate-100">
-                        대화가 초기화되었어! 다시 이야기를 시작해보자. 어떤 점이 궁금해?
+                    <div class="bg-slate-100 p-3 rounded-2xl rounded-bl-none shadow-xs max-w-[75%] text-slate-800 text-sm border border-slate-200">
+                        대화가 지워졌어! 다시 이야기를 시작해보자. 어떤 점이 궁금해?
                     </div>
                 </div>
             `;
