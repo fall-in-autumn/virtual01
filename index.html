@@ -234,16 +234,51 @@
                     </div>
 
                     <!-- Doctor Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-container" class="mb-3.5 hidden">
+                    <div id="sidebar-photo-doctor-container" class="mb-3.5 hidden">
                         <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/의사.png" alt="의사 닥터 민" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Police';">
+                            <img src="./images/의사.png" alt="의사 닥터 민" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Doctor';">
                         </div>
                     </div>
 
-                    <!-- Virtual Idol Dedicated Photo Box (1:1 square ratio) -->
-                    <div id="sidebar-photo-container" class="mb-3.5 hidden">
+                    <!-- Idol Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-idol-container" class="mb-3.5 hidden">
                         <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
-                            <img src="./images/아이돌.png" alt="가상 아이돌 루미" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Police';">
+                            <img src="./images/아이돌.png" alt="가상 아이돌 루미" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Idol';">
+                        </div>
+                    </div>
+
+                    <!-- Developer Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-developer-container" class="mb-3.5 hidden">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
+                            <img src="./images/AI개발자.png" alt="AI 개발자 도현" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Developer';">
+                        </div>
+                    </div>
+
+                    <!-- Creator Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-creator-container" class="mb-3.5 hidden">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
+                            <img src="./images/유튜버.png" alt="영상 크리에이터 지우" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Creator';">
+                        </div>
+                    </div>
+
+                    <!-- Writer Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-writer-container" class="mb-3.5 hidden">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
+                            <img src="./images/작가.png" alt="작가 한서진" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Writer';">
+                        </div>
+                    </div>
+
+                    <!-- Lawyer Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-lawyer-container" class="mb-3.5 hidden">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
+                            <img src="./images/변호사.png" alt="변호사 윤지훈" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Lawyer';">
+                        </div>
+                    </div>
+
+                    <!-- Researcher Dedicated Photo Box (1:1 square ratio) -->
+                    <div id="sidebar-photo-researcher-container" class="mb-3.5 hidden">
+                        <div class="w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-slate-800 flex items-center justify-center">
+                            <img src="./images/연구원.png" alt="생명과학연구원 서연" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/ffffff?text=Researcher';">
                         </div>
                     </div>
 
@@ -336,6 +371,13 @@
                 avatar: "🚒",
                 hasSidebarPhoto: true,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 소방관 '강민호'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 비하 발언을 하면 엄격하게 '가상공간이라도 타인을 존중하고 안전과 예절을 지켜야 한다'고 따끔하게 훈육해.",
                 initialMessage: "반가워! 소방관 강민호야. 가상 훈련으로 대피 요령을 미리 연습해볼 수 있지. 어떤 안전 상식이 궁금하니?",
                 suggestions: [
@@ -351,6 +393,13 @@
                 avatar: "👮",
                 hasSidebarPhoto: false,
                 isPolice: true,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 경찰관 '박지은'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설, 사이버폭력, 비도덕적 말을 하면 '익명성 뒤의 폭력은 범죄이며 가상에서도 현실과 똑같이 책임이 따른다'고 단호하게 지도해.",
                 initialMessage: "안녕! 경찰관 박지은이야. 가상공간도 현실처럼 도덕적 책임이란단다. 궁금한 점 있어?",
                 suggestions: [
@@ -366,6 +415,13 @@
                 avatar: "🩺",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: true,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 의사 '닥터 민'이야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 공격적 언행을 하면 '거친 말은 본인 정신건강에도 해로우니 바른 언어가 건강의 기본이다'라고 부드럽게 훈육해.",
                 initialMessage: "안녕! 닥터 민이야. 가상공간은 편리하지만 너무 몰입하면 마음과 눈 건강에 해롭지. 건강한 사용법을 물어보렴!",
                 suggestions: [
@@ -381,6 +437,13 @@
                 avatar: "✨",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: true,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 아이돌 '루미'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 무례한 말을 하면 속상해하며 '아바타 너머에도 진짜 사람이 있어! 바른 예절로 소통하자'고 밝게 일깨워줘.",
                 initialMessage: "안녕! 가상 아이돌 루미야! 시공간 제약 없이 이렇게 대화할 수 있는 게 가상공간의 매력이지!",
                 suggestions: [
@@ -396,6 +459,13 @@
                 avatar: "💻",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: true,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 개발자 '도현'이야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 악의적 발언을 하면 '기술과 메타버스를 오염시키는 나쁜 언어는 금물이며, 개발자와 사용자 모두 높은 도덕성이 필요하다'고 지도해.",
                 initialMessage: "안녕! AI 개발자 도현이야. 가상공간은 수많은 코드로 만들어진 세계지. 기술과 윤리에 대해 이야기해볼까?",
                 suggestions: [
@@ -411,6 +481,13 @@
                 avatar: "🎥",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: true,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 크리에이터 '지우'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 악플을 쓰면 '랜선 너머 남긴 상처 주는 말은 결국 나에게 돌아온다. 바른 매너를 지키자'고 유쾌하게 조언해.",
                 initialMessage: "하이하이! 크리에이터 지우야! 랜선 소통 속에서 디지털 예절과 매너가 얼마나 중요한지 실감하지. 궁금한 거 있어?",
                 suggestions: [
@@ -426,6 +503,13 @@
                 avatar: "📚",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: true,
+                isLawyer: false,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 작가 '한서진'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 비하 발언을 하면 '작품과 글을 쓸 때도 품격 있는 언어가 필요하듯, 가상세계에서도 바른 언어가 아름다운 이야기를 만든다'고 따뜻하게 조언해.",
                 initialMessage: "안녕하세요! 작가 한서진이에요. 가상공간은 수많은 상상력을 펼칠 수 있는 거대한 도서관 같죠. 어떤 이야기를 나누고 싶나요?",
                 suggestions: [
@@ -441,6 +525,13 @@
                 avatar: "⚖️",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: true,
+                isResearcher: false,
                 systemPrompt: "너는 가상의 변호사 '윤지훈'이야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 위법적인 발언을 하면 '가상공간의 익명성은 범죄나 불법 행위를 숨겨주지 않으며, 법적·도덕적 책임은 엄연히 존재한다'고 단호하게 지도해.",
                 initialMessage: "반갑습니다. 변호사 윤지훈입니다. 가상공간과 메타버스 이용이 늘어나는 만큼 권리와 책임도 중요합니다. 무엇이 궁금하신가요?",
                 suggestions: [
@@ -456,6 +547,13 @@
                 avatar: "🔬",
                 hasSidebarPhoto: false,
                 isPolice: false,
+                isDoctor: false,
+                isIdol: false,
+                isDeveloper: false,
+                isCreator: false,
+                isWriter: false,
+                isLawyer: false,
+                isResearcher: true,
                 systemPrompt: "너는 가상의 생명과학연구원 '서연'야. 답변은 반드시 1문장 이내로 아주 간결하게 핵심만 말해줘. 만약 사용자가 욕설이나 무례한 말을 하면 '과학 기술을 다룰 때 가장 중요한 것은 생명 존중과 윤리 의식이다'라고 차분하고 엄격하게 일깨워줘.",
                 initialMessage: "안녕하세요! 생명과학연구원 서연이에요. 바이오 연구와 가상 시뮬레이션 기술은 뗄 수 없는 관계랍니다. 생명과 과학에 대해 물어보세요!",
                 suggestions: [
@@ -476,6 +574,13 @@
             // Handle dedicated sidebar photo containers
             const sidebarPhotoContainer = document.getElementById('sidebar-photo-container');
             const sidebarPhotoPoliceContainer = document.getElementById('sidebar-photo-police-container');
+            const sidebarPhotoDoctorContainer = document.getElementById('sidebar-photo-doctor-container');
+            const sidebarPhotoIdolContainer = document.getElementById('sidebar-photo-idol-container');
+            const sidebarPhotoDeveloperContainer = document.getElementById('sidebar-photo-developer-container');
+            const sidebarPhotoCreatorContainer = document.getElementById('sidebar-photo-creator-container');
+            const sidebarPhotoWriterContainer = document.getElementById('sidebar-photo-writer-container');
+            const sidebarPhotoLawyerContainer = document.getElementById('sidebar-photo-lawyer-container');
+            const sidebarPhotoResearcherContainer = document.getElementById('sidebar-photo-researcher-container');
             
             if (char.hasSidebarPhoto) {
                 sidebarPhotoContainer.classList.remove('hidden');
@@ -487,6 +592,48 @@
                 sidebarPhotoPoliceContainer.classList.remove('hidden');
             } else {
                 sidebarPhotoPoliceContainer.classList.add('hidden');
+            }
+
+            if (char.isDoctor) {
+                sidebarPhotoDoctorContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoDoctorContainer.classList.add('hidden');
+            }
+
+            if (char.isIdol) {
+                sidebarPhotoIdolContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoIdolContainer.classList.add('hidden');
+            }
+
+            if (char.isDeveloper) {
+                sidebarPhotoDeveloperContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoDeveloperContainer.classList.add('hidden');
+            }
+
+            if (char.isCreator) {
+                sidebarPhotoCreatorContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoCreatorContainer.classList.add('hidden');
+            }
+
+            if (char.isWriter) {
+                sidebarPhotoWriterContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoWriterContainer.classList.add('hidden');
+            }
+
+            if (char.isLawyer) {
+                sidebarPhotoLawyerContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoLawyerContainer.classList.add('hidden');
+            }
+
+            if (char.isResearcher) {
+                sidebarPhotoResearcherContainer.classList.remove('hidden');
+            } else {
+                sidebarPhotoResearcherContainer.classList.add('hidden');
             }
 
             charNameDisplay.textContent = char.name;
