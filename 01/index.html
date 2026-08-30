@@ -170,11 +170,10 @@
     <!-- Firebase SDK Imports & Game Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase configuration setup
-        const appId = 'virtual-real-matching-game';
         const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
             authDomain: "virtual01-2b286.firebaseapp.com",
@@ -222,13 +221,14 @@
                 auth = getAuth(app);
 
                 await signInAnonymously(auth);
-
-                userId = auth.currentUser ? auth.currentUser.uid : crypto.randomUUID();
+                userId = auth.currentUser ? auth.currentUser.uid : 'user_' + Math.random().toString(36).substring(2, 9);
                 isFirebaseInitialized = true;
+                
+                // Start listening to live leaderboard data
                 listenToLeaderboard();
             } catch (err) {
-                console.warn("Firebase offline mode or mock initialized:", err);
-                renderMockLeaderboard();
+                console.error("Firebase initialization error:", err);
+                document.getElementById('leaderboard-list').innerHTML = `<div class="text-center text-xs text-red-400 py-6">데이터베이스 연결 실패<br>콘솔창을 확인해주세요.</div>`;
             }
         }
 
@@ -442,11 +442,10 @@
                     renderLeaderboard(records);
                 }, (error) => {
                     console.error("Leaderboard snapshot error:", error);
-                    renderMockLeaderboard();
+                    document.getElementById('leaderboard-list').innerHTML = `<div class="text-center text-xs text-red-400 py-6">랭킹 동기화 오류 발생</div>`;
                 });
             } catch (err) {
                 console.warn("Leaderboard listener failed:", err);
-                renderMockLeaderboard();
             }
         }
 
@@ -477,27 +476,12 @@
                     </div>
                 `;
             });
+            listEl.html = html; // 수정: 아래 실제 대입문 사용을 위해 아래 줄로 대체
             listEl.innerHTML = html;
         }
 
-        function renderMockLeaderboard() {
-            const listEl = document.getElementById('leaderboard-list');
-            listEl.innerHTML = `
-                <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
-                    <div class="flex items-center gap-2">
-                        <span class="w-5 text-center text-yellow-400 font-bold">#1</span>
-                        <span class="font-bold text-white">의리선생님</span>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-cyan-300 font-mono font-bold">18.42초</div>
-                        <div class="text-[9px] text-indigo-300/70">12회 시도</div>
-                    </div>
-                </div>
-            `;
-        }
-
         function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
         window.restartGame = function() {
