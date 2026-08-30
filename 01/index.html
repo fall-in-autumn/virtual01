@@ -176,10 +176,16 @@
         // Firebase configuration setup from environment variables
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'virtual-real-matching-game';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDummyKeyForLocalSandboxTestingOnly12345",
-            authDomain: "sandbox.firebaseapp.com",
-            projectId: "sandbox-project"
+            apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
+            authDomain: "virtual01-2b286.firebaseapp.com",
+            projectId: "virtual01-2b286"
+            storageBucket: "virtual01-2b286.firebasestorage.app",
+            messagingSenderId: "966540109639",
+            appId: "1:966540109639:web:7e38681a6df386dcd54e62"
         };
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+    </script>
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
