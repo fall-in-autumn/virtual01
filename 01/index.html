@@ -40,7 +40,7 @@
         }
     </style>
 </head>
-<body class="text-white flex flex-col items-center justify-between min-h-screen p-3 md:p-6">
+<body class="text-white flex flex-col items-center justify-between min-h-screen p-3 md:p-6 relative">
 
     <!-- Nickname Input Modal Screen -->
     <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
@@ -175,6 +175,11 @@
 
     </main>
 
+    <!-- 🔒 숨겨진 관리자 로그인 트리거 (화면 맨 우측 하단 구석의 투명 버튼) -->
+    <div onclick="triggerTeacherLogin()" class="fixed bottom-1 right-1 w-8 h-8 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-[10px]" title="선생님 로그인">
+        🔑
+    </div>
+
     <!-- Victory Modal -->
     <div id="victory-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
@@ -221,20 +226,17 @@
             }
         }
 
-        // 비밀 단축키 (Ctrl + Shift + L)
-        window.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'ㅣ')) {
-                e.preventDefault();
-                const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
-                if (inputPw === TEACHER_PASSWORD) {
-                    localStorage.setItem("is_uiri_teacher", "true");
-                    checkTeacherAuth();
-                    alert("관리자 인증 성공! 제어판이 활성화되었습니다.");
-                } else if (inputPw !== null) {
-                    alert("비밀번호가 틀렸습니다!");
-                }
+        // 화면 우측 하단 투명 버튼 클릭 시 비밀번호 창 띄우기
+        function triggerTeacherLogin() {
+            const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
+            if (inputPw === TEACHER_PASSWORD) {
+                localStorage.setItem("is_uiri_teacher", "true");
+                checkTeacherAuth();
+                alert("관리자 인증 성공! 제어판이 활성화되었습니다.");
+            } else if (inputPw !== null) {
+                alert("비밀번호가 틀렸습니다!");
             }
-        });
+        }
 
         function logoutTeacher() {
             localStorage.removeItem("is_uiri_teacher");
@@ -566,7 +568,7 @@
                 return;
             }
 
-            let html = '';
+            let html = ``;
             users.forEach(user => {
                 html += `
                     <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
@@ -586,7 +588,7 @@
                 return;
             }
 
-            let html = '';
+            let html = ``;
             records.forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 html += `
