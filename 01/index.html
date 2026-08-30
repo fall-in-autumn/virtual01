@@ -217,9 +217,15 @@
         function checkTeacherAuth() {
             const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
             const panel = document.getElementById('teacher-control-panel');
+            const waitingOverlay = document.getElementById('waiting-room-overlay');
+
             if (panel) {
                 if (isTeacher) {
                     panel.classList.remove('hidden');
+                    // 선생님 컴퓨터는 대기실 창을 즉시 없애고 바로 시작 가능하게 처리
+                    if (waitingOverlay) {
+                        waitingOverlay.classList.add('hidden');
+                    }
                 } else {
                     panel.classList.add('hidden');
                 }
@@ -284,7 +290,7 @@
         let score = 0;
         let attempts = 0;
         let isProcessing = false;
-        let playerNickname = "플레이어";
+        let playerNickname = "의리T(선생님)";
 
         let startTime = null;
         let timerInterval = null;
@@ -329,7 +335,12 @@
                 } catch(e) { console.error(e); }
             }
 
-            document.getElementById('waiting-room-overlay').classList.remove('hidden');
+            // 만약 선생님이 아니라 일반 학생이라면 대기실 오버레이 띄우기
+            const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
+            if (!isTeacher) {
+                document.getElementById('waiting-room-overlay').classList.remove('hidden');
+            }
+            
             initGame();
         };
 
@@ -431,7 +442,8 @@
         }
 
         function handleCardClick(cardEl, index) {
-            if (!document.getElementById('waiting-room-overlay').classList.contains('hidden')) return;
+            const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
+            if (!isTeacher && !document.getElementById('waiting-room-overlay').classList.contains('hidden')) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
             if (flippedCards.includes(index)) return;
