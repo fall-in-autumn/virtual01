@@ -104,7 +104,7 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
-                        <p class="text-[11px] text-indigo-200/90">시도 횟수가 늘어날 때마다 <b>-2점씩 감점</b>됩니다! (0점일 때는 감점 없음) 또한, <b>게임을 완료하면 재도전할 수 없습니다.</b></p>
+                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>됩니다! (성공 시에는 감점 없음) 또한, <b>게임을 완료하면 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
         <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
-            0점 출발! 맞출 때마다 +30점 | 시도할 때마다 -2점 감점 | 완료 시 1회 제한 및 등수별 보너스!
+            0점 출발! 맞출 때마다 +30점 | 틀릴 때마다 -2점 감점 | 완료 시 1회 제한 및 등수별 보너스!
         </p>
     </header>
 
@@ -309,10 +309,10 @@
         let isBgmPlaying = false;
         let bgmTimeoutId = null;
         const bgmNotes = [
-            261.63, 329.63, 392.00, 523.25, 392.00, 329.63, // 도 미 솔 고 솔 미
-            220.00, 261.63, 329.63, 440.00, 329.63, 261.63, // 라 도 미 라 미 도
-            196.00, 246.94, 293.66, 392.00, 293.66, 246.94, // 솔 시 레 솔 레 시
-            220.00, 246.94, 261.63, 293.66, 329.63, 392.00  // 라 시 도 레 미 솔
+            261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 
+            220.00, 261.63, 329.63, 440.00, 329.63, 261.63, 
+            196.00, 246.94, 293.66, 392.00, 293.66, 246.94, 
+            220.00, 246.94, 261.63, 293.66, 329.63, 392.00  
         ];
         let noteIndex = 0;
 
@@ -473,8 +473,6 @@
                     document.getElementById('nickname-screen').classList.add('hidden');
                     document.getElementById('waiting-room-overlay').classList.add('hidden');
 
-                    // 이미 완료한 유저이므로 결과 모달 띄우기
-                    document.getElementById('final-time.').innerText = (data.time || 0).toFixed(2) + '초';
                     document.getElementById('final-time').innerText = (data.time || 0).toFixed(2) + '초';
                     document.getElementById('final-attempts').innerText = (data.attempts || 0) + '회';
                     document.getElementById('final-score').innerText = (data.score || 0) + '점';
@@ -506,7 +504,7 @@
                     checkTeacherSession(user);
                     playerNickname = "의리T(선생님)";
                     document.getElementById('display-nickname').innerText = playerNickname;
-                    hasCompletedGame = false; // 선생님은 언제든 테스트 가능하도록 해제
+                    hasCompletedGame = false;
                     document.getElementById('victory-modal').classList.add('hidden');
                     alert("의리T 구글 계정 인증 성공! 제어판이 활성화되었습니다.");
                     updateLiveScoreAndStatus(false);
@@ -589,8 +587,11 @@
 
             updateLiveScoreAndStatus(false);
 
-            if (!isTeacher) {
+            // [수정 포인트] 이미 게임이 시작되었거나 선생님인 경우 대기실을 거치지 않고 바로 게임 참여
+            if (!isTeacher && !isGameActive) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
+            } else {
+                document.getElementById('waiting-room-overlay').classList.add('hidden');
             }
             
             initGame();
@@ -636,15 +637,13 @@
                     const data = docSnap.data();
                     if (data.status === 'started') {
                         isGameActive = true;
+                        // 게임이 시작되면 대기 중이던 학생들의 대기실 창도 자동으로 닫히도록 처리
                         if (!hasCompletedGame) {
                             document.getElementById('waiting-room-overlay').classList.add('hidden');
                         }
                     } else if (data.status === 'ended') {
                         isGameActive = false;
                         if (timerInterval) clearInterval(timerInterval);
-                        if (!hasCompletedGame && !document.getElementById('nickname-screen').classList.contains('hidden')) {
-                            // 아직 참여 안 한 상태에서 종료된 경우
-                        }
                     }
                 }
             });
@@ -725,7 +724,7 @@
         }
 
         function handleCardClick(cardEl, index) {
-            if (hasCompletedGame) return; // 이미 완료했다면 클릭 방지
+            if (hasCompletedGame) return;
 
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
@@ -750,11 +749,6 @@
                 attempts++;
                 document.getElementById('attempts').innerText = attempts;
 
-                if (score > 0) {
-                    score = Math.max(0, score - 2);
-                    document.getElementById('score').innerText = score;
-                }
-
                 isProcessing = true;
 
                 const firstIdx = flippedCards[0];
@@ -769,6 +763,7 @@
                 const isExactPair = firstData.pairId === secondData.pairId;
 
                 if (isOneRealOneVirtual && isExactPair) {
+                    // [수정 포인트] 성공 시: 감점하지 않고 점수(+30점)만 가산
                     setTimeout(() => {
                         playSound('match');
                         firstEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
@@ -786,13 +781,19 @@
                         isProcessing = false;
 
                         if (matchedPairs === cardPairs.length) {
-                            hasCompletedGame = true; // 완료 플래그 활성화
+                            hasCompletedGame = true;
                             clearInterval(timerInterval);
-                            updateLiveScoreAndStatus(true); // 서버에 완료 상태 저장
+                            updateLiveScoreAndStatus(true);
                             setTimeout(showVictoryModal, 500);
                         }
                     }, 350);
                 } else {
+                    // [수정 포인트] 실패 시에만: 틀렸을 때 -2점 감점 적용 (0점 아래로는 떨어지지 않음)
+                    if (score > 0) {
+                        score = Math.max(0, score - 2);
+                        document.getElementById('score').innerText = score;
+                    }
+
                     setTimeout(() => {
                         playSound('wrong');
                         firstEl.querySelector('.card-inner').classList.remove('rotate-y-180');
@@ -815,7 +816,6 @@
             document.getElementById('final-attempts').innerText = attempts + '회';
             document.getElementById('final-score').innerText = score + '점';
             
-            // 재도전 버튼을 숨기거나 비활성화 처리 (완료된 학생 보호)
             const restartBtn = document.getElementById('restart-btn');
             if (restartBtn) {
                 restartBtn.style.opacity = '0.4';
@@ -832,7 +832,6 @@
                 const currentUser = auth.currentUser;
                 const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-                // 선생님은 랭킹 완료 제한에서 제외
                 if (isTeacher) return;
 
                 const ref = doc(db, 'leaderboard', userId);
