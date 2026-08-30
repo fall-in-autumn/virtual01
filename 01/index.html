@@ -135,17 +135,6 @@
         <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
         <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[560px] lg:h-auto">
             
-            <!-- Teacher Login Box (학생들에게는 인증 전까지 이 버튼도 숨겨집니다!) -->
-            <div id="teacher-login-box" class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-3 rounded-xl border border-indigo-400/40 mb-3 text-center shadow-md hidden">
-                <div class="text-xs font-bold text-cyan-300 mb-1 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-lock"></i> 의리T 관리자 모드
-                </div>
-                <p class="text-[10px] text-indigo-200 mb-2">선생님만 제어판을 열 수 있습니다.</p>
-                <button onclick="verifyTeacher()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-key"></i> 관리자 로그인
-                </button>
-            </div>
-
             <!-- Unlocked Teacher Controls (선생님 컴퓨터에서만 인증 후 노출) -->
             <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-3 rounded-xl border border-emerald-400/40 mb-3 text-center shadow-md hidden">
                 <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center justify-center gap-1.5">
@@ -285,23 +274,25 @@
             const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
             if (isTeacher) {
                 document.getElementById('teacher-control-panel').classList.remove('hidden');
-                document.getElementById('teacher-login-box').classList.add('hidden');
             } else {
-                document.getElementById('teacher-login-box').classList.remove('hidden');
                 document.getElementById('teacher-control-panel').classList.add('hidden');
             }
         }
 
-        window.verifyTeacher = function() {
-            const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
-            if (inputPw === TEACHER_PASSWORD) {
-                localStorage.setItem("is_uiri_teacher", "true");
-                checkTeacherAuth();
-                alert("관리자 인증 성공! 이 컴퓨터에 권한이 저장되었습니다.");
-            } else if (inputPw !== null) {
-                alert("비밀번호가 틀렸습니다!");
+        // 🛠️ 비밀 단축키 설정 (Ctrl + Shift + L 누르면 비밀번호 창 뜸)
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'ㅣ')) {
+                e.preventDefault();
+                const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
+                if (inputPw === TEACHER_PASSWORD) {
+                    localStorage.setItem("is_uiri_teacher", "true");
+                    checkTeacherAuth();
+                    alert("관리자 인증 성공! 제어판이 활성화되었습니다.");
+                } else if (inputPw !== null) {
+                    alert("비밀번호가 틀렸습니다!");
+                }
             }
-        };
+        });
 
         window.logoutTeacher = function() {
             localStorage.removeItem("is_uiri_teacher");
@@ -487,7 +478,7 @@
                     setTimeout(() => {
                         firstEl.querySelector('.card-inner').classList.remove('rotate-y-180');
                         secondEl.querySelector('.card-inner').classList.remove('rotate-y-180');
-                        flippedCards= [];
+                        flippedCards = [];
                         isProcessing = false;
                     }, 1000);
                 }
@@ -590,7 +581,7 @@
                 return;
             }
 
-            let html = ``;
+            let html = '';
             records.forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 html += `
@@ -619,7 +610,7 @@
 
         window.onload = function() {
             initFirebase();
-            checkTeacherAuth(); // 페이지 켜질 때 선생님 컴퓨터인지 검사
+            checkTeacherAuth(); // 저장된 인증 상태 확인
         };
     </script>
 </body>
