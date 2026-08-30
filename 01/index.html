@@ -144,6 +144,9 @@
                 <button onclick="teacherStartGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5 mb-2">
                     <i class="fa-solid fa-play"></i> 전체 학생 게임 시작 신호
                 </button>
+                <button onclick="teacherResetLeaderboard()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5 mb-2">
+                    <i class="fa-solid fa-trash-can"></i> 랭킹 및 기록 초기화
+                </button>
                 <button onclick="logoutTeacher()" class="text-[10px] text-indigo-300 underline hover:text-white transition">
                     관리자 로그아웃
                 </button>
@@ -214,7 +217,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
@@ -262,7 +265,6 @@
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                // 기본적으로 학생용 익명 로그인 수행
                 await signInAnonymously(auth);
                 userId = auth.currentUser ? auth.currentUser.uid : 'user_' + Math.random().toString(36).substring(2, 9);
                 isFirebaseInitialized = true;
@@ -270,6 +272,15 @@
                 listenToLeaderboard();
                 listenToGameState();
                 checkTeacherSession(auth.currentUser);
+
+                // 페이지를 닫거나 벗어날 때 접속 목록에서 자신을 삭제하는 이벤트 등록
+                window.addEventListener('beforeunload', async () => {
+                    if (db && userId) {
+                        try {
+                            await deleteDoc(doc(db, 'presence', userId));
+                        } catch(e) {}
+                    }
+                });
             } catch (err) {
                 console.error("Firebase initialization error:", err);
             }
@@ -287,7 +298,6 @@
             }
         }
 
-        // 우측 하단 열쇠 클릭 시 구글 로그인 창 띄우기
         window.triggerGoogleTeacherLogin = async function() {
             if (!isFirebaseInitialized || !auth) return;
             const provider = new GoogleAuthProvider();
@@ -301,7 +311,7 @@
                 } else {
                     alert(`등록된 선생님 이메일(${TEACHER_EMAIL})이 아닙니다. (현재 로그인된 계정: ${user.email})`);
                     await signOut(auth);
-                    await signInAnonymously(auth); // 다시 익명으로 복구
+                    await signInAnonymously(auth);
                 }
             } catch (error) {
                 console.error("Google login error:", error);
@@ -311,10 +321,40 @@
 
         window.logoutTeacher = async function() {
             if (!auth) return;
+            // 로그아웃 시 현재 접속자 명단에서도 제거 후 익명 전환
+            if (db && userId) {
+                try { await deleteDoc(doc(db, 'presence', userId)); } catch(e) {}
+            }
             await signOut(auth);
-            await signInAnonymously(auth); // 익명으로 전환
+            await signInAnonymously(auth);
             checkTeacherSession(auth.currentUser);
             alert("관리자 로그아웃 되었습니다.");
+        };
+
+        // 🧹 선생님 전용: 랭킹 및 기록 전체 초기화 기능
+        window.teacherResetLeaderboard = async function() {
+            if (!isFirebaseInitialized || !db) return;
+            const currentUser = auth.currentUser;
+            if (!currentUser || currentUser.email !== TEACHER_EMAIL) {
+                alert("선생님만 초기화할 수 있습니다!");
+                return;
+            }
+
+            if (!confirm("정말로 모든 학생의 랭킹 기록을 초기화하시겠습니까?")) return;
+
+            try {
+                const colRef = collection(db, 'leaderboard');
+                const snapshot = await getDocs(colRef);
+                const deletePromises = [];
+                snapshot.forEach((docSnap) => {
+                    deletePromises.push(deleteDoc(doc(db, 'leaderboard', docSnap.id)));
+                });
+                await Promise.all(deletePromises);
+                alert("모든 랭킹 기록이 초기화되었습니다!");
+            } catch (err) {
+                console.error("Failed to reset leaderboard:", err);
+                alert("초기화 중 오류가 발생했습니다.");
+            }
         };
 
         window.joinLobby = async function() {
@@ -328,7 +368,6 @@
             document.getElementById('display-nickname').innerText = playerNickname;
             document.getElementById('nickname-screen').classList.add('hidden');
             
-            // 만약 현재 구글 로그인된 선생님이 아니라면 대기실 오버레이 띄우기
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
@@ -580,7 +619,7 @@
         function renderOnlineStudents(users) {
             const listEl = document.getElementById('online-students-list');
             const countEl = document.getElementById('online-count');
-            countEl.innerText = users.length + "명 접속";
+            countEl.innerText = users.length + "명 접속자";
 
             if (users.length === 0) {
                 listEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
@@ -592,7 +631,7 @@
                 html += `
                     <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
                         <span class="font-bold text-white truncate max-w-[120px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(user.nickname)}</span>
-                        <span class="text-[9px] text-emerald-300">대기중</span>
+                        <span class="text-[9px] text-emerald-300">접속중</span>
                     </div>
                 `;
             });
