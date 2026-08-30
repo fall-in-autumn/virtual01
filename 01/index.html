@@ -73,7 +73,7 @@
                 모든 친구들이 입장하면 게임이 곧 시작됩니다. 아래 규칙과 점수 방식을 확인해 보세요!
             </p>
 
-            <!-- 규칙 및 점수 산정 안내 박스 -->
+            <!-- 규칙 및 점수 산정 안내 박스 (시도 횟수당 2점 감점 반영) -->
             <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 text-left mb-6 space-y-3">
                 <div class="flex items-start gap-2.5">
                     <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-xs mt-0.5">
@@ -92,19 +92,19 @@
                     <div>
                         <h4 class="text-[11px] font-bold text-yellow-300">점수는 어떻게 매겨지나요?</h4>
                         <ul class="text-[11px] text-indigo-200/90 space-y-1 mt-1 list-disc list-inside">
-                            <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득! (0점일 때는 감점되지 않아요)</li>
+                            <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득!</li>
                             <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점... (최소 0점)</b>의 추가 보너스가 붙습니다!</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="flex items-start gap-2.5">
-                    <div class="w-6 h-6 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0 text-pink-300 text-xs mt-0.5">
-                        <i class="fa-solid fa-trophy"></i>
+                    <div class="w-6 h-6 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0 text-rose-300 text-xs mt-0.5">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-pink-300">승리 꿀팁!</h4>
-                        <p class="text-[11px] text-indigo-200/90">게임이 시작되기 전에는 랭킹에 올라가지 않으며, 시작 신호와 함께 순위 경쟁이 시작됩니다!</p>
+                        <h4 class="text-xs font-bold text-rose-300">감점 사항 안내</h4>
+                        <p class="text-[11px] text-indigo-200/90">시도 횟수가 늘어날 때마다 <b>-2점씩 감점</b>됩니다! 단, 점수가 0점일 때는 감점되지 않습니다.</p>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,12 @@
     </div>
 
     <!-- Header Section -->
-    <header class="w-full max-w-6xl text-center my-2">
+    <header class="w-full max-w-6xl text-center my-2 relative">
+        <div class="absolute right-0 top-0">
+            <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-music animate-bounce" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
+            </button>
+        </div>
         <div class="inline-block bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-full text-sm font-semibold mb-2 border border-indigo-500/30">
             <i class="fa-solid fa-graduation-cap mr-2"></i>의리T의 도덕 교실
         </div>
@@ -124,7 +129,7 @@
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
         <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
-            0점 출발! 짝을 맞출 때마다 +30점 & 완료 시 등수별 추가 보너스 점수!
+            0점 출발! 맞출 때마다 +30점 | 시도할 때마다 -2점 감점 | 완료 시 등수별 추가 보너스!
         </p>
     </header>
 
@@ -187,7 +192,7 @@
                     </button>
                 </div>
                 <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5 mb-1.5">
-                    <i class="fa-solid id-badge fa-trophy"></i> 전체 랭킹 보기
+                    <i class="fa-solid fa-trophy"></i> 전체 랭킹 보기
                 </button>
                 <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] shadow transition flex items-center justify-center gap-1.5 mb-1.5">
                     <i class="fa-solid fa-trash-can"></i> 랭킹 초기화
@@ -296,10 +301,20 @@
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
-        let isGameActive = false; // 게임 시작 여부 플래그
+        let isGameActive = false;
 
-        // 🔊 효과음 생성기 (Web Audio API)
+        // 🎵 배경음악 (BGM) 관련 변수
         let audioCtx = null;
+        let isBgmPlaying = false;
+        let bgmTimeoutId = null;
+        const bgmNotes = [
+            261.63, 329.63, 392.00, 523.25, 392.00, 329.63, // 도 미 솔 고 솔 미
+            220.00, 261.63, 329.63, 440.00, 329.63, 261.63, // 라 도 미 라 미 도
+            196.00, 246.94, 293.66, 392.00, 293.66, 246.94, // 솔 시 레 솔 레 시
+            220.00, 246.94, 261.63, 293.66, 329.63, 392.00  // 라 시 도 레 미 솔
+        ];
+        let noteIndex = 0;
+
         function getAudioContext() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -310,6 +325,49 @@
             return audioCtx;
         }
 
+        // BGM 루프 재생 함수
+        function playBgmLoop() {
+            if (!isBgmPlaying) return;
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle'; // 부드러운 8비트 게임 사운드 느낌
+                osc.frequency.setValueAtTime(bgmNotes[noteIndex], ctx.currentTime);
+
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+
+                noteIndex = (noteIndex + 1) % bgmNotes.length;
+                bgmTimeoutId = setTimeout(playBgmLoop, 320);
+            } catch (e) {}
+        }
+
+        window.toggleBGM = function() {
+            isBgmPlaying = !isBgmPlaying;
+            const btnText = document.getElementById('bgm-text');
+            const bgmIcon = document.getElementById('bgm-icon');
+
+            if (isBgmPlaying) {
+                getAudioContext();
+                btnText.innerText = "BGM ON";
+                bgmIcon.className = "fa-solid fa-music animate-bounce text-cyan-300";
+                playBgmLoop();
+            } else {
+                btnText.innerText = "BGM OFF";
+                bgmIcon.className = "fa-solid fa-volume-xmark text-gray-400";
+                if (bgmTimeoutId) clearTimeout(bgmTimeoutId);
+            }
+        };
+
+        // 🔊 효과음 생성기 (Web Audio API)
         function playSound(type) {
             try {
                 const ctx = getAudioContext();
@@ -489,7 +547,14 @@
             document.getElementById('display-nickname').innerText = playerNickname;
             document.getElementById('nickname-screen').classList.add('hidden');
 
-            updateLiveScoreAndStatus(false); // 로비 입장 시 기본 데이터 등록
+            if (!isBgmPlaying) {
+                isBgmPlaying = true;
+                document.getElementById('bgm-text').innerText = "BGM ON";
+                document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300";
+                playBgmLoop();
+            }
+
+            updateLiveScoreAndStatus(false);
 
             if (!isTeacher) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
@@ -542,7 +607,6 @@
                     } else if (data.status === 'ended') {
                         isGameActive = false;
                         if (timerInterval) clearInterval(timerInterval);
-                        // 게임 강제 종료 시 모달 띄우기
                         document.getElementById('victory-title').innerText = `${playerNickname}님 게임 종료!`;
                         document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
                         document.getElementById('final-attempts').innerText = attempts + '회';
@@ -649,6 +713,12 @@
                 attempts++;
                 document.getElementById('attempts').innerText = attempts;
 
+                // 시도 횟수가 올라갈 때마다 2점 감점 (단, 점수가 0점일 때는 감점되지 않음)
+                if (score > 0) {
+                    score = Math.max(0, score - 2);
+                    document.getElementById('score').innerText = score;
+                }
+
                 isProcessing = true;
 
                 const firstIdx = flippedCards[0];
@@ -672,18 +742,16 @@
                         secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
 
                         matchedPairs++;
-                        
-                        // 🎯 짝을 맞출 때마다 +30점 획득 (감점 없음)
-                        score += 30;
+                        score += 30; // 맞출 때마다 +30점
                         document.getElementById('score').innerText = score;
-                        updateLiveScoreAndStatus(false); // 실시간 상태 업데이트
+                        updateLiveScoreAndStatus(false);
 
                         flippedCards = [];
                         isProcessing = false;
 
                         if (matchedPairs === cardPairs.length) {
                             clearInterval(timerInterval);
-                            updateLiveScoreAndStatus(true); // 완료 확정 저장
+                            updateLiveScoreAndStatus(true);
                             setTimeout(showVictoryModal, 500);
                         }
                     }, 350);
@@ -742,26 +810,21 @@
                         allRecords.push(docSnap.data());
                     });
 
-                    // 1. 접속자 목록 렌더링 (선생님 포함 전체 접속자 표시)
                     renderOnlineRoster(allRecords);
 
-                    // 2. 랭킹 집계 (게임이 시작된 이후 완료한 학생들만 필터링)
                     let completedRecords = allRecords.filter(rec => rec.isCompleted && !rec.isTeacher);
 
-                    // 정렬: 1순위 점수 높은 순, 2순위 시간 빠른 순
                     completedRecords.sort((a, b) => {
                         if (b.score !== a.score) return b.score - a.score;
                         return a.time - b.time;
                     });
 
-                    // 🎯 완료한 학생들에게 등수별 추가 보너스 부여 (1등 100점, 2등 90점 ... 최소 0점)
                     completedRecords.forEach((rec, idx) => {
                         let rankBonus = Math.max(0, 100 - (idx * 10));
                         rec.rankBonus = rankBonus;
                         rec.displayScore = rec.score + rankBonus;
                     });
 
-                    // 보너스 포함 최종 점수로 재정렬
                     completedRecords.sort((a, b) => {
                         if (b.displayScore !== a.displayScore) return b.displayScore - a.displayScore;
                         return a.time - b.time;
@@ -787,7 +850,6 @@
             let rosterHtml = ``;
             records.forEach((rec) => {
                 if (rec.isTeacher) {
-                    // 🍎 선생님 표시 (구분되도록 특별한 스타일 적용)
                     rosterHtml += `
                         <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-2.5 py-1 rounded-lg border border-purple-400/50">
                             <span class="font-bold text-yellow-300 truncate max-w-[120px]"><i class="fa-solid fa-crown text-yellow-400 text-[10px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
@@ -795,7 +857,6 @@
                         </div>
                     `;
                 } else {
-                    // 일반 학생 표시
                     rosterHtml += `
                         <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
                             <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
@@ -822,7 +883,6 @@
             }
 
             let boardHtml = ``;
-            // 위에서 최대 5명까지만 메인 패널에 노출
             records.slice(0, 5).forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 
