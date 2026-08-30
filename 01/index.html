@@ -62,18 +62,55 @@
         </div>
     </div>
 
-    <!-- Teacher Waiting Room Notice Overlay -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl animate-pulse">
-            <div class="w-20 h-20 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-3xl">
+    <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide -->
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
+            <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
             </div>
-            <h2 class="text-2xl font-bold text-white mb-2">선생님의 시작을 기다리는 중...</h2>
-            <p class="text-indigo-200 text-sm mb-6">
-                의리T가 게임 시작 신호를 보내면 화면이 자동으로 열립니다! 잠시만 기다려주세요.
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 시작 신호를 기다리는 중!</h2>
+            <p class="text-indigo-200 text-xs md:text-sm mb-4">
+                모든 친구들이 입장하면 게임이 곧 시작됩니다. 아래 규칙과 점수 방식을 확인해 보세요!
             </p>
-            <div class="inline-block bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
-                <i class="fa-solid fa-spinner fa-spin mr-2"></i> 대기실 접속 완료
+
+            <!-- 규칙 및 점수 산정 안내 박스 -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 text-left mb-6 space-y-3">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-xs mt-0.5">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-cyan-300">어떤 게임인가요?</h4>
+                        <p class="text-[11px] text-indigo-200/90">현실세계 특징 카드와 가상공간 특징 카드 올바른 짝꿍(총 10쌍)을 찾는 <b>짝맞추기 챌린지</b>입니다.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                    <div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 text-yellow-300 text-xs mt-0.5">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-[11px] font-bold text-yellow-300">점수는 어떻게 매겨지나요?</h4>
+                        <ul class="text-[11px] text-indigo-200/90 space-y-1 mt-1 list-disc list-inside">
+                            <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득! (0점일 때는 감점되지 않아요)</li>
+                            <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점... (최소 0점)</b>의 추가 보너스가 붙습니다!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2.5">
+                    <div class="w-6 h-6 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0 text-pink-300 text-xs mt-0.5">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-pink-300">승리 꿀팁!</h4>
+                        <p class="text-[11px] text-indigo-200/90">게임이 시작되기 전에는 랭킹에 올라가지 않으며, 시작 신호와 함께 순위 경쟁이 시작됩니다!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
+                <i class="fa-solid fa-spinner fa-spin"></i> 의리T가 시작 버튼을 누르면 화면이 자동으로 열립니다!
             </div>
         </div>
     </div>
@@ -87,7 +124,7 @@
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
         <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
-            기본 300점 + 시도당 2점 감점! 실시간 점수가 랭킹에 즉시 반영됩니다!
+            0점 출발! 짝을 맞출 때마다 +30점 & 완료 시 등수별 추가 보너스 점수!
         </p>
     </header>
 
@@ -106,7 +143,7 @@
                     <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
                         <i class="fa-solid fa-trophy text-yellow-400 text-sm"></i>
                         <span class="text-xs text-indigo-200">점수:</span>
-                        <span id="score" class="text-base font-bold text-white">300</span>
+                        <span id="score" class="text-base font-bold text-white">0</span>
                     </div>
                     <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
                         <i class="fa-solid fa-rotate-right text-cyan-400 text-sm"></i>
@@ -140,12 +177,20 @@
                 <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 제어판 (선생님 전용)
                 </div>
-                <p class="text-[10px] text-indigo-200 mb-2">학생들이 다 들어오면 시작을 누르세요!</p>
-                <button onclick="teacherStartGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5 mb-2">
-                    <i class="fa-solid fa-play"></i> 전체 학생 게임 시작 신호
+                <p class="text-[10px] text-indigo-200 mb-2">게임 시작 및 종료를 제어하세요!</p>
+                <div class="grid grid-cols-2 gap-1.5 mb-2">
+                    <button onclick="teacherStartGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-play"></i> 게임 시작
+                    </button>
+                    <button onclick="teacherEndGame()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1.5 px-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-stop"></i> 게임 종료
+                    </button>
+                </div>
+                <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5 mb-1.5">
+                    <i class="fa-solid id-badge fa-trophy"></i> 전체 랭킹 보기
                 </button>
-                <button onclick="teacherResetLeaderboard()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5 mb-2">
-                    <i class="fa-solid fa-trash-can"></i> 랭킹 및 기록 초기화
+                <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] shadow transition flex items-center justify-center gap-1.5 mb-1.5">
+                    <i class="fa-solid fa-trash-can"></i> 랭킹 초기화
                 </button>
                 <button onclick="logoutTeacher()" class="text-[10px] text-indigo-300 underline hover:text-white transition">
                     관리자 로그아웃
@@ -155,23 +200,23 @@
             <!-- Connected Students Roster -->
             <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
                 <h3 class="font-bold text-xs text-cyan-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-users text-cyan-400"></i> 접속한 학생 목록
+                    <i class="fa-solid fa-users text-cyan-400"></i> 접속한 인원 목록
                 </h3>
                 <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
             </div>
-            <div id="online-students-list" class="h-24 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
+            <div id="online-students-list" class="h-28 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
                 <div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>
             </div>
 
             <!-- Leaderboard Section -->
             <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
                 <h3 class="font-bold text-xs text-yellow-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 순위 & 랭킹
+                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 완료 랭킹
                 </h3>
             </div>
             <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2 pr-1">
                 <div class="text-center text-xs text-indigo-300/60 py-6">
-                    참가자들의 실시간 점수가 표시됩니다.
+                    게임 시작 전에는 랭킹에 집계되지 않습니다.
                 </div>
             </div>
         </div>
@@ -213,6 +258,25 @@
         </div>
     </div>
 
+    <!-- 전체 랭킹 모달 (선생님 전용 창) -->
+    <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-6 md:p-8 max-w-xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="w-14 h-14 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-400 text-yellow-300 text-xl">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 전체 랭킹 리포트</h2>
+            <p class="text-indigo-200 text-xs mb-4">현재까지 집계된 전체 학생들의 최종 랭킹 결과입니다.</p>
+            
+            <div id="full-leaderboard-content" class="flex-grow overflow-y-auto space-y-2 pr-1 mb-6 text-left bg-white/5 p-3 rounded-2xl border border-white/10">
+                <!-- 리스트 주입 -->
+            </div>
+
+            <button onclick="closeFullLeaderboard()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-white/10">
+                창 닫기
+            </button>
+        </div>
+    </div>
+
     <!-- Firebase SDK & 게임 전용 모듈 스크립트 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -232,6 +296,7 @@
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
+        let isGameActive = false; // 게임 시작 여부 플래그
 
         // 🔊 효과음 생성기 (Web Audio API)
         let audioCtx = null;
@@ -300,7 +365,7 @@
         let cards = [];
         let flippedCards = [];
         let matchedPairs = 0;
-        let score = 300;
+        let score = 0; // 0점 출발
         let attempts = 0;
         let isProcessing = false;
         let playerNickname = "플레이어";
@@ -357,7 +422,10 @@
 
                 if (user.email === TEACHER_EMAIL) {
                     checkTeacherSession(user);
+                    playerNickname = "의리T(선생님)";
+                    document.getElementById('display-nickname').innerText = playerNickname;
                     alert("의리T 구글 계정 인증 성공! 제어판이 활성화되었습니다.");
+                    updateLiveScoreAndStatus(false);
                 } else {
                     alert(`등록된 선생님 이메일(${TEACHER_EMAIL})이 아닙니다.`);
                     await signOut(auth);
@@ -376,6 +444,8 @@
             await signOut(auth);
             await signInAnonymously(auth);
             checkTeacherSession(auth.currentUser);
+            playerNickname = "플레이어";
+            document.getElementById('display-nickname').innerText = playerNickname;
             alert("관리자 로그아웃 되었습니다.");
         };
 
@@ -406,18 +476,20 @@
         window.joinLobby = async function() {
             const input = document.getElementById('player-nickname');
             const val = input.value.trim();
-            if (val) {
+            const currentUser = auth.currentUser;
+            const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
+
+            if (isTeacher) {
+                playerNickname = "의리T(선생님)";
+            } else if (val) {
                 playerNickname = val;
             } else {
                 playerNickname = "도덕박사_" + Math.floor(Math.random() * 900 + 100);
             }
             document.getElementById('display-nickname').innerText = playerNickname;
             document.getElementById('nickname-screen').classList.add('hidden');
-            
-            const currentUser = auth.currentUser;
-            const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-            updateLiveScoreAndStatus(false); // 로비 입장 시 실시간 점수 등록
+            updateLiveScoreAndStatus(false); // 로비 입장 시 기본 데이터 등록
 
             if (!isTeacher) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
@@ -438,6 +510,26 @@
             } catch(err) {}
         };
 
+        window.teacherEndGame = async function() {
+            if (!isFirebaseInitialized || !db) return;
+            try {
+                const gameCtrlRef = doc(db, 'control', 'gamestate');
+                await setDoc(gameCtrlRef, {
+                    status: 'ended',
+                    timestamp: Date.now()
+                });
+                alert("전체 학생의 게임이 종료되었습니다!");
+            } catch(err) {}
+        };
+
+        window.teacherShowFullLeaderboard = function() {
+            document.getElementById('full-leaderboard-modal').classList.remove('hidden');
+        };
+
+        window.closeFullLeaderboard = function() {
+            document.getElementById('full-leaderboard-modal').classList.add('hidden');
+        };
+
         function listenToGameState() {
             if (!isFirebaseInitialized || !db) return;
             const gameCtrlRef = doc(db, 'control', 'gamestate');
@@ -445,7 +537,17 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.status === 'started') {
+                        isGameActive = true;
                         document.getElementById('waiting-room-overlay').classList.add('hidden');
+                    } else if (data.status === 'ended') {
+                        isGameActive = false;
+                        if (timerInterval) clearInterval(timerInterval);
+                        // 게임 강제 종료 시 모달 띄우기
+                        document.getElementById('victory-title').innerText = `${playerNickname}님 게임 종료!`;
+                        document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
+                        document.getElementById('final-attempts').innerText = attempts + '회';
+                        document.getElementById('final-score').innerText = score + '점';
+                        document.getElementById('victory-modal').classList.remove('hidden');
                     }
                 }
             });
@@ -455,7 +557,7 @@
             const board = document.getElementById('game-board');
             board.innerHTML = '';
             matchedPairs = 0;
-            score = 300; 
+            score = 0; 
             attempts = 0;
             flippedCards = [];
             isProcessing = false;
@@ -527,7 +629,7 @@
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-            if (!isTeacher && !document.getElementById('waiting-room-overlay').classList.contains('hidden')) return;
+            if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden'))) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
             if (flippedCards.includes(index)) return;
@@ -546,11 +648,6 @@
             if (flippedCards.length === 2) {
                 attempts++;
                 document.getElementById('attempts').innerText = attempts;
-
-                // 시도할 때마다 2점씩 감점 반영
-                score = Math.max(50, 300 - (attempts * 2));
-                document.getElementById('score').innerText = score;
-                updateLiveScoreAndStatus(false); // ⚡ 실시간 점수 동기화 업데이트
 
                 isProcessing = true;
 
@@ -575,6 +672,12 @@
                         secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
 
                         matchedPairs++;
+                        
+                        // 🎯 짝을 맞출 때마다 +30점 획득 (감점 없음)
+                        score += 30;
+                        document.getElementById('score').innerText = score;
+                        updateLiveScoreAndStatus(false); // 실시간 상태 업데이트
+
                         flippedCards = [];
                         isProcessing = false;
 
@@ -613,6 +716,9 @@
         async function updateLiveScoreAndStatus(isCompleted) {
             if (!isFirebaseInitialized || !db || !userId) return;
             try {
+                const currentUser = auth.currentUser;
+                const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
+
                 const ref = doc(db, 'leaderboard', userId);
                 await setDoc(ref, {
                     nickname: playerNickname,
@@ -620,6 +726,7 @@
                     time: isGameStarted ? Number(elapsedTime.toFixed(2)) : 0,
                     attempts: attempts,
                     isCompleted: isCompleted,
+                    isTeacher: isTeacher,
                     timestamp: Date.now()
                 }, { merge: true });
             } catch (err) {}
@@ -630,65 +737,95 @@
             try {
                 const colRef = collection(db, 'leaderboard');
                 onSnapshot(colRef, (snapshot) => {
-                    let records = [];
+                    let allRecords = [];
                     snapshot.forEach(docSnap => {
-                        records.push(docSnap.data());
+                        allRecords.push(docSnap.data());
                     });
 
-                    // 🏆 정렬 기준: 1순위 점수 높은 순, 2순위 완료 여부(완료자 우선), 3순위 시간 빠른 순
-                    records.sort((a, b) => {
+                    // 1. 접속자 목록 렌더링 (선생님 포함 전체 접속자 표시)
+                    renderOnlineRoster(allRecords);
+
+                    // 2. 랭킹 집계 (게임이 시작된 이후 완료한 학생들만 필터링)
+                    let completedRecords = allRecords.filter(rec => rec.isCompleted && !rec.isTeacher);
+
+                    // 정렬: 1순위 점수 높은 순, 2순위 시간 빠른 순
+                    completedRecords.sort((a, b) => {
                         if (b.score !== a.score) return b.score - a.score;
-                        if (b.isCompleted !== a.isCompleted) return b.isCompleted ? 1 : -1;
                         return a.time - b.time;
                     });
 
-                    // 🎯 등수 보너스 적용 (최소 0점 보장: max(0, 110 - 등수*10))
-                    records.forEach((rec, idx) => {
-                        let rankBonus = Math.max(0, 110 - ((idx + 1) * 10));
-                        rec.displayScore = rec.score + rankBonus;
-                        rec.rank = idx + 1;
+                    // 🎯 완료한 학생들에게 등수별 추가 보너스 부여 (1등 100점, 2등 90점 ... 최소 0점)
+                    completedRecords.forEach((rec, idx) => {
+                        let rankBonus = Math.max(0, 100 - (idx * 10));
                         rec.rankBonus = rankBonus;
+                        rec.displayScore = rec.score + rankBonus;
                     });
 
-                    // 최종 보너스 포함 점수로 재정렬
-                    records.sort((a, b) => {
+                    // 보너스 포함 최종 점수로 재정렬
+                    completedRecords.sort((a, b) => {
                         if (b.displayScore !== a.displayScore) return b.displayScore - a.displayScore;
                         return a.time - b.time;
                     });
 
-                    renderOnlineRosterAndLeaderboard(records);
+                    renderLeaderboard(completedRecords);
+                    renderFullLeaderboardModalContent(completedRecords);
                 });
             } catch (err) {}
         }
 
-        function renderOnlineRosterAndLeaderboard(records) {
-            const listEl = document.getElementById('leaderboard-list');
+        function renderOnlineRoster(records) {
             const rosterEl = document.getElementById('online-students-list');
             const countEl = document.getElementById('online-count');
 
-            countEl.innerText = records.length + "명 참여중";
+            countEl.innerText = records.length + "명 접속중";
 
             if (records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">참가 기록이 없습니다.</div>`;
                 rosterEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
                 return;
             }
 
             let rosterHtml = ``;
-            let boardHtml = ``;
+            records.forEach((rec) => {
+                if (rec.isTeacher) {
+                    // 🍎 선생님 표시 (구분되도록 특별한 스타일 적용)
+                    rosterHtml += `
+                        <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-2.5 py-1 rounded-lg border border-purple-400/50">
+                            <span class="font-bold text-yellow-300 truncate max-w-[120px]"><i class="fa-solid fa-crown text-yellow-400 text-[10px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-[9px] bg-purple-500/30 text-purple-200 px-1.5 py-0.5 rounded border border-purple-400/30 font-bold">호스트</span>
+                        </div>
+                    `;
+                } else {
+                    // 일반 학생 표시
+                    rosterHtml += `
+                        <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
+                            <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-[9px] text-cyan-300">${rec.score}점</span>
+                        </div>
+                    `;
+                }
+            });
 
-            records.forEach((rec, idx) => {
+            rosterEl.innerHTML = rosterHtml;
+        }
+
+        function renderLeaderboard(records) {
+            const listEl = document.getElementById('leaderboard-list');
+
+            if (!isGameActive && records.length === 0) {
+                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">게임 시작 전에는 랭킹에 집계되지 않습니다.</div>`;
+                return;
+            }
+
+            if (records.length === 0) {
+                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">아직 게임을 완료한 학생이 없습니다.</div>`;
+                return;
+            }
+
+            let boardHtml = ``;
+            // 위에서 최대 5명까지만 메인 패널에 노출
+            records.slice(0, 5).forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 
-                // 접속자 목록 렌더링
-                rosterHtml += `
-                    <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
-                        <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
-                        <span class="text-[9px] text-cyan-300">${rec.score}점 (${rec.attempts}회)</span>
-                    </div>
-                `;
-
-                // 랭킹 리스트 렌더링
                 boardHtml += `
                     <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2">
@@ -697,14 +834,42 @@
                         </div>
                         <div class="text-right">
                             <div class="text-yellow-400 font-bold">${rec.displayScore}점 <span class="text-[9px] text-cyan-300">(+${rec.rankBonus})</span></div>
-                            <div class="text-[9px] text-indigo-300/70">${rec.isCompleted ? rec.time.toFixed(2) + '초 완료' : '진행중...'} (${rec.attempts}회)</div>
+                            <div class="text-[9px] text-indigo-300/70">${rec.time.toFixed(2)}초 완료</div>
                         </div>
                     </div>
                 `;
             });
 
-            rosterEl.innerHTML = rosterHtml;
             listEl.innerHTML = boardHtml;
+        }
+
+        function renderFullLeaderboardModalContent(records) {
+            const contentEl = document.getElementById('full-leaderboard-content');
+
+            if (records.length === 0) {
+                contentEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-8">완료된 기록이 아직 존재하지 않습니다.</div>`;
+                return;
+            }
+
+            let html = ``;
+            records.forEach((rec, idx) => {
+                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-base' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-white';
+                
+                html += `
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 text-center ${rankColor}">#${idx + 1}</span>
+                            <span class="font-bold text-white">${escapeHtml(rec.nickname)}</span>
+                        </div>
+                        <div class="text-right flex items-center gap-4">
+                            <div class="text-xs text-indigo-200">기본 ${rec.score}점 + 보너스 <span class="text-cyan-300 font-bold">+${rec.rankBonus}점</span></div>
+                            <div class="text-yellow-400 font-bold text-base">${rec.displayScore}점 <span class="text-[10px] text-indigo-300 font-normal">(${rec.time.toFixed(2)}초)</span></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            contentEl.innerHTML = html;
         }
 
         function escapeHtml(str) {
