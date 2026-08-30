@@ -70,7 +70,7 @@
             </div>
             <h2 class="text-2xl font-bold text-white mb-2">선생님의 시작을 기다리는 중...</h2>
             <p class="text-indigo-200 text-sm mb-6">
-                선생님(의리T)이 게임 시작 버튼을 누르면 화면이 자동으로 열립니다! 잠시만 기다려주세요.
+                의리T가 게임 시작 신호를 보내면 화면이 자동으로 열립니다! 잠시만 기다려주세요.
             </p>
             <div class="inline-block bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
                 <i class="fa-solid fa-spinner fa-spin mr-2"></i> 대기실 접속 완료
@@ -135,14 +135,28 @@
         <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
         <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[560px] lg:h-auto">
             
-            <!-- Teacher Control Panel (의리T 전용 제어 박스) -->
-            <div class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-3 rounded-xl border border-indigo-400/40 mb-3 text-center shadow-md">
+            <!-- Teacher Login Box (학생들에게는 인증 전까지 이 버튼도 숨겨집니다!) -->
+            <div id="teacher-login-box" class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-3 rounded-xl border border-indigo-400/40 mb-3 text-center shadow-md hidden">
                 <div class="text-xs font-bold text-cyan-300 mb-1 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 전용 제어판
+                    <i class="fa-solid fa-lock"></i> 의리T 관리자 모드
                 </div>
-                <p class="text-[10px] text-indigo-200 mb-2">학생들이 다 들어오면 버튼을 누르세요!</p>
-                <button onclick="teacherStartGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5">
+                <p class="text-[10px] text-indigo-200 mb-2">선생님만 제어판을 열 수 있습니다.</p>
+                <button onclick="verifyTeacher()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-key"></i> 관리자 로그인
+                </button>
+            </div>
+
+            <!-- Unlocked Teacher Controls (선생님 컴퓨터에서만 인증 후 노출) -->
+            <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-3 rounded-xl border border-emerald-400/40 mb-3 text-center shadow-md hidden">
+                <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 제어판 (선생님 전용)
+                </div>
+                <p class="text-[10px] text-indigo-200 mb-2">학생들이 다 들어오면 시작을 누르세요!</p>
+                <button onclick="teacherStartGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5 mb-2">
                     <i class="fa-solid fa-play"></i> 전체 학생 게임 시작 신호
+                </button>
+                <button onclick="logoutTeacher()" class="text-[10px] text-indigo-300 underline hover:text-white transition">
+                    이 컴퓨터에서 관리자 모드 해제
                 </button>
             </div>
 
@@ -206,7 +220,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
@@ -219,6 +233,9 @@
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
+
+        // ** 🔑 관리자 비밀번호 설정 **
+        const TEACHER_PASSWORD = "2026"; 
 
         const cardPairs = [
             { id: 1, real: "학교 친구", virtual: "sns 친구", category: "소통 관계" },
@@ -239,7 +256,7 @@
         let score = 0;
         let attempts = 0;
         let isProcessing = false;
-        let playerNickname = "플레이er";
+        let playerNickname = "플레이어";
 
         let startTime = null;
         let timerInterval = null;
@@ -263,6 +280,35 @@
             }
         }
 
+        // Check if this browser is authenticated as teacher
+        function checkTeacherAuth() {
+            const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
+            if (isTeacher) {
+                document.getElementById('teacher-control-panel').classList.remove('hidden');
+                document.getElementById('teacher-login-box').classList.add('hidden');
+            } else {
+                document.getElementById('teacher-login-box').classList.remove('hidden');
+                document.getElementById('teacher-control-panel').classList.add('hidden');
+            }
+        }
+
+        window.verifyTeacher = function() {
+            const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
+            if (inputPw === TEACHER_PASSWORD) {
+                localStorage.setItem("is_uiri_teacher", "true");
+                checkTeacherAuth();
+                alert("관리자 인증 성공! 이 컴퓨터에 권한이 저장되었습니다.");
+            } else if (inputPw !== null) {
+                alert("비밀번호가 틀렸습니다!");
+            }
+        };
+
+        window.logoutTeacher = function() {
+            localStorage.removeItem("is_uiri_teacher");
+            checkTeacherAuth();
+            alert("관리자 권한이 해제되었습니다.");
+        };
+
         // Student joins lobby
         window.joinLobby = async function() {
             const input = document.getElementById('player-nickname');
@@ -275,7 +321,6 @@
             document.getElementById('display-nickname').innerText = playerNickname;
             document.getElementById('nickname-screen').classList.add('hidden');
             
-            // Register presence in Firestore
             if (isFirebaseInitialized && db) {
                 try {
                     const presenceRef = doc(db, 'presence', userId);
@@ -286,12 +331,10 @@
                 } catch(e) { console.error(e); }
             }
 
-            // Show waiting overlay until teacher starts
             document.getElementById('waiting-room-overlay').classList.remove('hidden');
             initGame();
         };
 
-        // Teacher triggers start signal
         window.teacherStartGame = async function() {
             if (!isFirebaseInitialized || !db) return;
             try {
@@ -306,7 +349,6 @@
             }
         };
 
-        // Listen for game state from Firebase (Start Signal)
         function listenToGameState() {
             if (!isFirebaseInitialized || !db) return;
             const gameCtrlRef = doc(db, 'control', 'gamestate');
@@ -314,7 +356,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.status === 'started') {
-                        // Hide waiting overlay and allow play
                         document.getElementById('waiting-room-overlay').classList.add('hidden');
                     }
                 }
@@ -392,7 +433,6 @@
         }
 
         function handleCardClick(cardEl, index) {
-            // Block clicking if waiting overlay is active
             if (!document.getElementById('waiting-room-overlay').classList.contains('hidden')) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
@@ -447,7 +487,7 @@
                     setTimeout(() => {
                         firstEl.querySelector('.card-inner').classList.remove('rotate-y-180');
                         secondEl.querySelector('.card-inner').classList.remove('rotate-y-180');
-                        flippedCards = [];
+                        flippedCards= [];
                         isProcessing = false;
                     }, 1000);
                 }
@@ -491,7 +531,6 @@
         function listenToLeaderboard() {
             if (!isFirebaseInitialized || !db) return;
             try {
-                // Listen to online presence list
                 const presenceRef = collection(db, 'presence');
                 onSnapshot(presenceRef, (snapshot) => {
                     let onlineUsers = [];
@@ -501,7 +540,6 @@
                     renderOnlineStudents(onlineUsers);
                 });
 
-                // Listen to leaderboard
                 const colRef = collection(db, 'leaderboard');
                 onSnapshot(colRef, (snapshot) => {
                     let records = [];
@@ -552,7 +590,7 @@
                 return;
             }
 
-            let html = '';
+            let html = ``;
             records.forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 html += `
@@ -581,6 +619,7 @@
 
         window.onload = function() {
             initFirebase();
+            checkTeacherAuth(); // 페이지 켜질 때 선생님 컴퓨터인지 검사
         };
     </script>
 </body>
