@@ -167,15 +167,15 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Imports -->
+    <!-- Firebase SDK Imports & Game Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase configuration setup from environment variables
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'virtual-real-matching-game';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        // Firebase configuration setup
+        const appId = 'virtual-real-matching-game';
+        const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
             authDomain: "virtual01-2b286.firebaseapp.com",
             projectId: "virtual01-2b286",
@@ -183,9 +183,6 @@
             messagingSenderId: "966540109639",
             appId: "1:966540109639:web:7e38681a6df386dcd54e62"
         };
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-    </script>
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
@@ -224,11 +221,7 @@
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
 
                 userId = auth.currentUser ? auth.currentUser.uid : crypto.randomUUID();
                 isFirebaseInitialized = true;
@@ -358,7 +351,6 @@
                 const firstEl = document.querySelector(`[data-index='${firstIdx}']`);
                 const secondEl = document.querySelector(`[data-index='${secondIdx}']`);
 
-                // Strict validation: must be 1 Real + 1 Virtual AND have the exact same matching pairId from the list
                 const isOneRealOneVirtual = firstData.type !== secondData.type;
                 const isExactPair = firstData.pairId === secondData.pairId;
 
@@ -412,12 +404,12 @@
             saveScoreToFirestore(playerNickname, score, elapsedTime, attempts);
         }
 
-        // Save score to Firestore adhering strictly to rules
+        // Save score to Firestore
         async function saveScoreToFirestore(name, finalScore, timeSec, totalAttempts) {
             if (!isFirebaseInitialized || !db) return;
             try {
                 const recordId = userId + "_" + Date.now();
-                const recordRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', recordId);
+                const recordRef = doc(db, 'leaderboard', recordId);
                 await setDoc(recordRef, {
                     nickname: name,
                     score: finalScore,
@@ -434,14 +426,13 @@
         function listenToLeaderboard() {
             if (!isFirebaseInitialized || !db) return;
             try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                const colRef = collection(db, 'leaderboard');
                 onSnapshot(colRef, (snapshot) => {
                     let records = [];
                     snapshot.forEach(docSnap => {
                         records.push(docSnap.data());
                     });
 
-                    // Sort records client-side: Highest score first, then lowest time, then lowest attempts
                     records.sort((a, b) => {
                         if (b.score !== a.score) return b.score - a.score;
                         if (a.time !== b.time) return a.time - b.time;
