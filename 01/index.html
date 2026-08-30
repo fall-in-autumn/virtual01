@@ -73,7 +73,7 @@
                 모든 친구들이 입장하면 게임이 곧 시작됩니다. 아래 규칙과 점수 방식을 확인해 보세요!
             </p>
 
-            <!-- 규칙 및 점수 산정 안내 박스 (시도 횟수당 2점 감점 반영) -->
+            <!-- 규칙 및 점수 산정 안내 박스 -->
             <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 text-left mb-6 space-y-3">
                 <div class="flex items-start gap-2.5">
                     <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-xs mt-0.5">
@@ -103,8 +103,8 @@
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-rose-300">감점 사항 안내</h4>
-                        <p class="text-[11px] text-indigo-200/90">시도 횟수가 늘어날 때마다 <b>-2점씩 감점</b>됩니다! 단, 점수가 0점일 때는 감점되지 않습니다.</p>
+                        <h4 class="text-xs font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
+                        <p class="text-[11px] text-indigo-200/90">시도 횟수가 늘어날 때마다 <b>-2점씩 감점</b>됩니다! (0점일 때는 감점 없음) 또한, <b>게임을 완료하면 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
         <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
-            0점 출발! 맞출 때마다 +30점 | 시도할 때마다 -2점 감점 | 완료 시 등수별 추가 보너스!
+            0점 출발! 맞출 때마다 +30점 | 시도할 때마다 -2점 감점 | 완료 시 1회 제한 및 등수별 보너스!
         </p>
     </header>
 
@@ -162,7 +162,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-3.5 py-1.5 rounded-xl font-bold shadow-lg transition flex items-center gap-1.5 text-xs">
+                    <button id="restart-btn" onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-3.5 py-1.5 rounded-xl font-bold shadow-lg transition flex items-center gap-1.5 text-xs">
                         <i class="fa-solid fa-arrow-rotate-right"></i> 다시 섞기
                     </button>
                 </div>
@@ -195,7 +195,7 @@
                     <i class="fa-solid fa-trophy"></i> 전체 랭킹 보기
                 </button>
                 <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] shadow transition flex items-center justify-center gap-1.5 mb-1.5">
-                    <i class="fa-solid fa-trash-can"></i> 랭킹 초기화
+                    <i class="fa-solid fa-trash-can"></i> 랭킹 초기화 (재도전 허용)
                 </button>
                 <button onclick="logoutTeacher()" class="text-[10px] text-indigo-300 underline hover:text-white transition">
                     관리자 로그아웃
@@ -233,15 +233,15 @@
         🔑
     </div>
 
-    <!-- Victory Modal -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
-            <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-500/30 text-2xl text-slate-900 font-bold">
-                <i class="fa-solid fa-award"></i>
+    <!-- Victory Modal (게임 완료 후 재도전 불가 안내) -->
+    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
+            <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30 text-2xl text-slate-900 font-bold">
+                <i class="fa-solid fa-check-to-slot"></i>
             </div>
-            <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공!</h2>
-            <p class="text-indigo-200 text-sm md:text-base mb-6">
-                10가지 현실세계와 가상공간의 정확한 짝을 모두 맞추셨습니다!
+            <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공 완료!</h2>
+            <p id="victory-desc" class="text-indigo-200 text-xs md:text-sm mb-6">
+                성공적으로 기록이 저장되었습니다!<br>본 게임은 <b>1회만 완료 가능</b>하므로 더 이상 재도전할 수 없습니다.
             </p>
             <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10 grid grid-cols-3 gap-2">
                 <div>
@@ -257,13 +257,8 @@
                     <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
                 </div>
             </div>
-            <div class="space-y-2">
-                <button onclick="closeVictoryModalToReview()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition text-sm">
-                    확인하고 카드 내용 복습하기 <i class="fa-solid fa-eye ml-1"></i>
-                </button>
-                <button onclick="restartGame()" class="w-full bg-slate-800 hover:bg-slate-700 text-indigo-200 hover:text-white font-bold py-2.5 px-6 rounded-xl transition text-xs border border-white/10">
-                    새로고침(다시 시작)
-                </button>
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold py-2.5 px-4 rounded-xl">
+                <i class="fa-solid fa-circle-check mr-1.5"></i> 랭킹 등록 완료 (재도전 잠김)
             </div>
         </div>
     </div>
@@ -291,7 +286,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
@@ -307,7 +302,7 @@
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
         let isGameActive = false;
-        let hasCompletedGame = false; // 게임 완료 여부 플래그
+        let hasCompletedGame = false; // 완료 여부 플래그
 
         // 🎵 배경음악 (BGM) 관련 변수
         let audioCtx = null;
@@ -447,12 +442,14 @@
                 userId = auth.currentUser ? auth.currentUser.uid : 'user_' + Math.random().toString(36).substring(2, 9);
                 isFirebaseInitialized = true;
                 
+                await checkIfAlreadyCompleted();
+
                 listenToLeaderboard();
                 listenToGameState();
                 checkTeacherSession(auth.currentUser);
 
                 window.addEventListener('beforeunload', async () => {
-                    if (db && userId) {
+                    if (db && userId && !hasCompletedGame) {
                         try {
                             await deleteDoc(doc(db, 'presence', userId));
                         } catch(e) {}
@@ -461,6 +458,29 @@
             } catch (err) {
                 console.error("Firebase initialization error:", err);
             }
+        }
+
+        async function checkIfAlreadyCompleted() {
+            if (!db || !userId) return;
+            try {
+                const docRef = doc(db, 'leaderboard', userId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().isCompleted) {
+                    hasCompletedGame = true;
+                    const data = docSnap.data();
+                    playerNickname = data.nickname || "플레이어";
+                    document.getElementById('display-nickname').innerText = playerNickname;
+                    document.getElementById('nickname-screen').classList.add('hidden');
+                    document.getElementById('waiting-room-overlay').classList.add('hidden');
+
+                    // 이미 완료한 유저이므로 결과 모달 띄우기
+                    document.getElementById('final-time.').innerText = (data.time || 0).toFixed(2) + '초';
+                    document.getElementById('final-time').innerText = (data.time || 0).toFixed(2) + '초';
+                    document.getElementById('final-attempts').innerText = (data.attempts || 0) + '회';
+                    document.getElementById('final-score').innerText = (data.score || 0) + '점';
+                    document.getElementById('victory-modal').classList.remove('hidden');
+                }
+            } catch (e) {}
         }
 
         function checkTeacherSession(user) {
@@ -486,6 +506,8 @@
                     checkTeacherSession(user);
                     playerNickname = "의리T(선생님)";
                     document.getElementById('display-nickname').innerText = playerNickname;
+                    hasCompletedGame = false; // 선생님은 언제든 테스트 가능하도록 해제
+                    document.getElementById('victory-modal').classList.add('hidden');
                     alert("의리T 구글 계정 인증 성공! 제어판이 활성화되었습니다.");
                     updateLiveScoreAndStatus(false);
                 } else {
@@ -509,6 +531,7 @@
             playerNickname = "플레이어";
             document.getElementById('display-nickname').innerText = playerNickname;
             alert("관리자 로그아웃 되었습니다.");
+            location.reload();
         };
 
         window.teacherResetLeaderboard = async function() {
@@ -519,7 +542,7 @@
                 return;
             }
 
-            if (!confirm("정말로 모든 학생의 랭킹 기록을 초기화하시겠습니까?")) return;
+            if (!confirm("모든 학생의 랭킹 기록을 초기화하시겠습니까? (초기화되면 학생들이 다시 도전할 수 있게 됩니다.)")) return;
 
             try {
                 const colRef = collection(db, 'leaderboard');
@@ -529,13 +552,19 @@
                     deletePromises.push(deleteDoc(doc(db, 'leaderboard', docSnap.id)));
                 });
                 await Promise.all(deletePromises);
-                alert("모든 랭킹 기록이 초기화되었습니다!");
+                alert("모든 랭킹 기록이 초기화되었습니다. 학생들이 다시 참여할 수 있습니다!");
+                location.reload();
             } catch (err) {
                 alert("초기화 중 오류가 발생했습니다.");
             }
         };
 
         window.joinLobby = async function() {
+            if (hasCompletedGame) {
+                alert("이미 게임을 완료하여 다시 도전할 수 없습니다!");
+                return;
+            }
+
             const input = document.getElementById('player-nickname');
             const val = input.value.trim();
             const currentUser = auth.currentUser;
@@ -607,23 +636,23 @@
                     const data = docSnap.data();
                     if (data.status === 'started') {
                         isGameActive = true;
-                        document.getElementById('waiting-room-overlay').classList.add('hidden');
+                        if (!hasCompletedGame) {
+                            document.getElementById('waiting-room-overlay').classList.add('hidden');
+                        }
                     } else if (data.status === 'ended') {
                         isGameActive = false;
                         if (timerInterval) clearInterval(timerInterval);
-
-                        // 선생님이 게임을 종료했을 때, 아직 완료하지 못했거나 완료한 상태 모두 최종 결과 모달 안내
-                        document.getElementById('victory-title').innerText = hasCompletedGame ? `${playerNickname}님 챌린지 최종 완료!` : `${playerNickname}님 게임 종료!`;
-                        document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
-                        document.getElementById('final-attempts').innerText = attempts + '회';
-                        document.getElementById('final-score').innerText = score + '점';
-                        document.getElementById('victory-modal').classList.remove('hidden');
+                        if (!hasCompletedGame && !document.getElementById('nickname-screen').classList.contains('hidden')) {
+                            // 아직 참여 안 한 상태에서 종료된 경우
+                        }
                     }
                 }
             });
         }
 
         function initGame() {
+            if (hasCompletedGame) return;
+
             const board = document.getElementById('game-board');
             board.innerHTML = '';
             matchedPairs = 0;
@@ -632,7 +661,6 @@
             flippedCards = [];
             isProcessing = false;
             isGameStarted = false;
-            hasCompletedGame = false;
 
             document.getElementById('score').innerText = score;
             document.getElementById('attempts').innerText = attempts;
@@ -697,14 +725,12 @@
         }
 
         function handleCardClick(cardEl, index) {
+            if (hasCompletedGame) return; // 이미 완료했다면 클릭 방지
+
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
             if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden'))) return;
-            
-            // 게임을 이미 완료한 학생은 선생님이 종료하기 전까지 카드를 뒤집을 수 없고 내용을 자유롭게 검토만 가능
-            if (hasCompletedGame) return;
-
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
             if (flippedCards.includes(index)) return;
@@ -745,8 +771,8 @@
                 if (isOneRealOneVirtual && isExactPair) {
                     setTimeout(() => {
                         playSound('match');
-                        firstEl.classList.add('matched', 'opacity-80', 'pointer-events-none');
-                        secondEl.classList.add('matched', 'opacity-80', 'pointer-events-none');
+                        firstEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
+                        secondEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
 
                         firstEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
                         secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
@@ -760,9 +786,9 @@
                         isProcessing = false;
 
                         if (matchedPairs === cardPairs.length) {
-                            clearInterval(timerInterval);
                             hasCompletedGame = true; // 완료 플래그 활성화
-                            updateLiveScoreAndStatus(true);
+                            clearInterval(timerInterval);
+                            updateLiveScoreAndStatus(true); // 서버에 완료 상태 저장
                             setTimeout(showVictoryModal, 500);
                         }
                     }, 350);
@@ -785,23 +811,29 @@
         }
 
         function showVictoryModal() {
-            document.getElementById('victory-title').innerText = `${playerNickname}님 챌린지 성공!`;
             document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
             document.getElementById('final-attempts').innerText = attempts + '회';
             document.getElementById('final-score').innerText = score + '점';
+            
+            // 재도전 버튼을 숨기거나 비활성화 처리 (완료된 학생 보호)
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn) {
+                restartBtn.style.opacity = '0.4';
+                restartBtn.style.pointerEvents = 'none';
+                restartBtn.innerHTML = `<i class="fa-solid fa-lock"></i> 완료됨 (재도전 불가)`;
+            }
+
             document.getElementById('victory-modal').classList.remove('hidden');
         }
-
-        // 성공 모달을 닫고 자신의 정답 카드를 화면에서 검토할 수 있도록 하는 함수
-        window.closeVictoryModalToReview = function() {
-            document.getElementById('victory-modal').classList.add('hidden');
-        };
 
         async function updateLiveScoreAndStatus(isCompleted) {
             if (!isFirebaseInitialized || !db || !userId) return;
             try {
                 const currentUser = auth.currentUser;
                 const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
+
+                // 선생님은 랭킹 완료 제한에서 제외
+                if (isTeacher) return;
 
                 const ref = doc(db, 'leaderboard', userId);
                 await setDoc(ref, {
@@ -810,7 +842,7 @@
                     time: isGameStarted ? Number(elapsedTime.toFixed(2)) : 0,
                     attempts: attempts,
                     isCompleted: isCompleted,
-                    isTeacher: isTeacher,
+                    isTeacher: false,
                     timestamp: Date.now()
                 }, { merge: true });
             } catch (err) {}
@@ -876,7 +908,7 @@
                     rosterHtml += `
                         <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
                             <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
-                            <span class="text-[9px] text-cyan-300">${rec.score}점</span>
+                            <span class="text-[9px] text-cyan-300">${rec.isCompleted ? '완료됨' : rec.score + '점'}</span>
                         </div>
                     `;
                 }
@@ -953,6 +985,10 @@
         }
 
         window.restartGame = function() {
+            if (hasCompletedGame) {
+                alert("이미 게임을 완료하여 다시 도전할 수 없습니다!");
+                return;
+            }
             initGame();
         };
 
