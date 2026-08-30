@@ -50,15 +50,31 @@
             </div>
             <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">디지털 도덕 짝맞추기 챌린지</h2>
             <p class="text-indigo-200 text-sm md:text-base mb-6">
-                랭킹에 등록할 플레이어 닉네임을 입력해주세요! (난이도: 상)
+                참가할 닉네임을 입력하고 로비에 입장하세요!
             </p>
             <div class="mb-6 text-left">
                 <label for="player-nickname" class="block text-xs font-semibold text-indigo-300 mb-2 uppercase tracking-wider">플레이어 닉네임</label>
                 <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-xl px-4 py-3 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-lg">
             </div>
-            <button onclick="startGameWithNickname()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base">
-                도전 시작하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base">
+                로비 입장하기 <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- Teacher Waiting Room Notice Overlay (Shown before teacher starts) -->
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl animate-pulse">
+            <div class="w-20 h-20 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-3xl">
+                <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">선생님의 시작을 기다리는 중...</h2>
+            <p class="text-indigo-200 text-sm mb-6">
+                선생님(의리T)이 게임 시작 버튼을 누르면 화면이 자동으로 열립니다! 잠시만 기다려주세요.
+            </p>
+            <div class="inline-block bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
+                <i class="fa-solid fa-spinner fa-spin mr-2"></i> 대기실 접속 완료
+            </div>
         </div>
     </div>
 
@@ -83,7 +99,6 @@
             <!-- Status Bar -->
             <div class="w-full bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-4 shadow-xl border border-white/10 mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3 flex-wrap">
-                    <!-- Player Nickname on the Left -->
                     <div class="bg-cyan-500/20 px-3.5 py-1.5 rounded-xl border border-cyan-400/40 flex items-center gap-2">
                         <i class="fa-solid fa-user text-cyan-300 text-sm"></i>
                         <span id="display-nickname" class="text-sm font-bold text-cyan-200">플레이어</span>
@@ -111,27 +126,47 @@
                 </div>
             </div>
 
-            <!-- 5 x 4 Grid (20 Cards Total: 10 Real vs 10 Virtual) -->
+            <!-- 5 x 4 Grid (20 Cards Total) -->
             <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 md:gap-3 w-full">
                 <!-- Cards injected dynamically -->
             </div>
         </div>
 
-        <!-- Right 1 Column: Real-time Firebase Leaderboard -->
-        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[520px] lg:h-auto">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
-                <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2">
-                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 학생 랭킹
-                </h3>
-                <span class="text-[10px] bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full" id="leaderboard-count">0명 참여</span>
-            </div>
-            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2.5 pr-1">
-                <div class="text-center text-xs text-indigo-300/60 py-10">
-                    <i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i><br>랭킹 불러오는 중...
+        <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
+        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[560px] lg:h-auto">
+            
+            <!-- Teacher Control Panel (의리T 전용 제어 박스) -->
+            <div class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 p-3 rounded-xl border border-indigo-400/40 mb-3 text-center shadow-md">
+                <div class="text-xs font-bold text-cyan-300 mb-1 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 전용 제어판
                 </div>
+                <p class="text-[10px] text-indigo-200 mb-2">학생들이 다 들어오면 버튼을 누르세요!</p>
+                <button onclick="teacherStartGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2 px-3 rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-play"></i> 전체 학생 게임 시작 신호
+                </button>
             </div>
-            <div class="mt-3 pt-3 border-t border-white/10 text-[10px] text-indigo-300/70 text-center">
-                <i class="fa-solid fa-cloud text-emerald-400 mr-1"></i> 클라우드 자동 저장 및 순위 반영
+
+            <!-- Connected Students Roster (접속한 학생 목록) -->
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                <h3 class="font-bold text-xs text-cyan-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-users text-cyan-400"></i> 접속한 학생 목록
+                </h3>
+                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
+            </div>
+            <div id="online-students-list" class="h-28 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
+                <div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                <h3 class="font-bold text-xs text-yellow-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 도전 랭킹
+                </h3>
+            </div>
+            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2 pr-1">
+                <div class="text-center text-xs text-indigo-300/60 py-6">
+                    아직 완료한 기록이 없습니다.
+                </div>
             </div>
         </div>
 
@@ -145,7 +180,7 @@
             </div>
             <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공!</h2>
             <p class="text-indigo-200 text-sm md:text-base mb-6">
-                10가지 현실세계와 가상공간의 정확한 짝을 모두 맞추셨습니다! 기록이 저장되었습니다.
+                10가지 현실세계와 가상공간의 정확한 짝을 모두 맞추셨습니다!
             </p>
             <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10 grid grid-cols-3 gap-2">
                 <div>
@@ -171,9 +206,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase configuration setup
         const firebaseConfig = {
             apiKey: "AIzaSyDXmPG-EmXeFM-SOC3XpmFoUumtZFU8b50",
             authDomain: "virtual01-2b286.firebaseapp.com",
@@ -186,7 +220,6 @@
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
 
-        // Exact 10 Pairs requested by user
         const cardPairs = [
             { id: 1, real: "학교 친구", virtual: "sns 친구", category: "소통 관계" },
             { id: 2, real: "학교 교실", virtual: "줌 수업", category: "학습 공간" },
@@ -206,14 +239,13 @@
         let score = 0;
         let attempts = 0;
         let isProcessing = false;
-        let playerNickname = "플레이어";
+        let playerNickname = "플레이er";
 
         let startTime = null;
         let timerInterval = null;
         let elapsedTime = 0;
         let isGameStarted = false;
 
-        // Initialize Firebase on load
         async function initFirebase() {
             try {
                 app = initializeApp(firebaseConfig);
@@ -224,16 +256,15 @@
                 userId = auth.currentUser ? auth.currentUser.uid : 'user_' + Math.random().toString(36).substring(2, 9);
                 isFirebaseInitialized = true;
                 
-                // Start listening to live leaderboard data
                 listenToLeaderboard();
+                listenToGameState();
             } catch (err) {
                 console.error("Firebase initialization error:", err);
-                document.getElementById('leaderboard-list').innerHTML = `<div class="text-center text-xs text-red-400 py-6">데이터베이스 연결 실패<br>콘솔창을 확인해주세요.</div>`;
             }
         }
 
-        // Start game after setting nickname
-        window.startGameWithNickname = function() {
+        // Student joins lobby
+        window.joinLobby = async function() {
             const input = document.getElementById('player-nickname');
             const val = input.value.trim();
             if (val) {
@@ -243,10 +274,53 @@
             }
             document.getElementById('display-nickname').innerText = playerNickname;
             document.getElementById('nickname-screen').classList.add('hidden');
+            
+            // Register presence in Firestore
+            if (isFirebaseInitialized && db) {
+                try {
+                    const presenceRef = doc(db, 'presence', userId);
+                    await setDoc(presenceRef, {
+                        nickname: playerNickname,
+                        joinedAt: Date.now()
+                    });
+                } catch(e) { console.error(e); }
+            }
+
+            // Show waiting overlay until teacher starts
+            document.getElementById('waiting-room-overlay').classList.remove('hidden');
             initGame();
         };
 
-        // Initialize Game Board
+        // Teacher triggers start signal
+        window.teacherStartGame = async function() {
+            if (!isFirebaseInitialized || !db) return;
+            try {
+                const gameCtrlRef = doc(db, 'control', 'gamestate');
+                await setDoc(gameCtrlRef, {
+                    status: 'started',
+                    timestamp: Date.now()
+                });
+                alert("전체 학생에게 게임 시작 신호가 전송되었습니다!");
+            } catch(err) {
+                console.error("Failed to start game:", err);
+            }
+        };
+
+        // Listen for game state from Firebase (Start Signal)
+        function listenToGameState() {
+            if (!isFirebaseInitialized || !db) return;
+            const gameCtrlRef = doc(db, 'control', 'gamestate');
+            onSnapshot(gameCtrlRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.status === 'started') {
+                        // Hide waiting overlay and allow play
+                        document.getElementById('waiting-room-overlay').classList.add('hidden');
+                    }
+                }
+            });
+        }
+
         function initGame() {
             const board = document.getElementById('game-board');
             board.innerHTML = '';
@@ -267,17 +341,14 @@
                 timerInterval = null;
             }
 
-            // Flatten 10 pairs into 20 individual cards
             cards = [];
             cardPairs.forEach(item => {
                 cards.push({ text: item.real, type: 'real', pairId: item.id, subtitle: item.category + " (현실)" });
                 cards.push({ text: item.virtual, type: 'virtual', pairId: item.id, subtitle: item.category + " (가상)" });
             });
 
-            // Shuffle cards randomly
             cards.sort(() => Math.random() - 0.5);
 
-            // Render cards
             cards.forEach((card, index) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = 'perspective-1000 h-32 sm:h-36 cursor-pointer';
@@ -291,14 +362,12 @@
 
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full duration-500 transform-style-3d card-inner shadow-xl rounded-2xl">
-                        <!-- Front Face -->
                         <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center p-2 backface-hidden hover:border-indigo-400/60 transition group">
                             <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center mb-1 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
                                 <i class="fa-solid fa-puzzle-piece text-indigo-300 text-xs"></i>
                             </div>
                             <span class="text-[9px] text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
                         </div>
-                        <!-- Back Face -->
                         <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-2.5 backface-hidden rotate-y-180 text-left">
                             <div class="flex justify-between items-center">
                                 <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
@@ -322,13 +391,13 @@
             });
         }
 
-        // Handle card click and timer activation
         function handleCardClick(cardEl, index) {
+            // Block clicking if waiting overlay is active
+            if (!document.getElementById('waiting-room-overlay').classList.contains('hidden')) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
             if (flippedCards.includes(index)) return;
 
-            // Start timer on first card click
             if (!isGameStarted) {
                 isGameStarted = true;
                 startTime = performance.now();
@@ -385,14 +454,12 @@
             }
         }
 
-        // Timer update with centisecond precision
         function updateTimer() {
             const now = performance.now();
             elapsedTime = (now - startTime) / 1000;
             document.getElementById('timer').innerText = elapsedTime.toFixed(2) + '초';
         }
 
-        // Show victory modal and save score to Firebase
         function showVictoryModal() {
             const finalTimeStr = elapsedTime.toFixed(2) + '초';
             document.getElementById('victory-title').innerText = `${playerNickname}님 챌린지 성공!`;
@@ -404,7 +471,6 @@
             saveScoreToFirestore(playerNickname, score, elapsedTime, attempts);
         }
 
-        // Save score to Firestore
         async function saveScoreToFirestore(name, finalScore, timeSec, totalAttempts) {
             if (!isFirebaseInitialized || !db) return;
             try {
@@ -422,10 +488,20 @@
             }
         }
 
-        // Real-time listener for leaderboard
         function listenToLeaderboard() {
             if (!isFirebaseInitialized || !db) return;
             try {
+                // Listen to online presence list
+                const presenceRef = collection(db, 'presence');
+                onSnapshot(presenceRef, (snapshot) => {
+                    let onlineUsers = [];
+                    snapshot.forEach(docSnap => {
+                        onlineUsers.push(docSnap.data());
+                    });
+                    renderOnlineStudents(onlineUsers);
+                });
+
+                // Listen to leaderboard
                 const colRef = collection(db, 'leaderboard');
                 onSnapshot(colRef, (snapshot) => {
                     let records = [];
@@ -440,23 +516,39 @@
                     });
 
                     renderLeaderboard(records);
-                }, (error) => {
-                    console.error("Leaderboard snapshot error:", error);
-                    document.getElementById('leaderboard-list').innerHTML = `<div class="text-center text-xs text-red-400 py-6">랭킹 동기화 오류 발생</div>`;
                 });
             } catch (err) {
-                console.warn("Leaderboard listener failed:", err);
+                console.error("Listener error:", err);
             }
         }
 
-        // Render leaderboard items
+        function renderOnlineStudents(users) {
+            const listEl = document.getElementById('online-students-list');
+            const countEl = document.getElementById('online-count');
+            countEl.innerText = users.length + "명 접속";
+
+            if (users.length === 0) {
+                listEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
+                return;
+            }
+
+            let html = '';
+            users.forEach(user => {
+                html += `
+                    <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
+                        <span class="font-bold text-white truncate max-w-[120px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(user.nickname)}</span>
+                        <span class="text-[9px] text-emerald-300">대기중</span>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }
+
         function renderLeaderboard(records) {
             const listEl = document.getElementById('leaderboard-list');
-            const countEl = document.getElementById('leaderboard-count');
-            countEl.innerText = records.length + "명 참여";
 
             if (records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-10">아직 등록된 기록이 없습니다.<br>첫 번째 주인공이 되어보세요!</div>`;
+                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">아직 완료한 기록이 없습니다.</div>`;
                 return;
             }
 
@@ -476,7 +568,6 @@
                     </div>
                 `;
             });
-            listEl.html = html; // 수정: 아래 실제 대입문 사용을 위해 아래 줄로 대체
             listEl.innerHTML = html;
         }
 
