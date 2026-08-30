@@ -135,7 +135,7 @@
         <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
         <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[560px] lg:h-auto">
             
-            <!-- Unlocked Teacher Controls (선생님 컴퓨터에서만 인증 후 노출) -->
+            <!-- Unlocked Teacher Controls -->
             <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-3 rounded-xl border border-emerald-400/40 mb-3 text-center shadow-md hidden">
                 <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 제어판 (선생님 전용)
@@ -149,7 +149,7 @@
                 </button>
             </div>
 
-            <!-- Connected Students Roster (접속한 학생 목록) -->
+            <!-- Connected Students Roster -->
             <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
                 <h3 class="font-bold text-xs text-cyan-300 flex items-center gap-1.5">
                     <i class="fa-solid fa-users text-cyan-400"></i> 접속한 학생 목록
@@ -205,7 +205,47 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Imports & Game Logic -->
+    <!-- 일반 글로벌 스크립트 (관리자 인증 관리) -->
+    <script>
+        const TEACHER_PASSWORD = "2026";
+
+        function checkTeacherAuth() {
+            const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
+            const panel = document.getElementById('teacher-control-panel');
+            if (panel) {
+                if (isTeacher) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            }
+        }
+
+        // 비밀 단축키 (Ctrl + Shift + L)
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'ㅣ')) {
+                e.preventDefault();
+                const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
+                if (inputPw === TEACHER_PASSWORD) {
+                    localStorage.setItem("is_uiri_teacher", "true");
+                    checkTeacherAuth();
+                    alert("관리자 인증 성공! 제어판이 활성화되었습니다.");
+                } else if (inputPw !== null) {
+                    alert("비밀번호가 틀렸습니다!");
+                }
+            }
+        });
+
+        function logoutTeacher() {
+            localStorage.removeItem("is_uiri_teacher");
+            checkTeacherAuth();
+            alert("관리자 권한이 해제되었습니다.");
+        }
+
+        document.addEventListener("DOMContentLoaded", checkTeacherAuth);
+    </script>
+
+    <!-- Firebase SDK & 게임 전용 모듈 스크립트 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -222,9 +262,6 @@
 
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
-
-        // ** 🔑 관리자 비밀번호 설정 **
-        const TEACHER_PASSWORD = "2026"; 
 
         const cardPairs = [
             { id: 1, real: "학교 친구", virtual: "sns 친구", category: "소통 관계" },
@@ -269,38 +306,6 @@
             }
         }
 
-        // Check if this browser is authenticated as teacher
-        function checkTeacherAuth() {
-            const isTeacher = localStorage.getItem("is_uiri_teacher") === "true";
-            if (isTeacher) {
-                document.getElementById('teacher-control-panel').classList.remove('hidden');
-            } else {
-                document.getElementById('teacher-control-panel').classList.add('hidden');
-            }
-        }
-
-        // 🛠️ 비밀 단축키 설정 (Ctrl + Shift + L 누르면 비밀번호 창 뜸)
-        window.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l' || e.key === 'ㅣ')) {
-                e.preventDefault();
-                const inputPw = prompt("의리T 관리자 비밀번호를 입력하세요:");
-                if (inputPw === TEACHER_PASSWORD) {
-                    localStorage.setItem("is_uiri_teacher", "true");
-                    checkTeacherAuth();
-                    alert("관리자 인증 성공! 제어판이 활성화되었습니다.");
-                } else if (inputPw !== null) {
-                    alert("비밀번호가 틀렸습니다!");
-                }
-            }
-        });
-
-        window.logoutTeacher = function() {
-            localStorage.removeItem("is_uiri_teacher");
-            checkTeacherAuth();
-            alert("관리자 권한이 해제되었습니다.");
-        };
-
-        // Student joins lobby
         window.joinLobby = async function() {
             const input = document.getElementById('player-nickname');
             const val = input.value.trim();
@@ -610,7 +615,7 @@
 
         window.onload = function() {
             initFirebase();
-            checkTeacherAuth(); // 저장된 인증 상태 확인
+            checkTeacherAuth();
         };
     </script>
 </body>
