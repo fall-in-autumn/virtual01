@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가상공간 vs 현실세계 짝맞추기 챌린지</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Jua for friendly Korean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Jua', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+        }
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-white flex flex-col items-center justify-between min-h-screen p-3 md:p-6">
+
+    <!-- Nickname Input Modal Screen -->
+    <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl">
+            <div class="w-16 h-16 bg-gradient-to-tr from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/30 text-2xl text-slate-900 font-bold">
+                <i class="fa-solid fa-user-astronaut text-white"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">디지털 도덕 짝맞추기 챌린지</h2>
+            <p class="text-indigo-200 text-sm md:text-base mb-6">
+                랭킹에 등록할 플레이어 닉네임을 입력해주세요! (난이도: 상)
+            </p>
+            <div class="mb-6 text-left">
+                <label for="player-nickname" class="block text-xs font-semibold text-indigo-300 mb-2 uppercase tracking-wider">플레이어 닉네임</label>
+                <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-xl px-4 py-3 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-lg">
+            </div>
+            <button onclick="startGameWithNickname()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base">
+                도전 시작하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <header class="w-full max-w-6xl text-center my-2">
+        <div class="inline-block bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-full text-sm font-semibold mb-2 border border-indigo-500/30">
+            <i class="fa-solid fa-graduation-cap mr-2"></i>의리T의 도덕 교실
+        </div>
+        <h1 class="text-2xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-indigo-200 to-pink-400 bg-clip-text text-transparent pb-1">
+            현실세계 vs 가상공간 특징 짝맞추기
+        </h1>
+        <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
+            지정된 10가지 올바른 짝(총 20장)을 정확히 연결하세요! 지정된 짝이 아니면 틀리게 처리됩니다.
+        </p>
+    </header>
+
+    <!-- Main Game & Leaderboard Layout -->
+    <main class="w-full max-w-6xl flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6 my-4">
+        
+        <!-- Left 3 Columns: Game Board & Stats -->
+        <div class="lg:col-span-3 flex flex-col items-center">
+            <!-- Status Bar -->
+            <div class="w-full bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-4 shadow-xl border border-white/10 mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <!-- Player Nickname on the Left -->
+                    <div class="bg-cyan-500/20 px-3.5 py-1.5 rounded-xl border border-cyan-400/40 flex items-center gap-2">
+                        <i class="fa-solid fa-user text-cyan-300 text-sm"></i>
+                        <span id="display-nickname" class="text-sm font-bold text-cyan-200">플레이어</span>
+                    </div>
+                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-yellow-400 text-sm"></i>
+                        <span class="text-xs text-indigo-200">점수:</span>
+                        <span id="score" class="text-base font-bold text-white">0</span>
+                    </div>
+                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right text-cyan-400 text-sm"></i>
+                        <span class="text-xs text-indigo-200">시도:</span>
+                        <span id="attempts" class="text-base font-bold text-white">0</span>
+                    </div>
+                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
+                        <i class="fa-solid fa-stopwatch text-pink-400 text-sm"></i>
+                        <span class="text-xs text-indigo-200">시간:</span>
+                        <span id="timer" class="text-base font-bold text-white font-mono">0.00초</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-3.5 py-1.5 rounded-xl font-bold shadow-lg transition flex items-center gap-1.5 text-xs">
+                        <i class="fa-solid fa-arrow-rotate-right"></i> 다시 섞기
+                    </button>
+                </div>
+            </div>
+
+            <!-- 5 x 4 Grid (20 Cards Total: 10 Real vs 10 Virtual) -->
+            <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 md:gap-3 w-full">
+                <!-- Cards injected dynamically -->
+            </div>
+        </div>
+
+        <!-- Right 1 Column: Real-time Firebase Leaderboard -->
+        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[520px] lg:h-auto">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2">
+                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 학생 랭킹
+                </h3>
+                <span class="text-[10px] bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full" id="leaderboard-count">0명 참여</span>
+            </div>
+            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2.5 pr-1">
+                <div class="text-center text-xs text-indigo-300/60 py-10">
+                    <i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i><br>랭킹 불러오는 중...
+                </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/10 text-[10px] text-indigo-300/70 text-center">
+                <i class="fa-solid fa-cloud text-emerald-400 mr-1"></i> 클라우드 자동 저장 및 순위 반영
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Victory Modal -->
+    <div id="victory-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
+            <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-500/30 text-2xl text-slate-900 font-bold">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공!</h2>
+            <p class="text-indigo-200 text-sm md:text-base mb-6">
+                10가지 현실세계와 가상공간의 정확한 짝을 모두 맞추셨습니다! 기록이 저장되었습니다.
+            </p>
+            <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10 grid grid-cols-3 gap-2">
+                <div>
+                    <div class="text-[11px] text-indigo-300">소요 시간</div>
+                    <div id="final-time" class="text-base font-bold text-cyan-400 font-mono">0.00초</div>
+                </div>
+                <div class="border-x border-white/10">
+                    <div class="text-[11px] text-indigo-300">시도 횟수</div>
+                    <div id="final-attempts" class="text-base font-bold text-white">0회</div>
+                </div>
+                <div>
+                    <div class="text-[11px] text-indigo-300">최종 점수</div>
+                    <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
+                </div>
+            </div>
+            <button onclick="restartGame()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
+                다시 도전하기
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration setup from environment variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'virtual-real-matching-game';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDummyKeyForLocalSandboxTestingOnly12345",
+            authDomain: "sandbox.firebaseapp.com",
+            projectId: "sandbox-project"
+        };
+
+        let app, db, auth, userId = null;
+        let isFirebaseInitialized = false;
+
+        // Exact 10 Pairs requested by user
+        const cardPairs = [
+            { id: 1, real: "학교 친구", virtual: "sns 친구", category: "소통 관계" },
+            { id: 2, real: "학교 교실", virtual: "줌 수업", category: "학습 공간" },
+            { id: 3, real: "회사 출근", virtual: "재택 근무", category: "근무 환경" },
+            { id: 4, real: "대면 진료", virtual: "원격 진료", category: "의료 서비스" },
+            { id: 5, real: "오프라인 모임", virtual: "온라인 커뮤니티", category: "커뮤니티" },
+            { id: 6, real: "현실의 나", virtual: "부캐/아바타", category: "정체성 표현" },
+            { id: 7, real: "오프라인 매장", virtual: "온라인 쇼핑몰", category: "상업 소비" },
+            { id: 8, real: "영화관/공연장", virtual: "온라인 스트리밍", category: "문화 콘텐츠" },
+            { id: 9, real: "실제 여행", virtual: "VR 탐방", category: "여가 탐방" },
+            { id: 10, real: "현실 도덕", virtual: "온라인 네티켓", category: "규범 예절" }
+        ];
+
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let score = 0;
+        let attempts = 0;
+        let isProcessing = false;
+        let playerNickname = "플레이어";
+
+        let startTime = null;
+        let timerInterval = null;
+        let elapsedTime = 0;
+        let isGameStarted = false;
+
+        // Initialize Firebase on load
+        async function initFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                userId = auth.currentUser ? auth.currentUser.uid : crypto.randomUUID();
+                isFirebaseInitialized = true;
+                listenToLeaderboard();
+            } catch (err) {
+                console.warn("Firebase offline mode or mock initialized:", err);
+                renderMockLeaderboard();
+            }
+        }
+
+        // Start game after setting nickname
+        window.startGameWithNickname = function() {
+            const input = document.getElementById('player-nickname');
+            const val = input.value.trim();
+            if (val) {
+                playerNickname = val;
+            } else {
+                playerNickname = "도덕박사_" + Math.floor(Math.random() * 900 + 100);
+            }
+            document.getElementById('display-nickname').innerText = playerNickname;
+            document.getElementById('nickname-screen').classList.add('hidden');
+            initGame();
+        };
+
+        // Initialize Game Board
+        function initGame() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            matchedPairs = 0;
+            score = 0;
+            attempts = 0;
+            flippedCards = [];
+            isProcessing = false;
+            isGameStarted = false;
+
+            document.getElementById('score').innerText = score;
+            document.getElementById('attempts').innerText = attempts;
+            document.getElementById('timer').innerText = "0.00초";
+            document.getElementById('victory-modal').classList.add('hidden');
+
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            // Flatten 10 pairs into 20 individual cards
+            cards = [];
+            cardPairs.forEach(item => {
+                cards.push({ text: item.real, type: 'real', pairId: item.id, subtitle: item.category + " (현실)" });
+                cards.push({ text: item.virtual, type: 'virtual', pairId: item.id, subtitle: item.category + " (가상)" });
+            });
+
+            // Shuffle cards randomly
+            cards.sort(() => Math.random() - 0.5);
+
+            // Render cards
+            cards.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'perspective-1000 h-32 sm:h-36 cursor-pointer';
+                cardEl.dataset.index = index;
+                cardEl.dataset.pairId = card.pairId;
+                cardEl.dataset.type = card.type;
+
+                const isReal = card.type === 'real';
+                const badgeColor = isReal ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+                const iconClass = isReal ? 'fa-building-columns' : 'fa-globe';
+
+                cardEl.innerHTML = `
+                    <div class="relative w-full h-full duration-500 transform-style-3d card-inner shadow-xl rounded-2xl">
+                        <!-- Front Face -->
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center p-2 backface-hidden hover:border-indigo-400/60 transition group">
+                            <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center mb-1 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
+                                <i class="fa-solid fa-puzzle-piece text-indigo-300 text-xs"></i>
+                            </div>
+                            <span class="text-[9px] text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-2.5 backface-hidden rotate-y-180 text-left">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-0.5"></i> ${card.subtitle}
+                                </span>
+                            </div>
+                            <div class="my-auto py-1 text-center">
+                                <p class="text-xs sm:text-sm font-bold text-white whitespace-pre-line leading-snug">
+                                    ${card.text}
+                                </p>
+                            </div>
+                            <div class="text-[9px] text-gray-400 text-right italic">
+                                ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                cardEl.addEventListener('click', () => handleCardClick(cardEl, index));
+                board.appendChild(cardEl);
+            });
+        }
+
+        // Handle card click and timer activation
+        function handleCardClick(cardEl, index) {
+            if (isProcessing) return;
+            if (cardEl.classList.contains('matched')) return;
+            if (flippedCards.includes(index)) return;
+
+            // Start timer on first card click
+            if (!isGameStarted) {
+                isGameStarted = true;
+                startTime = performance.now();
+                timerInterval = setInterval(updateTimer, 30);
+            }
+
+            cardEl.querySelector('.card-inner').classList.add('rotate-y-180');
+            flippedCards.push(index);
+
+            if (flippedCards.length === 2) {
+                attempts++;
+                document.getElementById('attempts').innerText = attempts;
+                isProcessing = true;
+
+                const firstIdx = flippedCards[0];
+                const secondIdx = flippedCards[1];
+                const firstData = cards[firstIdx];
+                const secondData = cards[secondIdx];
+
+                const firstEl = document.querySelector(`[data-index='${firstIdx}']`);
+                const secondEl = document.querySelector(`[data-index='${secondIdx}']`);
+
+                // Strict validation: must be 1 Real + 1 Virtual AND have the exact same matching pairId from the list
+                const isOneRealOneVirtual = firstData.type !== secondData.type;
+                const isExactPair = firstData.pairId === secondData.pairId;
+
+                if (isOneRealOneVirtual && isExactPair) {
+                    setTimeout(() => {
+                        firstEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
+                        secondEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
+
+                        firstEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
+                        secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
+
+                        matchedPairs++;
+                        score += 10;
+                        document.getElementById('score').innerText = score;
+
+                        flippedCards = [];
+                        isProcessing = false;
+
+                        if (matchedPairs === cardPairs.length) {
+                            clearInterval(timerInterval);
+                            setTimeout(showVictoryModal, 500);
+                        }
+                    }, 350);
+                } else {
+                    setTimeout(() => {
+                        firstEl.querySelector('.card-inner').classList.remove('rotate-y-180');
+                        secondEl.querySelector('.card-inner').classList.remove('rotate-y-180');
+                        flippedCards = [];
+                        isProcessing = false;
+                    }, 1000);
+                }
+            }
+        }
+
+        // Timer update with centisecond precision
+        function updateTimer() {
+            const now = performance.now();
+            elapsedTime = (now - startTime) / 1000;
+            document.getElementById('timer').innerText = elapsedTime.toFixed(2) + '초';
+        }
+
+        // Show victory modal and save score to Firebase
+        function showVictoryModal() {
+            const finalTimeStr = elapsedTime.toFixed(2) + '초';
+            document.getElementById('victory-title').innerText = `${playerNickname}님 챌린지 성공!`;
+            document.getElementById('final-time').innerText = finalTimeStr;
+            document.getElementById('final-attempts').innerText = attempts + '회';
+            document.getElementById('final-score').innerText = score + '점';
+            document.getElementById('victory-modal').classList.remove('hidden');
+
+            saveScoreToFirestore(playerNickname, score, elapsedTime, attempts);
+        }
+
+        // Save score to Firestore adhering strictly to rules
+        async function saveScoreToFirestore(name, finalScore, timeSec, totalAttempts) {
+            if (!isFirebaseInitialized || !db) return;
+            try {
+                const recordId = userId + "_" + Date.now();
+                const recordRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', recordId);
+                await setDoc(recordRef, {
+                    nickname: name,
+                    score: finalScore,
+                    time: Number(timeSec.toFixed(2)),
+                    attempts: totalAttempts,
+                    timestamp: Date.now()
+                });
+            } catch (err) {
+                console.error("Error saving score:", err);
+            }
+        }
+
+        // Real-time listener for leaderboard
+        function listenToLeaderboard() {
+            if (!isFirebaseInitialized || !db) return;
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+                onSnapshot(colRef, (snapshot) => {
+                    let records = [];
+                    snapshot.forEach(docSnap => {
+                        records.push(docSnap.data());
+                    });
+
+                    // Sort records client-side: Highest score first, then lowest time, then lowest attempts
+                    records.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        if (a.time !== b.time) return a.time - b.time;
+                        return a.attempts - b.attempts;
+                    });
+
+                    renderLeaderboard(records);
+                }, (error) => {
+                    console.error("Leaderboard snapshot error:", error);
+                    renderMockLeaderboard();
+                });
+            } catch (err) {
+                console.warn("Leaderboard listener failed:", err);
+                renderMockLeaderboard();
+            }
+        }
+
+        // Render leaderboard items
+        function renderLeaderboard(records) {
+            const listEl = document.getElementById('leaderboard-list');
+            const countEl = document.getElementById('leaderboard-count');
+            countEl.innerText = records.length + "명 참여";
+
+            if (records.length === 0) {
+                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-10">아직 등록된 기록이 없습니다.<br>첫 번째 주인공이 되어보세요!</div>`;
+                return;
+            }
+
+            let html = '';
+            records.forEach((rec, idx) => {
+                const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
+                html += `
+                    <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-5 text-center ${rankColor}">#${idx + 1}</span>
+                            <span class="font-bold text-white truncate max-w-[90px]">${escapeHtml(rec.nickname)}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-cyan-300 font-mono font-bold">${rec.time.toFixed(2)}초</div>
+                            <div class="text-[9px] text-indigo-300/70">${rec.attempts}회 시도</div>
+                        </div>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }
+
+        function renderMockLeaderboard() {
+            const listEl = document.getElementById('leaderboard-list');
+            listEl.innerHTML = `
+                <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 text-center text-yellow-400 font-bold">#1</span>
+                        <span class="font-bold text-white">의리선생님</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-cyan-300 font-mono font-bold">18.42초</div>
+                        <div class="text-[9px] text-indigo-300/70">12회 시도</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        window.restartGame = function() {
+            initGame();
+        };
+
+        window.onload = function() {
+            initFirebase();
+        };
+    </script>
+</body>
+</html>
