@@ -73,7 +73,7 @@
                 모든 친구들이 입장하면 게임이 곧 시작됩니다. 아래 규칙과 점수 방식을 확인해 보세요!
             </p>
 
-            <!-- 규칙 및 점수 산정 안내 박스 (시도 횟수당 2점 감점 반영) -->
+            <!-- 규칙 및 점수 산정 안내 박스 -->
             <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 text-left mb-6 space-y-3">
                 <div class="flex items-start gap-2.5">
                     <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-xs mt-0.5">
@@ -117,7 +117,11 @@
 
     <!-- Header Section -->
     <header class="w-full max-w-6xl text-center my-2 relative">
-        <div class="absolute right-0 top-0">
+        <div class="absolute right-0 top-0 flex items-center gap-2">
+            <!-- 게임 완료 후 언제든 열어볼 수 있는 결과 확인하기 버튼 (평상시엔 숨김 또는 비활성 가능하나 완료 후 노출) -->
+            <button id="header-review-btn" onclick="openReviewModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md hidden">
+                <i class="fa-solid fa-book-open"></i> 학습 결과 확인
+            </button>
             <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
                 <i class="fa-solid fa-music animate-bounce" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
             </button>
@@ -233,7 +237,7 @@
         🔑
     </div>
 
-    <!-- Victory Modal -->
+    <!-- Victory Modal (미션 성공 시 등장하는 모달) -->
     <div id="victory-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
             <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-yellow-500/30 text-2xl text-slate-900 font-bold">
@@ -257,9 +261,67 @@
                     <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
                 </div>
             </div>
-            <button onclick="restartGame()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
-                다시 도전하기
-            </button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="openReviewModalFromVictory()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-book-open"></i> 결과 확인하기
+                </button>
+                <button onclick="restartGame()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl transition border border-white/10 text-sm">
+                    다시 도전하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학습 내용 복습 및 개인 기록 & 실시간 랭킹 확인 모달 -->
+    <div id="review-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-2xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-xl">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">학습 내용 및 나의 결과 리포트</h2>
+            <p class="text-indigo-200 text-xs mb-4">현실세계와 가상공간의 특징 카드 쌍을 다시 확인하고, 나의 기록과 실시간 랭킹을 확인해보세요!</p>
+            
+            <div class="flex-grow overflow-y-auto space-y-4 pr-1 mb-6 text-left">
+                <!-- 나의 최종 기록 요약 카드 -->
+                <div class="bg-gradient-to-r from-indigo-950/80 to-purple-950/80 p-4 rounded-2xl border border-indigo-500/40">
+                    <h3 class="text-xs font-bold text-cyan-300 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-check"></i> 내 기록 요약 (<span id="review-my-nickname">플레이어</span>)
+                    </h3>
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                            <div class="text-[10px] text-indigo-300">총 점수</div>
+                            <div id="review-my-score" class="text-sm font-bold text-yellow-400">0점</div>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                            <div class="text-[10px] text-indigo-300">완료 시간</div>
+                            <div id="review-my-time" class="text-sm font-bold text-cyan-400 font-mono">0.00초</div>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                            <div class="text-[10px] text-indigo-300">시도 횟수</div>
+                            <div id="review-my-attempts" class="text-sm font-bold text-white">0회</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 짝맞추기 학습 내용 복습 카드 리스트 -->
+                <div>
+                    <h3 class="text-xs font-bold text-yellow-300 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-puzzle-piece"></i> 가상공간 vs 현실세계 짝꿍 학습 내용 복습 (총 10쌍)
+                    </h3>
+                    <div id="review-pairs-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <!-- 동적 주입 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closeReviewModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-white/10 text-sm">
+                    창 닫기
+                </button>
+                <button onclick="closeReviewModal(); restartGame();" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition text-sm">
+                    새로고침 및 다시 도전
+                </button>
+            </div>
         </div>
     </div>
 
@@ -325,7 +387,6 @@
             return audioCtx;
         }
 
-        // BGM 루프 재생 함수
         function playBgmLoop() {
             if (!isBgmPlaying) return;
             try {
@@ -333,7 +394,7 @@
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
 
-                osc.type = 'triangle'; // 부드러운 8비트 게임 사운드 느낌
+                osc.type = 'triangle';
                 osc.frequency.setValueAtTime(bgmNotes[noteIndex], ctx.currentTime);
 
                 gain.gain.setValueAtTime(0.04, ctx.currentTime);
@@ -367,7 +428,6 @@
             }
         };
 
-        // 🔊 효과음 생성기 (Web Audio API)
         function playSound(type) {
             try {
                 const ctx = getAudioContext();
@@ -423,10 +483,10 @@
         let cards = [];
         let flippedCards = [];
         let matchedPairs = 0;
-        let score = 0; // 0점 출발
+        let score = 0;
         let attempts = 0;
         let isProcessing = false;
-        let playerNickname = "플레이어";
+        let playerNickname = "플레이er";
 
         let startTime = null;
         let timerInterval = null;
@@ -595,6 +655,52 @@
             document.getElementById('full-leaderboard-modal').classList.add('hidden');
         };
 
+        // 결과 확인하기 모달 열기/닫기 및 데이터 주입
+        window.openReviewModal = function() {
+            document.getElementById('review-my-nickname').innerText = playerNickname;
+            document.getElementById('review-my-score').innerText = score + "점";
+            document.getElementById('review-my-time').innerText = isGameStarted ? elapsedTime.toFixed(2) + "초" : "0.00초";
+            document.getElementById('review-my-attempts').innerText = attempts + "회";
+
+            renderReviewPairsList();
+            document.getElementById('review-modal').classList.remove('hidden');
+        };
+
+        window.openReviewModalFromVictory = function() {
+            document.getElementById('victory-modal').classList.add('hidden');
+            window.openReviewModal();
+        };
+
+        window.closeReviewModal = function() {
+            document.getElementById('review-modal').classList.add('hidden');
+        };
+
+        function renderReviewPairsList() {
+            const container = document.getElementById('review-pairs-list');
+            let html = ``;
+            cardPairs.forEach((pair, idx) => {
+                html += `
+                    <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex flex-col gap-1 text-xs">
+                        <div class="text-[10px] text-cyan-300 font-bold flex items-center justify-between">
+                            <span><i class="fa-solid fa-tag mr-1"></i> ${pair.category}</span>
+                            <span class="text-indigo-300/60">PAIR #${idx + 1}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-1">
+                            <div class="bg-amber-500/10 border border-amber-500/30 p-1.5 rounded-lg text-amber-200">
+                                <span class="text-[9px] block text-amber-400 font-semibold">🏢 현실세계</span>
+                                <span class="font-bold">${pair.real}</span>
+                            </div>
+                            <div class="bg-cyan-500/10 border border-cyan-500/30 p-1.5 rounded-lg text-cyan-200">
+                                <span class="text-[9px] block text-cyan-400 font-semibold">🌐 가상공간</span>
+                                <span class="font-bold">${pair.virtual}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
         function listenToGameState() {
             if (!isFirebaseInitialized || !db) return;
             const gameCtrlRef = doc(db, 'control', 'gamestate');
@@ -612,6 +718,7 @@
                         document.getElementById('final-attempts').innerText = attempts + '회';
                         document.getElementById('final-score').innerText = score + '점';
                         document.getElementById('victory-modal').classList.remove('hidden');
+                        document.getElementById('header-review-btn').classList.remove('hidden');
                     }
                 }
             });
@@ -631,6 +738,7 @@
             document.getElementById('attempts').innerText = attempts;
             document.getElementById('timer').innerText = "0.00초";
             document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('header-review-btn').classList.add('hidden');
 
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -713,7 +821,6 @@
                 attempts++;
                 document.getElementById('attempts').innerText = attempts;
 
-                // 시도 횟수가 올라갈 때마다 2점 감점 (단, 점수가 0점일 때는 감점되지 않음)
                 if (score > 0) {
                     score = Math.max(0, score - 2);
                     document.getElementById('score').innerText = score;
@@ -742,7 +849,7 @@
                         secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
 
                         matchedPairs++;
-                        score += 30; // 맞출 때마다 +30점
+                        score += 30;
                         document.getElementById('score').innerText = score;
                         updateLiveScoreAndStatus(false);
 
@@ -752,6 +859,7 @@
                         if (matchedPairs === cardPairs.length) {
                             clearInterval(timerInterval);
                             updateLiveScoreAndStatus(true);
+                            document.getElementById('header-review-btn').classList.remove('hidden');
                             setTimeout(showVictoryModal, 500);
                         }
                     }, 350);
