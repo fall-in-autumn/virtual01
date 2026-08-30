@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <!-- Teacher Waiting Room Notice Overlay (Shown before teacher starts) -->
+    <!-- Teacher Waiting Room Notice Overlay -->
     <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl animate-pulse">
             <div class="w-20 h-20 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-3xl">
@@ -87,7 +87,7 @@
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
         <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
-            지정된 10가지 올바른 짝(총 20장)을 정확히 연결하세요! 지정된 짝이 아니면 틀리게 처리됩니다.
+            기본 300점 + 시도당 2점 감점! 실시간 점수가 랭킹에 즉시 반영됩니다!
         </p>
     </header>
 
@@ -106,7 +106,7 @@
                     <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
                         <i class="fa-solid fa-trophy text-yellow-400 text-sm"></i>
                         <span class="text-xs text-indigo-200">점수:</span>
-                        <span id="score" class="text-base font-bold text-white">0</span>
+                        <span id="score" class="text-base font-bold text-white">300</span>
                     </div>
                     <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
                         <i class="fa-solid fa-rotate-right text-cyan-400 text-sm"></i>
@@ -159,19 +159,19 @@
                 </h3>
                 <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
             </div>
-            <div id="online-students-list" class="h-28 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
+            <div id="online-students-list" class="h-24 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
                 <div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>
             </div>
 
             <!-- Leaderboard Section -->
             <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
                 <h3 class="font-bold text-xs text-yellow-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 도전 랭킹
+                    <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 순위 & 랭킹
                 </h3>
             </div>
             <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2 pr-1">
                 <div class="text-center text-xs text-indigo-300/60 py-6">
-                    아직 완료한 기록이 없습니다.
+                    참가자들의 실시간 점수가 표시됩니다.
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
             </p>
             <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10 grid grid-cols-3 gap-2">
                 <div>
-                    <div class="text-[11px] text-indigo-300">소요 시간</div>
+                    <div class="text-[11px] text-indigo-300">완료 시간</div>
                     <div id="final-time" class="text-base font-bold text-cyan-400 font-mono">0.00초</div>
                 </div>
                 <div class="border-x border-white/10">
@@ -203,7 +203,7 @@
                     <div id="final-attempts" class="text-base font-bold text-white">0회</div>
                 </div>
                 <div>
-                    <div class="text-[11px] text-indigo-300">최종 점수</div>
+                    <div class="text-[11px] text-indigo-300">최종 총점수</div>
                     <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
                 </div>
             </div>
@@ -233,6 +233,57 @@
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
 
+        // 🔊 효과음 생성기 (Web Audio API)
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+
+                if (type === 'flip') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'match') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    osc.frequency.setValueAtTime(783.99, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.setValueAtTime(120, now + 0.15);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch(e) {}
+        }
+
         const cardPairs = [
             { id: 1, real: "학교 친구", virtual: "sns 친구", category: "소통 관계" },
             { id: 2, real: "학교 교실", virtual: "줌 수업", category: "학습 공간" },
@@ -249,7 +300,7 @@
         let cards = [];
         let flippedCards = [];
         let matchedPairs = 0;
-        let score = 0;
+        let score = 300;
         let attempts = 0;
         let isProcessing = false;
         let playerNickname = "플레이어";
@@ -273,7 +324,6 @@
                 listenToGameState();
                 checkTeacherSession(auth.currentUser);
 
-                // 페이지를 닫거나 벗어날 때 접속 목록에서 자신을 삭제하는 이벤트 등록
                 window.addEventListener('beforeunload', async () => {
                     if (db && userId) {
                         try {
@@ -309,19 +359,17 @@
                     checkTeacherSession(user);
                     alert("의리T 구글 계정 인증 성공! 제어판이 활성화되었습니다.");
                 } else {
-                    alert(`등록된 선생님 이메일(${TEACHER_EMAIL})이 아닙니다. (현재 로그인된 계정: ${user.email})`);
+                    alert(`등록된 선생님 이메일(${TEACHER_EMAIL})이 아닙니다.`);
                     await signOut(auth);
                     await signInAnonymously(auth);
                 }
             } catch (error) {
-                console.error("Google login error:", error);
                 alert("구글 로그인 중 오류가 발생했습니다: " + error.message);
             }
         };
 
         window.logoutTeacher = async function() {
             if (!auth) return;
-            // 로그아웃 시 현재 접속자 명단에서도 제거 후 익명 전환
             if (db && userId) {
                 try { await deleteDoc(doc(db, 'presence', userId)); } catch(e) {}
             }
@@ -331,7 +379,6 @@
             alert("관리자 로그아웃 되었습니다.");
         };
 
-        // 🧹 선생님 전용: 랭킹 및 기록 전체 초기화 기능
         window.teacherResetLeaderboard = async function() {
             if (!isFirebaseInitialized || !db) return;
             const currentUser = auth.currentUser;
@@ -352,7 +399,6 @@
                 await Promise.all(deletePromises);
                 alert("모든 랭킹 기록이 초기화되었습니다!");
             } catch (err) {
-                console.error("Failed to reset leaderboard:", err);
                 alert("초기화 중 오류가 발생했습니다.");
             }
         };
@@ -371,15 +417,7 @@
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-            if (isFirebaseInitialized && db) {
-                try {
-                    const presenceRef = doc(db, 'presence', userId);
-                    await setDoc(presenceRef, {
-                        nickname: playerNickname,
-                        joinedAt: Date.now()
-                    });
-                } catch(e) { console.error(e); }
-            }
+            updateLiveScoreAndStatus(false); // 로비 입장 시 실시간 점수 등록
 
             if (!isTeacher) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
@@ -397,9 +435,7 @@
                     timestamp: Date.now()
                 });
                 alert("전체 학생에게 게임 시작 신호가 전송되었습니다!");
-            } catch(err) {
-                console.error("Failed to start game:", err);
-            }
+            } catch(err) {}
         };
 
         function listenToGameState() {
@@ -419,7 +455,7 @@
             const board = document.getElementById('game-board');
             board.innerHTML = '';
             matchedPairs = 0;
-            score = 0;
+            score = 300; 
             attempts = 0;
             flippedCards = [];
             isProcessing = false;
@@ -483,6 +519,8 @@
                 cardEl.addEventListener('click', () => handleCardClick(cardEl, index));
                 board.appendChild(cardEl);
             });
+
+            updateLiveScoreAndStatus(false);
         }
 
         function handleCardClick(cardEl, index) {
@@ -500,12 +538,20 @@
                 timerInterval = setInterval(updateTimer, 30);
             }
 
+            playSound('flip');
+
             cardEl.querySelector('.card-inner').classList.add('rotate-y-180');
             flippedCards.push(index);
 
             if (flippedCards.length === 2) {
                 attempts++;
                 document.getElementById('attempts').innerText = attempts;
+
+                // 시도할 때마다 2점씩 감점 반영
+                score = Math.max(50, 300 - (attempts * 2));
+                document.getElementById('score').innerText = score;
+                updateLiveScoreAndStatus(false); // ⚡ 실시간 점수 동기화 업데이트
+
                 isProcessing = true;
 
                 const firstIdx = flippedCards[0];
@@ -521,6 +567,7 @@
 
                 if (isOneRealOneVirtual && isExactPair) {
                     setTimeout(() => {
+                        playSound('match');
                         firstEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
                         secondEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
 
@@ -528,19 +575,18 @@
                         secondEl.querySelector('.card-inner').classList.add('ring-4', 'ring-emerald-400');
 
                         matchedPairs++;
-                        score += 10;
-                        document.getElementById('score').innerText = score;
-
                         flippedCards = [];
                         isProcessing = false;
 
                         if (matchedPairs === cardPairs.length) {
                             clearInterval(timerInterval);
+                            updateLiveScoreAndStatus(true); // 완료 확정 저장
                             setTimeout(showVictoryModal, 500);
                         }
                     }, 350);
                 } else {
                     setTimeout(() => {
+                        playSound('wrong');
                         firstEl.querySelector('.card-inner').classList.remove('rotate-y-180');
                         secondEl.querySelector('.card-inner').classList.remove('rotate-y-180');
                         flippedCards = [];
@@ -557,45 +603,31 @@
         }
 
         function showVictoryModal() {
-            const finalTimeStr = elapsedTime.toFixed(2) + '초';
             document.getElementById('victory-title').innerText = `${playerNickname}님 챌린지 성공!`;
-            document.getElementById('final-time').innerText = finalTimeStr;
+            document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
             document.getElementById('final-attempts').innerText = attempts + '회';
             document.getElementById('final-score').innerText = score + '점';
             document.getElementById('victory-modal').classList.remove('hidden');
-
-            saveScoreToFirestore(playerNickname, score, elapsedTime, attempts);
         }
 
-        async function saveScoreToFirestore(name, finalScore, timeSec, totalAttempts) {
-            if (!isFirebaseInitialized || !db) return;
+        async function updateLiveScoreAndStatus(isCompleted) {
+            if (!isFirebaseInitialized || !db || !userId) return;
             try {
-                const recordId = userId + "_" + Date.now();
-                const recordRef = doc(db, 'leaderboard', recordId);
-                await setDoc(recordRef, {
-                    nickname: name,
-                    score: finalScore,
-                    time: Number(timeSec.toFixed(2)),
-                    attempts: totalAttempts,
+                const ref = doc(db, 'leaderboard', userId);
+                await setDoc(ref, {
+                    nickname: playerNickname,
+                    score: score,
+                    time: isGameStarted ? Number(elapsedTime.toFixed(2)) : 0,
+                    attempts: attempts,
+                    isCompleted: isCompleted,
                     timestamp: Date.now()
-                });
-            } catch (err) {
-                console.error("Error saving score:", err);
-            }
+                }, { merge: true });
+            } catch (err) {}
         }
 
         function listenToLeaderboard() {
             if (!isFirebaseInitialized || !db) return;
             try {
-                const presenceRef = collection(db, 'presence');
-                onSnapshot(presenceRef, (snapshot) => {
-                    let onlineUsers = [];
-                    snapshot.forEach(docSnap => {
-                        onlineUsers.push(docSnap.data());
-                    });
-                    renderOnlineStudents(onlineUsers);
-                });
-
                 const colRef = collection(db, 'leaderboard');
                 onSnapshot(colRef, (snapshot) => {
                     let records = [];
@@ -603,66 +635,76 @@
                         records.push(docSnap.data());
                     });
 
+                    // 🏆 정렬 기준: 1순위 점수 높은 순, 2순위 완료 여부(완료자 우선), 3순위 시간 빠른 순
                     records.sort((a, b) => {
                         if (b.score !== a.score) return b.score - a.score;
-                        if (a.time !== b.time) return a.time - b.time;
-                        return a.attempts - b.attempts;
+                        if (b.isCompleted !== a.isCompleted) return b.isCompleted ? 1 : -1;
+                        return a.time - b.time;
                     });
 
-                    renderLeaderboard(records);
+                    // 🎯 등수 보너스 적용 (최소 0점 보장: max(0, 110 - 등수*10))
+                    records.forEach((rec, idx) => {
+                        let rankBonus = Math.max(0, 110 - ((idx + 1) * 10));
+                        rec.displayScore = rec.score + rankBonus;
+                        rec.rank = idx + 1;
+                        rec.rankBonus = rankBonus;
+                    });
+
+                    // 최종 보너스 포함 점수로 재정렬
+                    records.sort((a, b) => {
+                        if (b.displayScore !== a.displayScore) return b.displayScore - a.displayScore;
+                        return a.time - b.time;
+                    });
+
+                    renderOnlineRosterAndLeaderboard(records);
                 });
-            } catch (err) {
-                console.error("Listener error:", err);
-            }
+            } catch (err) {}
         }
 
-        function renderOnlineStudents(users) {
-            const listEl = document.getElementById('online-students-list');
-            const countEl = document.getElementById('online-count');
-            countEl.innerText = users.length + "명 접속자";
-
-            if (users.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
-                return;
-            }
-
-            let html = ``;
-            users.forEach(user => {
-                html += `
-                    <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
-                        <span class="font-bold text-white truncate max-w-[120px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(user.nickname)}</span>
-                        <span class="text-[9px] text-emerald-300">접속중</span>
-                    </div>
-                `;
-            });
-            listEl.innerHTML = html;
-        }
-
-        function renderLeaderboard(records) {
+        function renderOnlineRosterAndLeaderboard(records) {
             const listEl = document.getElementById('leaderboard-list');
+            const rosterEl = document.getElementById('online-students-list');
+            const countEl = document.getElementById('online-count');
+
+            countEl.innerText = records.length + "명 참여중";
 
             if (records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">아직 완료한 기록이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">참가 기록이 없습니다.</div>`;
+                rosterEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
                 return;
             }
 
-            let html = ``;
+            let rosterHtml = ``;
+            let boardHtml = ``;
+
             records.forEach((rec, idx) => {
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
-                html += `
+                
+                // 접속자 목록 렌더링
+                rosterHtml += `
+                    <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
+                        <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
+                        <span class="text-[9px] text-cyan-300">${rec.score}점 (${rec.attempts}회)</span>
+                    </div>
+                `;
+
+                // 랭킹 리스트 렌더링
+                boardHtml += `
                     <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2">
                             <span class="w-5 text-center ${rankColor}">#${idx + 1}</span>
-                            <span class="font-bold text-white truncate max-w-[90px]">${escapeHtml(rec.nickname)}</span>
+                            <span class="font-bold text-white truncate max-w-[85px]">${escapeHtml(rec.nickname)}</span>
                         </div>
                         <div class="text-right">
-                            <div class="text-cyan-300 font-mono font-bold">${rec.time.toFixed(2)}초</div>
-                            <div class="text-[9px] text-indigo-300/70">${rec.attempts}회 시도</div>
+                            <div class="text-yellow-400 font-bold">${rec.displayScore}점 <span class="text-[9px] text-cyan-300">(+${rec.rankBonus})</span></div>
+                            <div class="text-[9px] text-indigo-300/70">${rec.isCompleted ? rec.time.toFixed(2) + '초 완료' : '진행중...'} (${rec.attempts}회)</div>
                         </div>
                     </div>
                 `;
             });
-            listEl.innerHTML = html;
+
+            rosterEl.innerHTML = rosterHtml;
+            listEl.innerHTML = boardHtml;
         }
 
         function escapeHtml(str) {
