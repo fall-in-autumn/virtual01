@@ -72,14 +72,14 @@
     </div>
 
     <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide (의리T 시작 신호 대기 화면) -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
             <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
             </div>
             <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 시작 신호를 기다리는 중!</h2>
             <p class="text-indigo-200 text-xs md:text-sm mb-4">
-                모든 친구들이 입장하면 게임이 곧 시작됩니다. 아래 규칙과 점수 방식을 확인해 보세요!
+                선생님이 시작 신호를 보낼 때까지 게임 규칙을 읽으며 대기해 주세요.
             </p>
 
             <!-- 규칙 및 점수 산정 안내 박스 -->
@@ -102,7 +102,7 @@
                         <h4 class="text-[11px] font-bold text-yellow-300">점수는 어떻게 매겨지나요?</h4>
                         <ul class="text-[11px] text-indigo-200/90 space-y-1 mt-1 list-disc list-inside">
                             <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득!</li>
-                            <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점... (최소 0점)</b>의 추가 보너스가 붙습니다!</li>
+                            <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점...</b> 추가 보너스가 붙습니다!</li>
                         </ul>
                     </div>
                 </div>
@@ -113,13 +113,23 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
-                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>됩니다! 또한, <b>게임 완료 후에는 재도전할 수 없습니다.</b></p>
+                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>되며, <b>완료 후에는 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
 
             <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
-                <i class="fa-solid fa-spinner fa-spin"></i> 의리T가 시작 버튼을 누르면 화면이 자동으로 열립니다!
+                <i class="fa-solid fa-spinner fa-spin"></i> 의리T가 시작 버튼을 누르면 카운트다운 후 자동 시작됩니다!
+            </div>
+        </div>
+    </div>
+
+    <!-- 3, 2, 1 Countdown Overlay -->
+    <div id="countdown-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
+        <div class="text-center">
+            <div class="text-indigo-300 text-lg md:text-xl font-bold mb-3 tracking-widest uppercase">Game Starting in</div>
+            <div id="countdown-number" class="text-8xl md:text-9xl font-black text-cyan-400 drop-shadow-[0_0_35px_rgba(6,182,212,0.6)] animate-pulse">
+                3
             </div>
         </div>
     </div>
@@ -242,11 +252,10 @@
         🔑
     </div>
 
-    <!-- Victory Modal (왼쪽 상단 X 버튼 추가 및 모달 닫기 지원) -->
+    <!-- Victory Modal -->
     <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300 relative">
             
-            <!-- 왼쪽 상단 X 닫기 버튼 -->
             <button onclick="closeVictoryModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-sm font-bold" title="모달 닫기">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -348,6 +357,7 @@
         let isFirebaseInitialized = false;
         let isGameActive = false;
         let hasCompletedGame = false;
+        let lastTriggerTimestamp = 0; // 중복 카운트다운 방지용
 
         // 🎵 배경음악 (BGM) 관련 변수
         let audioCtx = null;
@@ -530,11 +540,8 @@
 
         function checkTeacherSession(user) {
             const panel = document.getElementById('teacher-control-panel');
-            const waitingOverlay = document.getElementById('waiting-room-overlay');
-
             if (user && user.email === TEACHER_EMAIL) {
                 if (panel) panel.classList.remove('hidden');
-                if (waitingOverlay) waitingOverlay.classList.add('hidden');
             } else {
                 if (panel) panel.classList.add('hidden');
             }
@@ -643,15 +650,11 @@
 
             updateLiveScoreAndStatus(false);
 
-            // 🔑 핵심 수정: 선생님이 시작 신호를 주지 않았다면(isGameActive가 false면) 무조건 규칙 안내 대기 화면 표시!
-            if (!isTeacher) {
-                if (isGameActive) {
-                    document.getElementById('waiting-room-overlay').classList.add('hidden');
-                } else {
-                    document.getElementById('waiting-room-overlay').classList.remove('hidden');
-                }
-            } else {
+            // 🔑 닉네임 입력 후 대기실 오버레이 노출 (카운트다운은 절대 바로 뜨지 않고 선생님 시작 신호 대기)
+            if (isTeacher) {
                 document.getElementById('waiting-room-overlay').classList.add('hidden');
+            } else {
+                document.getElementById('waiting-room-overlay').classList.remove('hidden');
             }
             
             initGame();
@@ -665,7 +668,6 @@
                     status: 'started',
                     timestamp: Date.now()
                 });
-                alert("전체 학생에게 게임 시작 신호가 전송되었습니다!");
             } catch(err) {}
         };
 
@@ -677,7 +679,6 @@
                     status: 'ended',
                     timestamp: Date.now()
                 });
-                alert("전체 학생의 게임이 종료되었습니다!");
             } catch(err) {}
         };
 
@@ -704,10 +705,11 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.status === 'started') {
-                        isGameActive = true;
-                        // 선생님이 시작 신호를 주면 대기실 창을 숨기고 게임 시작 가능 상태로 전환
-                        if (!hasCompletedGame) {
-                            document.getElementById('waiting-room-overlay').classList.add('hidden');
+                        // 선생님이 '게임 시작' 버튼을 눌렀을 때만 카운트다운 실행
+                        if (data.timestamp && data.timestamp !== lastTriggerTimestamp) {
+                            lastTriggerTimestamp = data.timestamp;
+                            isGameActive = false; // 카운트다운 중 조작 금지
+                            triggerCountdownAndStart();
                         }
                     } else if (data.status === 'ended') {
                         isGameActive = false;
@@ -717,9 +719,35 @@
             });
         }
 
-        function initGame() {
+        // 3, 2, 1 카운트다운 후 게임 본격 활성화 함수
+        function triggerCountdownAndStart() {
             if (hasCompletedGame) return;
 
+            // 대기실 오버레이 숨기기
+            document.getElementById('waiting-room-overlay').classList.add('hidden');
+            
+            const countdownOverlay = document.getElementById('countdown-overlay');
+            const countdownNumber = document.getElementById('countdown-number');
+            countdownOverlay.classList.remove('hidden');
+
+            let count = 3;
+            countdownNumber.innerText = count;
+
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownNumber.innerText = count;
+                } else if (count === 0) {
+                    countdownNumber.innerText = "시작!";
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownOverlay.classList.add('hidden');
+                    isGameActive = true; // 게임 플레이 활성화!
+                }
+            }, 1000);
+        }
+
+        function initGame() {
             const board = document.getElementById('game-board');
             board.innerHTML = '';
             matchedPairs = 0;
@@ -797,8 +825,8 @@
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-            // 선생님이 게임 시작 신호를 주지 않았거나 대기실 창이 열려있으면 클릭 원천 차단
-            if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden'))) return;
+            // 선생님이 시작 신호를 주지 않았거나 대기 중/카운트다운 중이면 클릭 원천 차단
+            if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden') || !document.getElementById('countdown-overlay').classList.contains('hidden'))) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
             if (flippedCards.includes(index)) return;
@@ -888,7 +916,6 @@
             document.getElementById('victory-modal').classList.remove('hidden');
         }
 
-        // 미션 완료 후 게임 재시작 차단 및 카드 상태 유지 처리 함수
         function lockGameAfterCompletion() {
             const restartBtn = document.getElementById('restart-btn');
             if (restartBtn) {
@@ -951,7 +978,6 @@
             });
         }
 
-        // 왼쪽 상단 X 버튼으로 모달 닫기
         window.closeVictoryModal = function() {
             document.getElementById('victory-modal').classList.add('hidden');
         };
