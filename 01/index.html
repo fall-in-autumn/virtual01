@@ -248,7 +248,7 @@
             <p id="victory-desc" class="text-indigo-200 text-xs md:text-sm mb-6">
                 성공적으로 기록이 저장되었습니다!<br>본 게임은 <b>1회만 완료 가능</b>하므로 더 이상 재도전할 수 없습니다.
             </p>
-            <div class="bg-white/5 rounded-2xl p-4 mb-6 border border-white/10 grid grid-cols-3 gap-2">
+            <div class="bg-white/5 rounded-2xl p-4 mb-4 border border-white/10 grid grid-cols-3 gap-2">
                 <div>
                     <div class="text-[11px] text-indigo-300">완료 시간</div>
                     <div id="final-time" class="text-base font-bold text-cyan-400 font-mono">0.00초</div>
@@ -262,9 +262,40 @@
                     <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
                 </div>
             </div>
-            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold py-2.5 px-4 rounded-xl">
-                <i class="fa-solid fa-circle-check mr-1.5"></i> 랭킹 등록 완료 (재도전 잠김)
+            
+            <!-- 랭킹 등록 완료 문구 수정 및 학습 리포트 버튼 추가 -->
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold py-2.5 px-4 rounded-xl mb-3">
+                <i class="fa-solid fa-circle-check mr-1.5"></i> 랭킹 등록 완료
             </div>
+            <button onclick="openLearningReport()" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-600 hover:to-cyan-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-xs">
+                <i class="fa-solid fa-book-open-reader"></i> 학습 리포트 보기
+            </button>
+        </div>
+    </div>
+
+    <!-- 학습 리포트 모달 (성공 완료 후 나의 학습 내용 성찰용) -->
+    <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-xl">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 도덕 학습 리포트</h2>
+            <p class="text-indigo-200 text-xs mb-4">현실세계와 가상공간의 특징 짝맞추기 성찰 내용입니다.</p>
+            
+            <div class="flex-grow overflow-y-auto space-y-2.5 pr-1 mb-6 text-left bg-white/5 p-3.5 rounded-2xl border border-white/10 text-xs text-indigo-100 leading-relaxed">
+                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/30">
+                    <h4 class="font-bold text-cyan-300 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> 핵심 도덕적 성찰</h4>
+                    <p class="text-[11px] text-indigo-200">가상공간(메타버스, SNS 등)은 우리의 관계와 활동 범위를 넓혀주지만, 현실세계에서의 도덕적 책임과 예절(네티켓)이 사이버 공간에서도 똑같이 적용되어야 합니다.</p>
+                </div>
+                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/30">
+                    <h4 class="font-bold text-yellow-300 mb-1"><i class="fa-solid fa-check-to-slot mr-1"></i> 나의 도전 결과 요약</h4>
+                    <p class="text-[11px] text-indigo-200" id="report-summary-text">성공적으로 미션을 완수했습니다!</p>
+                </div>
+            </div>
+
+            <button onclick="closeLearningReport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-white/10 text-xs">
+                리포트 닫기
+            </button>
         </div>
     </div>
 
@@ -481,6 +512,7 @@
                     document.getElementById('final-time').innerText = (data.time || 0).toFixed(2) + '초';
                     document.getElementById('final-attempts').innerText = (data.attempts || 0) + '회';
                     document.getElementById('final-score').innerText = (data.score || 0) + '점';
+                    document.getElementById('report-summary-text').innerText = `완료 시간: ${(data.time || 0).toFixed(2)}초 | 시도: ${data.attempts || 0}회 | 최종 점수: ${data.score || 0}점`;
                     document.getElementById('victory-modal').classList.remove('hidden');
                 }
             } catch (e) {}
@@ -601,7 +633,6 @@
 
             updateLiveScoreAndStatus(false);
 
-            // 학생이고 아직 게임이 시작되지 않았다면 대기실 규칙 화면 표시
             if (!isTeacher && !isGameActive) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
             } else {
@@ -641,6 +672,14 @@
 
         window.closeFullLeaderboard = function() {
             document.getElementById('full-leaderboard-modal').classList.add('hidden');
+        };
+
+        window.openLearningReport = function() {
+            document.getElementById('learning-report-modal').classList.remove('hidden');
+        };
+
+        window.closeLearningReport = function() {
+            document.getElementById('learning-report-modal').classList.add('hidden');
         };
 
         function listenToGameState() {
@@ -826,6 +865,7 @@
             document.getElementById('final-time').innerText = elapsedTime.toFixed(2) + '초';
             document.getElementById('final-attempts').innerText = attempts + '회';
             document.getElementById('final-score').innerText = score + '점';
+            document.getElementById('report-summary-text').innerText = `완료 시간: ${elapsedTime.toFixed(2)}초 | 시도: ${attempts}회 | 최종 점수: ${score}점`;
             
             const restartBtn = document.getElementById('restart-btn');
             if (restartBtn) {
