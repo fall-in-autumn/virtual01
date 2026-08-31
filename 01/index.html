@@ -33,213 +33,213 @@
             pointer-events: none;
         }
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
         ::-webkit-scrollbar-track {
             background: rgba(255,255,255,0.05);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 5px;
         }
     </style>
 </head>
-<body class="text-white flex flex-col items-center justify-between min-h-screen p-3 md:p-6 relative">
+<body class="text-white flex flex-col items-center justify-between min-h-screen p-4 md:p-8 relative text-lg">
 
     <!-- Nickname Input Modal Screen -->
-    <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl">
-            <div class="w-16 h-16 bg-gradient-to-tr from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/30 text-2xl text-slate-900 font-bold">
+    <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-8 md:p-10 max-w-lg w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-gradient-to-tr from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/30 text-3xl text-slate-900 font-bold">
                 <i class="fa-solid fa-user-astronaut text-white"></i>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">디지털 도덕 짝맞추기 챌린지</h2>
-            <p class="text-indigo-200 text-sm md:text-base mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-3">디지털 도덕 짝맞추기 챌린지</h2>
+            <p class="text-indigo-200 text-base md:text-lg mb-8">
                 참가할 닉네임을 입력하고 로비에 입장하세요!
             </p>
-            <div class="mb-6 text-left">
-                <label for="player-nickname" class="block text-xs font-semibold text-indigo-300 mb-2 uppercase tracking-wider">플레이어 닉네임</label>
-                <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-xl px-4 py-3 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-lg">
+            <div class="mb-8 text-left">
+                <label for="player-nickname" class="block text-sm font-semibold text-indigo-300 mb-3 uppercase tracking-wider">플레이어 닉네임</label>
+                <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-2xl px-5 py-4 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-xl">
             </div>
-            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base mb-4">
+            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition text-lg mb-5">
                 로비 입장하기 <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
             
             <!-- 선생님 전용 구글 원클릭 로그인 버튼 -->
-            <button onclick="triggerGoogleTeacherLogin()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
-                <i class="fa-brands fa-google text-red-500"></i> 의리T 구글 계정으로 즉시 입장
+            <button onclick="triggerGoogleTeacherLogin()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-bold py-3.5 px-6 rounded-2xl shadow transition flex items-center justify-center gap-3 text-base">
+                <i class="fa-brands fa-google text-red-500 text-lg"></i> 의리T 구글 계정으로 즉시 입장
             </button>
         </div>
     </div>
 
     <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide (의리T 시작 신호 대기 화면) -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
-            <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 md:p-10 max-w-xl w-full text-center shadow-2xl">
+            <div class="w-20 h-20 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-3xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
             </div>
-            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 시작 신호를 기다리는 중!</h2>
-            <p class="text-indigo-200 text-xs md:text-sm mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">의리T의 시작 신호를 기다리는 중!</h2>
+            <p class="text-indigo-200 text-sm md:text-base mb-6">
                 선생님이 시작 신호를 보낼 때까지 게임 규칙을 읽으며 대기해 주세요.
             </p>
 
             <!-- 규칙 및 점수 산정 안내 박스 -->
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 text-left mb-6 space-y-3">
-                <div class="flex items-start gap-2.5">
-                    <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-xs mt-0.5">
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-5 text-left mb-6 space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-sm mt-0.5">
                         <i class="fa-solid fa-puzzle-piece"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-cyan-300">어떤 게임인가요?</h4>
-                        <p class="text-[11px] text-indigo-200/90">현실세계 특징 카드와 가상공간 특징 카드 올바른 짝꿍(총 10쌍)을 찾는 <b>짝맞추기 챌린지</b>입니다.</p>
+                        <h4 class="text-sm font-bold text-cyan-300">어떤 게임인가요?</h4>
+                        <p class="text-xs md:text-sm text-indigo-200/90">현실세계 특징 카드와 가상공간 특징 카드 올바른 짝꿍(총 10쌍)을 찾는 <b>짝맞추기 챌린지</b>입니다.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-2.5">
-                    <div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 text-yellow-300 text-xs mt-0.5">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 text-yellow-300 text-sm mt-0.5">
                         <i class="fa-solid fa-calculator"></i>
                     </div>
                     <div>
-                        <h4 class="text-[11px] font-bold text-yellow-300">점수는 어떻게 매겨지나요?</h4>
-                        <ul class="text-[11px] text-indigo-200/90 space-y-1 mt-1 list-disc list-inside">
+                        <h4 class="text-sm font-bold text-yellow-300">점수는 어떻게 매겨지나요?</h4>
+                        <ul class="text-xs md:text-sm text-indigo-200/90 space-y-1 mt-1 list-disc list-inside">
                             <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득!</li>
                             <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점...</b> 추가 보너스가 붙습니다!</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-2.5">
-                    <div class="w-6 h-6 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0 text-rose-300 text-xs mt-0.5">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0 text-rose-300 text-sm mt-0.5">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
-                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>되며, <b>완료 후에는 재도전할 수 없습니다.</b></p>
+                        <h4 class="text-sm font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
+                        <p class="text-xs md:text-sm text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>되며, <b>완료 후에는 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
 
-            <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-xl border border-cyan-500/30 text-xs font-bold">
+            <div class="inline-flex items-center gap-2.5 bg-cyan-500/10 text-cyan-300 px-5 py-3 rounded-2xl border border-cyan-500/30 text-sm font-bold">
                 <i class="fa-solid fa-spinner fa-spin"></i> 의리T가 시작 버튼을 누르면 카운트다운 후 자동 시작됩니다!
             </div>
         </div>
     </div>
 
     <!-- 3, 2, 1 Countdown Overlay -->
-    <div id="countdown-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
+    <div id="countdown-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-6 hidden">
         <div class="text-center">
-            <div class="text-indigo-300 text-lg md:text-xl font-bold mb-3 tracking-widest uppercase">Game Starting in</div>
-            <div id="countdown-number" class="text-8xl md:text-9xl font-black text-cyan-400 drop-shadow-[0_0_35px_rgba(6,182,212,0.6)] animate-pulse">
+            <div class="text-indigo-300 text-xl md:text-2xl font-bold mb-4 tracking-widest uppercase">Game Starting in</div>
+            <div id="countdown-number" class="text-9xl md:text-[12rem] font-black text-cyan-400 drop-shadow-[0_0_45px_rgba(6,182,212,0.7)] animate-pulse">
                 3
             </div>
         </div>
     </div>
 
     <!-- Header Section -->
-    <header class="w-full max-w-6xl text-center my-2 relative">
+    <header class="w-full max-w-7xl text-center my-3 relative">
         <div class="absolute right-0 top-0">
-            <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-music animate-bounce" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
+            <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-4 py-2 rounded-2xl text-sm font-bold transition flex items-center gap-2 shadow-md">
+                <i class="fa-solid fa-music animate-bounce text-base" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
             </button>
         </div>
-        <div class="inline-block bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-full text-sm font-semibold mb-2 border border-indigo-500/30">
+        <div class="inline-block bg-indigo-500/20 text-indigo-300 px-5 py-2 rounded-full text-base font-semibold mb-3 border border-indigo-500/30">
             <i class="fa-solid fa-graduation-cap mr-2"></i>의리T의 도덕 교실
         </div>
-        <h1 class="text-2xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-indigo-200 to-pink-400 bg-clip-text text-transparent pb-1">
+        <h1 class="text-3xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-indigo-200 to-pink-400 bg-clip-text text-transparent pb-1">
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
-        <p class="text-indigo-200/80 text-xs md:text-sm mt-1">
+        <p class="text-indigo-200/90 text-sm md:text-base mt-2">
             0점 출발! 맞출 때마다 +30점 | 틀릴 때마다 -2점 감점 | 완료 시 1회 제한 및 등수별 보너스!
         </p>
     </header>
 
     <!-- Main Game & Leaderboard Layout -->
-    <main class="w-full max-w-6xl flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6 my-4">
+    <main class="w-full max-w-7xl flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6 my-4">
         
         <!-- Left 3 Columns: Game Board & Stats -->
         <div class="lg:col-span-3 flex flex-col items-center">
             <!-- Status Bar -->
-            <div class="w-full bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-4 shadow-xl border border-white/10 mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-3 flex-wrap">
-                    <div class="bg-cyan-500/20 px-3.5 py-1.5 rounded-xl border border-cyan-400/40 flex items-center gap-2">
-                        <i class="fa-solid fa-user text-cyan-300 text-sm"></i>
-                        <span id="display-nickname" class="text-sm font-bold text-cyan-200">플레이어</span>
+            <div class="w-full bg-white/10 backdrop-blur-md rounded-3xl p-4 md:p-5 shadow-xl border border-white/10 mb-5 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <div class="bg-cyan-500/20 px-4 py-2 rounded-2xl border border-cyan-400/40 flex items-center gap-2.5">
+                        <i class="fa-solid fa-user text-cyan-300 text-base"></i>
+                        <span id="display-nickname" class="text-base font-bold text-cyan-200">플레이어</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
-                        <i class="fa-solid fa-trophy text-yellow-400 text-sm"></i>
-                        <span class="text-xs text-indigo-200">점수:</span>
-                        <span id="score" class="text-base font-bold text-white">0</span>
+                    <div class="bg-indigo-600/50 px-4 py-2 rounded-2xl border border-indigo-400/30 flex items-center gap-2.5">
+                        <i class="fa-solid fa-trophy text-yellow-400 text-base"></i>
+                        <span class="text-sm text-indigo-200">점수:</span>
+                        <span id="score" class="text-lg font-bold text-white">0</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
-                        <i class="fa-solid fa-rotate-right text-cyan-400 text-sm"></i>
-                        <span class="text-xs text-indigo-200">시도:</span>
-                        <span id="attempts" class="text-base font-bold text-white">0</span>
+                    <div class="bg-indigo-600/50 px-4 py-2 rounded-2xl border border-indigo-400/30 flex items-center gap-2.5">
+                        <i class="fa-solid fa-rotate-right text-cyan-400 text-base"></i>
+                        <span class="text-sm text-indigo-200">시도:</span>
+                        <span id="attempts" class="text-lg font-bold text-white">0</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-3 py-1.5 rounded-xl border border-indigo-400/30 flex items-center gap-2">
-                        <i class="fa-solid fa-stopwatch text-pink-400 text-sm"></i>
-                        <span class="text-xs text-indigo-200">시간:</span>
-                        <span id="timer" class="text-base font-bold text-white font-mono">0.00초</span>
+                    <div class="bg-indigo-600/50 px-4 py-2 rounded-2xl border border-indigo-400/30 flex items-center gap-2.5">
+                        <i class="fa-solid fa-stopwatch text-pink-400 text-base"></i>
+                        <span class="text-sm text-indigo-200">시간:</span>
+                        <span id="timer" class="text-lg font-bold text-white font-mono">0.00초</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button id="restart-btn" onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-3.5 py-1.5 rounded-xl font-bold shadow-lg transition flex items-center gap-1.5 text-xs">
+                    <button id="restart-btn" onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-5 py-2.5 rounded-2xl font-bold shadow-lg transition flex items-center gap-2 text-sm">
                         <i class="fa-solid fa-arrow-rotate-right"></i> 다시 섞기
                     </button>
                 </div>
             </div>
 
             <!-- 5 x 4 Grid (20 Cards Total) -->
-            <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 md:gap-3 w-full">
+            <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3.5 md:gap-4 w-full">
                 <!-- Cards injected dynamically -->
             </div>
         </div>
 
         <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
-        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 border border-indigo-500/30 shadow-xl flex flex-col h-[560px] lg:h-auto">
+        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-3xl p-5 border border-indigo-500/30 shadow-xl flex flex-col h-[620px] lg:h-auto">
             
             <!-- Unlocked Teacher Controls -->
-            <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-3 rounded-xl border border-emerald-400/40 mb-3 text-center shadow-md hidden">
-                <div class="text-xs font-bold text-emerald-300 mb-1 flex items-center justify-center gap-1.5">
+            <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-4 rounded-2xl border border-emerald-400/40 mb-4 text-center shadow-md hidden">
+                <div class="text-sm font-bold text-emerald-300 mb-1.5 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> 의리T 제어판 (선생님 전용)
                 </div>
-                <p class="text-[10px] text-indigo-200 mb-2">게임 시작 및 종료를 제어하세요!</p>
-                <div class="grid grid-cols-2 gap-1.5 mb-2">
-                    <button onclick="teacherStartGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1">
+                <p class="text-xs text-indigo-200 mb-3">게임 시작 및 종료를 제어하세요!</p>
+                <div class="grid grid-cols-2 gap-2 mb-2.5">
+                    <button onclick="teacherStartGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-play"></i> 게임 시작
                     </button>
-                    <button onclick="teacherEndGame()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-1.5 px-2 rounded-lg text-xs shadow transition flex items-center justify-center gap-1">
+                    <button onclick="teacherEndGame()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-stop"></i> 게임 종료
                     </button>
                 </div>
-                <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs shadow transition flex items-center justify-center gap-1.5 mb-1.5">
+                <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 mb-2">
                     <i class="fa-solid fa-trophy"></i> 전체 랭킹 보기
                 </button>
-                <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-lg text-[11px] shadow transition flex items-center justify-center gap-1.5 mb-1.5">
+                <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow transition flex items-center justify-center gap-2 mb-2">
                     <i class="fa-solid fa-trash-can"></i> 랭킹 초기화 (재도전 허용)
                 </button>
-                <button onclick="logoutTeacher()" class="text-[10px] text-indigo-300 underline hover:text-white transition">
+                <button onclick="logoutTeacher()" class="text-xs text-indigo-300 underline hover:text-white transition">
                     관리자 로그아웃
                 </button>
             </div>
 
             <!-- Connected Students Roster -->
-            <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
-                <h3 class="font-bold text-xs text-cyan-300 flex items-center gap-1.5">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/10">
+                <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2">
                     <i class="fa-solid fa-users text-cyan-400"></i> 접속한 인원 목록
                 </h3>
-                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
+                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
             </div>
-            <div id="online-students-list" class="h-28 overflow-y-auto space-y-1.5 pr-1 mb-3 bg-white/5 p-2 rounded-xl border border-white/5 text-xs text-indigo-200">
-                <div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>
+            <div id="online-students-list" class="h-32 overflow-y-auto space-y-2 pr-1.5 mb-4 bg-white/5 p-2.5 rounded-2xl border border-white/5 text-sm text-indigo-200">
+                <div class="text-center text-xs text-indigo-300/50 py-4">접속 대기 중...</div>
             </div>
 
             <!-- Leaderboard Section -->
-            <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
-                <h3 class="font-bold text-xs text-yellow-300 flex items-center gap-1.5">
+            <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/10">
+                <h3 class="font-bold text-sm text-yellow-300 flex items-center gap-2">
                     <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 완료 랭킹
                 </h3>
             </div>
-            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2 pr-1">
-                <div class="text-center text-xs text-indigo-300/60 py-6">
+            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-2.5 pr-1.5">
+                <div class="text-center text-sm text-indigo-300/60 py-8">
                     게임 시작 전에는 랭킹에 집계되지 않습니다.
                 </div>
             </div>
@@ -248,89 +248,89 @@
     </main>
 
     <!-- 🔑 우측 하단 구석의 투명한 선생님 구글 로그인 트리거 버튼 -->
-    <div onclick="triggerGoogleTeacherLogin()" class="fixed bottom-1 right-1 w-8 h-8 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-[10px]" title="선생님 구글 로그인">
+    <div onclick="triggerGoogleTeacherLogin()" class="fixed bottom-2 right-2 w-10 h-10 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-xs" title="선생님 구글 로그인">
         🔑
     </div>
 
     <!-- Victory Modal -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300 relative">
+    <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-8 md:p-10 max-w-lg w-full text-center shadow-2xl transform scale-95 transition-all duration-300 relative">
             
-            <button onclick="closeVictoryModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-sm font-bold" title="모달 닫기">
+            <button onclick="closeVictoryModal()" class="absolute top-5 left-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-base font-bold" title="모달 닫기">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30 text-2xl text-slate-900 font-bold mt-2">
+            <div class="w-20 h-20 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg shadow-emerald-500/30 text-3xl text-slate-900 font-bold mt-2">
                 <i class="fa-solid fa-check-to-slot"></i>
             </div>
-            <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공 완료!</h2>
-            <p id="victory-desc" class="text-indigo-200 text-xs md:text-sm mb-6">
+            <h2 id="victory-title" class="text-3xl font-bold text-white mb-2">미션 성공 완료!</h2>
+            <p id="victory-desc" class="text-indigo-200 text-sm md:text-base mb-6">
                 성공적으로 기록이 저장되었습니다!<br>맞춘 카드들을 배경으로 확인하실 수 있습니다.
             </p>
-            <div class="bg-white/5 rounded-2xl p-4 mb-4 border border-white/10 grid grid-cols-3 gap-2">
+            <div class="bg-white/5 rounded-2xl p-5 mb-6 border border-white/10 grid grid-cols-3 gap-3">
                 <div>
-                    <div class="text-[11px] text-indigo-300">완료 시간</div>
-                    <div id="final-time" class="text-base font-bold text-cyan-400 font-mono">0.00초</div>
+                    <div class="text-xs text-indigo-300 mb-1">완료 시간</div>
+                    <div id="final-time" class="text-lg font-bold text-cyan-400 font-mono">0.00초</div>
                 </div>
                 <div class="border-x border-white/10">
-                    <div class="text-[11px] text-indigo-300">시도 횟수</div>
-                    <div id="final-attempts" class="text-base font-bold text-white">0회</div>
+                    <div class="text-xs text-indigo-300 mb-1">시도 횟수</div>
+                    <div id="final-attempts" class="text-lg font-bold text-white">0회</div>
                 </div>
                 <div>
-                    <div class="text-[11px] text-indigo-300">최종 총점수</div>
-                    <div id="final-score" class="text-base font-bold text-yellow-400">0점</div>
+                    <div class="text-xs text-indigo-300 mb-1">최종 총점수</div>
+                    <div id="final-score" class="text-lg font-bold text-yellow-400">0점</div>
                 </div>
             </div>
             
-            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold py-2.5 px-4 rounded-xl mb-3">
-                <i class="fa-solid fa-circle-check mr-1.5"></i> 랭킹 등록 완료
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-bold py-3 px-5 rounded-2xl mb-4">
+                <i class="fa-solid fa-circle-check mr-2"></i> 랭킹 등록 완료
             </div>
-            <button onclick="openLearningReport()" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-600 hover:to-cyan-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-xs">
+            <button onclick="openLearningReport()" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-600 hover:to-cyan-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow transition flex items-center justify-center gap-2.5 text-sm">
                 <i class="fa-solid fa-book-open-reader"></i> 학습 리포트 보기
             </button>
         </div>
     </div>
 
     <!-- 학습 리포트 모달 -->
-    <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
-            <div class="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-xl">
+    <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 md:p-10 max-w-xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-2xl">
                 <i class="fa-solid fa-award"></i>
             </div>
-            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 도덕 학습 리포트</h2>
-            <p class="text-indigo-200 text-xs mb-4">현실세계와 가상공간의 특징 짝맞추기 성찰 내용입니다.</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">의리T의 도덕 학습 리포트</h2>
+            <p class="text-indigo-200 text-sm mb-6">현실세계와 가상공간의 특징 짝맞추기 성찰 내용입니다.</p>
             
-            <div class="flex-grow overflow-y-auto space-y-2.5 pr-1 mb-6 text-left bg-white/5 p-3.5 rounded-2xl border border-white/10 text-xs text-indigo-100 leading-relaxed">
-                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/30">
-                    <h4 class="font-bold text-cyan-300 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> 핵심 도덕적 성찰</h4>
-                    <p class="text-[11px] text-indigo-200">가상공간(메타버스, SNS 등)은 우리의 관계와 활동 범위를 넓혀주지만, 현실세계에서의 도덕적 책임과 예절(네티켓)이 사이버 공간에서도 똑같이 적용되어야 합니다.</p>
+            <div class="flex-grow overflow-y-auto space-y-4 pr-1.5 mb-6 text-left bg-white/5 p-5 rounded-2xl border border-white/10 text-sm text-indigo-100 leading-relaxed">
+                <div class="bg-indigo-950/50 p-4 rounded-2xl border border-indigo-500/30">
+                    <h4 class="font-bold text-cyan-300 mb-1.5"><i class="fa-solid fa-lightbulb mr-1.5"></i> 핵심 도덕적 성찰</h4>
+                    <p class="text-xs md:text-sm text-indigo-200">가상공간(메타버스, SNS 등)은 우리의 관계와 활동 범위를 넓혀주지만, 현실세계에서의 도덕적 책임과 예절(네티켓)이 사이버 공간에서도 똑같이 적용되어야 합니다.</p>
                 </div>
-                <div class="bg-indigo-950/50 p-3 rounded-xl border border-indigo-500/30">
-                    <h4 class="font-bold text-yellow-300 mb-1"><i class="fa-solid fa-check-to-slot mr-1"></i> 나의 도전 결과 요약</h4>
-                    <p class="text-[11px] text-indigo-200" id="report-summary-text">성공적으로 미션을 완수했습니다!</p>
+                <div class="bg-indigo-950/50 p-4 rounded-2xl border border-indigo-500/30">
+                    <h4 class="font-bold text-yellow-300 mb-1.5"><i class="fa-solid fa-check-to-slot mr-1.5"></i> 나의 도전 결과 요약</h4>
+                    <p class="text-xs md:text-sm text-indigo-200" id="report-summary-text">성공적으로 미션을 완수했습니다!</p>
                 </div>
             </div>
 
-            <button onclick="closeLearningReport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-white/10 text-xs">
+            <button onclick="closeLearningReport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-6 rounded-2xl transition border border-white/10 text-sm">
                 리포트 닫기
             </button>
         </div>
     </div>
 
     <!-- 전체 랭킹 모달 -->
-    <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-6 md:p-8 max-w-xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
-            <div class="w-14 h-14 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-400 text-yellow-300 text-xl">
+    <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-8 md:p-10 max-w-2xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-400 text-yellow-300 text-2xl">
                 <i class="fa-solid fa-trophy"></i>
             </div>
-            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">의리T의 전체 랭킹 리포트</h2>
-            <p class="text-indigo-200 text-xs mb-4">현재까지 집계된 전체 학생들의 최종 랭킹 결과입니다.</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">의리T의 전체 랭킹 리포트</h2>
+            <p class="text-indigo-200 text-sm mb-6">현재까지 집계된 전체 학생들의 최종 랭킹 결과입니다.</p>
             
-            <div id="full-leaderboard-content" class="flex-grow overflow-y-auto space-y-2 pr-1 mb-6 text-left bg-white/5 p-3 rounded-2xl border border-white/10">
+            <div id="full-leaderboard-content" class="flex-grow overflow-y-auto space-y-3 pr-1.5 mb-6 text-left bg-white/5 p-4 rounded-2xl border border-white/10">
                 <!-- 리스트 주입 -->
             </div>
 
-            <button onclick="closeFullLeaderboard()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition border border-white/10">
+            <button onclick="closeFullLeaderboard()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-6 rounded-2xl transition border border-white/10 text-sm">
                 창 닫기
             </button>
         </div>
@@ -650,7 +650,7 @@
 
             updateLiveScoreAndStatus(false);
 
-            // 🔑 닉네임 입력 후 대기실 오버레이 노출 (카운트다운은 절대 바로 뜨지 않고 선생님 시작 신호 대기)
+            // 닉네임 입력 후 대기실 오버레이 노출 (카운트다운은 절대 바로 뜨지 않고 선생님 시작 신호 대기)
             if (isTeacher) {
                 document.getElementById('waiting-room-overlay').classList.add('hidden');
             } else {
@@ -777,7 +777,7 @@
 
             cards.forEach((card, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'perspective-1000 h-32 sm:h-36 cursor-pointer';
+                cardEl.className = 'perspective-1000 h-36 sm:h-40 cursor-pointer';
                 cardEl.dataset.index = index;
                 cardEl.dataset.pairId = card.pairId;
                 cardEl.dataset.type = card.type;
@@ -788,24 +788,24 @@
 
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full duration-500 transform-style-3d card-inner shadow-xl rounded-2xl">
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center p-2 backface-hidden hover:border-indigo-400/60 transition group">
-                            <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center mb-1 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
-                                <i class="fa-solid fa-puzzle-piece text-indigo-300 text-xs"></i>
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-2xl flex flex-col items-center justify-center p-3 backface-hidden hover:border-indigo-400/60 transition group">
+                            <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
+                                <i class="fa-solid fa-puzzle-piece text-indigo-300 text-sm"></i>
                             </div>
-                            <span class="text-[9px] text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
+                            <span class="text-xs text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
                         </div>
-                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-2.5 backface-hidden rotate-y-180 text-left">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-3.5 backface-hidden rotate-y-180 text-left">
                             <div class="flex justify-between items-center">
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
-                                    <i class="fa-solid ${iconClass} mr-0.5"></i> ${card.subtitle}
+                                <span class="text-[11px] px-2 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-1"></i> ${card.subtitle}
                                 </span>
                             </div>
                             <div class="my-auto py-1 text-center">
-                                <p class="text-xs sm:text-sm font-bold text-white whitespace-pre-line leading-snug">
+                                <p class="text-sm sm:text-base font-bold text-white whitespace-pre-line leading-snug">
                                     ${card.text}
                                 </p>
                             </div>
-                            <div class="text-[9px] text-gray-400 text-right italic">
+                            <div class="text-[11px] text-gray-400 text-right italic">
                                 ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
                             </div>
                         </div>
@@ -950,25 +950,25 @@
 
             cards.forEach((card, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'perspective-1000 h-32 sm:h-36 cards-locked';
+                cardEl.className = 'perspective-1000 h-36 sm:h-40 cards-locked';
                 const isReal = card.type === 'real';
                 const badgeColor = isReal ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
                 const iconClass = isReal ? 'fa-building-columns' : 'fa-globe';
 
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full transform-style-3d card-inner shadow-xl rounded-2xl rotate-y-180 ring-2 ring-emerald-400">
-                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-2.5 backface-hidden text-left opacity-90">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-3.5 backface-hidden text-left opacity-90">
                             <div class="flex justify-between items-center">
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
-                                    <i class="fa-solid ${iconClass} mr-0.5"></i> ${card.subtitle}
+                                <span class="text-[11px] px-2 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-1"></i> ${card.subtitle}
                                 </span>
                             </div>
                             <div class="my-auto py-1 text-center">
-                                <p class="text-xs sm:text-sm font-bold text-white whitespace-pre-line leading-snug">
+                                <p class="text-sm sm:text-base font-bold text-white whitespace-pre-line leading-snug">
                                     ${card.text}
                                 </p>
                             </div>
-                            <div class="text-[9px] text-gray-400 text-right italic">
+                            <div class="text-[11px] text-gray-400 text-right italic">
                                 ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
                             </div>
                         </div>
@@ -1046,7 +1046,7 @@
             countEl.innerText = records.length + "명 접속중";
 
             if (records.length === 0) {
-                rosterEl.innerHTML = `<div class="text-center text-[11px] text-indigo-300/50 py-3">접속 대기 중...</div>`;
+                rosterEl.innerHTML = `<div class="text-center text-xs text-indigo-300/50 py-4">접속 대기 중...</div>`;
                 return;
             }
 
@@ -1054,16 +1054,16 @@
             records.forEach((rec) => {
                 if (rec.isTeacher) {
                     rosterHtml += `
-                        <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-2.5 py-1 rounded-lg border border-purple-400/50">
-                            <span class="font-bold text-yellow-300 truncate max-w-[120px]"><i class="fa-solid fa-crown text-yellow-400 text-[10px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
-                            <span class="text-[9px] bg-purple-500/30 text-purple-200 px-1.5 py-0.5 rounded border border-purple-400/30 font-bold">호스트</span>
+                        <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-3 py-2 rounded-xl border border-purple-400/50 text-sm">
+                            <span class="font-bold text-yellow-300 truncate max-w-[130px]"><i class="fa-solid fa-crown text-yellow-400 text-xs mr-2"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-xs bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded border border-purple-400/30 font-bold">호스트</span>
                         </div>
                     `;
                 } else {
                     rosterHtml += `
-                        <div class="flex items-center justify-between bg-white/5 px-2 py-1 rounded-lg border border-white/5">
-                            <span class="font-bold text-white truncate max-w-[100px]"><i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1.5"></i>${escapeHtml(rec.nickname)}</span>
-                            <span class="text-[9px] text-cyan-300">${rec.isCompleted ? '완료됨' : rec.score + '점'}</span>
+                        <div class="flex items-center justify-between bg-white/5 px-3 py-2 rounded-xl border border-white/5 text-sm">
+                            <span class="font-bold text-white truncate max-w-[110px]"><i class="fa-solid fa-circle text-emerald-400 text-[10px] mr-2"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-xs text-cyan-300 font-semibold">${rec.isCompleted ? '완료됨' : rec.score + '점'}</span>
                         </div>
                     `;
                 }
@@ -1076,12 +1076,12 @@
             const listEl = document.getElementById('leaderboard-list');
 
             if (!isGameActive && records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">게임 시작 전에는 랭킹에 집계되지 않습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center text-sm text-indigo-300/60 py-8">게임 시작 전에는 랭킹에 집계되지 않습니다.</div>`;
                 return;
             }
 
             if (records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-6">아직 게임을 완료한 학생이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center text-sm text-indigo-300/60 py-8">아직 게임을 완료한 학생이 없습니다.</div>`;
                 return;
             }
 
@@ -1090,14 +1090,14 @@
                 const rankColor = idx === 0 ? 'text-yellow-400 font-bold' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-indigo-300';
                 
                 boardHtml += `
-                    <div class="bg-white/5 p-2.5 rounded-xl border border-white/10 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-2">
-                            <span class="w-5 text-center ${rankColor}">#${idx + 1}</span>
-                            <span class="font-bold text-white truncate max-w-[85px]">${escapeHtml(rec.nickname)}</span>
+                    <div class="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-6 text-center ${rankColor}">#${idx + 1}</span>
+                            <span class="font-bold text-white truncate max-w-[95px]">${escapeHtml(rec.nickname)}</span>
                         </div>
                         <div class="text-right">
-                            <div class="text-yellow-400 font-bold">${rec.displayScore}점 <span class="text-[9px] text-cyan-300">(+${rec.rankBonus})</span></div>
-                            <div class="text-[9px] text-indigo-300/70">${rec.time.toFixed(2)}초 완료</div>
+                            <div class="text-yellow-400 font-bold text-base">${rec.displayScore}점 <span class="text-xs text-cyan-300">(+${rec.rankBonus})</span></div>
+                            <div class="text-xs text-indigo-300/80">${rec.time.toFixed(2)}초 완료</div>
                         </div>
                     </div>
                 `;
@@ -1110,23 +1110,23 @@
             const contentEl = document.getElementById('full-leaderboard-content');
 
             if (records.length === 0) {
-                contentEl.innerHTML = `<div class="text-center text-xs text-indigo-300/60 py-8">완료된 기록이 아직 존재하지 않습니다.</div>`;
+                contentEl.innerHTML = `<div class="text-center text-sm text-indigo-300/60 py-10">완료된 기록이 아직 존재하지 않습니다.</div>`;
                 return;
             }
 
             let html = ``;
             records.forEach((rec, idx) => {
-                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-base' : idx === 1 ? 'text-slate-300 font-bold' : idx === 2 ? 'text-amber-600 font-bold' : 'text-white';
+                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-lg' : idx === 1 ? 'text-slate-300 font-bold text-base' : idx === 2 ? 'text-amber-600 font-bold text-base' : 'text-white text-base';
                 
                 html += `
-                    <div class="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between text-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="w-7 text-center ${rankColor}">#${idx + 1}</span>
+                    <div class="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between text-base">
+                        <div class="flex items-center gap-3.5">
+                            <span class="w-8 text-center ${rankColor}">#${idx + 1}</span>
                             <span class="font-bold text-white">${escapeHtml(rec.nickname)}</span>
                         </div>
-                        <div class="text-right flex items-center gap-4">
+                        <div class="text-right flex items-center gap-5">
                             <div class="text-xs text-indigo-200">기본 ${rec.score}점 + 보너스 <span class="text-cyan-300 font-bold">+${rec.rankBonus}점</span></div>
-                            <div class="text-yellow-400 font-bold text-base">${rec.displayScore}점 <span class="text-[10px] text-indigo-300 font-normal">(${rec.time.toFixed(2)}초)</span></div>
+                            <div class="text-yellow-400 font-bold text-lg">${rec.displayScore}점 <span class="text-xs text-indigo-300 font-normal">(${rec.time.toFixed(2)}초)</span></div>
                         </div>
                     </div>
                 `;
