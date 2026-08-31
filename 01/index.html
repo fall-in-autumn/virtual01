@@ -56,14 +56,19 @@
                 <label for="player-nickname" class="block text-xs font-semibold text-indigo-300 mb-2 uppercase tracking-wider">플레이어 닉네임</label>
                 <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-xl px-4 py-3 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-lg">
             </div>
-            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base">
+            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition text-base mb-4">
                 로비 입장하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+            
+            <!-- 선생님 전용 구글 원클릭 로그인 버튼 -->
+            <button onclick="triggerGoogleTeacherLogin()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                <i class="fa-brands fa-google text-red-500"></i> 의리T 구글 계정으로 즉시 입장
             </button>
         </div>
     </div>
 
     <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
             <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
@@ -302,7 +307,7 @@
         let app, db, auth, userId = null;
         let isFirebaseInitialized = false;
         let isGameActive = false;
-        let hasCompletedGame = false; // 완료 여부 플래그
+        let hasCompletedGame = false;
 
         // 🎵 배경음악 (BGM) 관련 변수
         let audioCtx = null;
@@ -506,8 +511,17 @@
                     document.getElementById('display-nickname').innerText = playerNickname;
                     hasCompletedGame = false;
                     document.getElementById('victory-modal').classList.add('hidden');
-                    alert("의리T 구글 계정 인증 성공! 제어판이 활성화되었습니다.");
-                    updateLiveScoreAndStatus(false);
+                    document.getElementById('nickname-screen').classList.add('hidden');
+                    document.getElementById('waiting-room-overlay').classList.add('hidden');
+                    
+                    if (!isBgmPlaying) {
+                        isBgmPlaying = true;
+                        document.getElementById('bgm-text').innerText = "BGM ON";
+                        document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300";
+                        playBgmLoop();
+                    }
+
+                    initGame();
                 } else {
                     alert(`등록된 선생님 이메일(${TEACHER_EMAIL})이 아닙니다.`);
                     await signOut(auth);
@@ -587,7 +601,7 @@
 
             updateLiveScoreAndStatus(false);
 
-            // [수정 포인트] 이미 게임이 시작되었거나 선생님인 경우 대기실을 거치지 않고 바로 게임 참여
+            // 학생이고 아직 게임이 시작되지 않았다면 대기실 규칙 화면 표시
             if (!isTeacher && !isGameActive) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
             } else {
@@ -637,7 +651,6 @@
                     const data = docSnap.data();
                     if (data.status === 'started') {
                         isGameActive = true;
-                        // 게임이 시작되면 대기 중이던 학생들의 대기실 창도 자동으로 닫히도록 처리
                         if (!hasCompletedGame) {
                             document.getElementById('waiting-room-overlay').classList.add('hidden');
                         }
@@ -763,7 +776,6 @@
                 const isExactPair = firstData.pairId === secondData.pairId;
 
                 if (isOneRealOneVirtual && isExactPair) {
-                    // [수정 포인트] 성공 시: 감점하지 않고 점수(+30점)만 가산
                     setTimeout(() => {
                         playSound('match');
                         firstEl.classList.add('matched', 'opacity-60', 'pointer-events-none');
@@ -788,7 +800,6 @@
                         }
                     }, 350);
                 } else {
-                    // [수정 포인트] 실패 시에만: 틀렸을 때 -2점 감점 적용 (0점 아래로는 떨어지지 않음)
                     if (score > 0) {
                         score = Math.max(0, score - 2);
                         document.getElementById('score').innerText = score;
