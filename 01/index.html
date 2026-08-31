@@ -72,7 +72,7 @@
     </div>
 
     <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide (의리T 시작 신호 대기 화면) -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4">
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
             <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
@@ -643,9 +643,13 @@
 
             updateLiveScoreAndStatus(false);
 
-            // 게임이 시작되지 않았다면 대기실(규칙 안내 창) 유지
-            if (!isTeacher && !isGameActive) {
-                document.getElementById('waiting-room-overlay').classList.remove('hidden');
+            // 🔑 핵심 수정: 선생님이 시작 신호를 주지 않았다면(isGameActive가 false면) 무조건 규칙 안내 대기 화면 표시!
+            if (!isTeacher) {
+                if (isGameActive) {
+                    document.getElementById('waiting-room-overlay').classList.add('hidden');
+                } else {
+                    document.getElementById('waiting-room-overlay').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('waiting-room-overlay').classList.add('hidden');
             }
@@ -701,6 +705,7 @@
                     const data = docSnap.data();
                     if (data.status === 'started') {
                         isGameActive = true;
+                        // 선생님이 시작 신호를 주면 대기실 창을 숨기고 게임 시작 가능 상태로 전환
                         if (!hasCompletedGame) {
                             document.getElementById('waiting-room-overlay').classList.add('hidden');
                         }
@@ -792,7 +797,7 @@
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
-            // 선생님이 게임 시작 신호를 주지 않았거나 대기실 창이 열려있으면 클릭 차단
+            // 선생님이 게임 시작 신호를 주지 않았거나 대기실 창이 열려있으면 클릭 원천 차단
             if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden'))) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
@@ -892,7 +897,6 @@
                 restartBtn.innerHTML = `<i class="fa-solid fa-lock"></i> 완료됨 (재도전 불가)`;
             }
 
-            // 모든 카드를 맞춘 상태로 뒤집힌 채 유지하고 추가 클릭 차단
             const board = document.getElementById('game-board');
             if (board && board.children.length > 0) {
                 const allCards = board.querySelectorAll('.perspective-1000');
