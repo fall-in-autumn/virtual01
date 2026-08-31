@@ -28,6 +28,10 @@
         .rotate-y-180 {
             transform: rotateY(180deg);
         }
+        /* 카드 조작 원천 차단 스타일 */
+        .cards-locked {
+            pointer-events: none;
+        }
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -67,7 +71,7 @@
         </div>
     </div>
 
-    <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide -->
+    <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide (의리T 시작 신호 대기 화면) -->
     <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl">
             <div class="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-2xl animate-pulse">
@@ -109,7 +113,7 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-rose-300">감점 및 재도전 제한 안내</h4>
-                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>됩니다! (성공 시에는 감점 없음) 또한, <b>게임을 완료하면 재도전할 수 없습니다.</b></p>
+                        <p class="text-[11px] text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>됩니다! 또한, <b>게임 완료 후에는 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
@@ -233,20 +237,26 @@
 
     </main>
 
-    <!-- 🔒 우측 하단 구석의 투명한 선생님 구글 로그인 트리거 버튼 -->
+    <!-- 🔑 우측 하단 구석의 투명한 선생님 구글 로그인 트리거 버튼 -->
     <div onclick="triggerGoogleTeacherLogin()" class="fixed bottom-1 right-1 w-8 h-8 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-[10px]" title="선생님 구글 로그인">
         🔑
     </div>
 
-    <!-- Victory Modal (게임 완료 후 재도전 불가 안내) -->
+    <!-- Victory Modal (왼쪽 상단 X 버튼 추가 및 모달 닫기 지원) -->
     <div id="victory-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
-            <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30 text-2xl text-slate-900 font-bold">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300 relative">
+            
+            <!-- 왼쪽 상단 X 닫기 버튼 -->
+            <button onclick="closeVictoryModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-sm font-bold" title="모달 닫기">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-16 h-16 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30 text-2xl text-slate-900 font-bold mt-2">
                 <i class="fa-solid fa-check-to-slot"></i>
             </div>
             <h2 id="victory-title" class="text-2xl md:text-3xl font-bold text-white mb-2">미션 성공 완료!</h2>
             <p id="victory-desc" class="text-indigo-200 text-xs md:text-sm mb-6">
-                성공적으로 기록이 저장되었습니다!<br>본 게임은 <b>1회만 완료 가능</b>하므로 더 이상 재도전할 수 없습니다.
+                성공적으로 기록이 저장되었습니다!<br>맞춘 카드들을 배경으로 확인하실 수 있습니다.
             </p>
             <div class="bg-white/5 rounded-2xl p-4 mb-4 border border-white/10 grid grid-cols-3 gap-2">
                 <div>
@@ -263,7 +273,6 @@
                 </div>
             </div>
             
-            <!-- 랭킹 등록 완료 문구 수정 및 학습 리포트 버튼 추가 -->
             <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold py-2.5 px-4 rounded-xl mb-3">
                 <i class="fa-solid fa-circle-check mr-1.5"></i> 랭킹 등록 완료
             </div>
@@ -273,7 +282,7 @@
         </div>
     </div>
 
-    <!-- 학습 리포트 모달 (성공 완료 후 나의 학습 내용 성찰용) -->
+    <!-- 학습 리포트 모달 -->
     <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
             <div class="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-cyan-400 text-cyan-300 text-xl">
@@ -299,7 +308,7 @@
         </div>
     </div>
 
-    <!-- 전체 랭킹 모달 (선생님 전용 창) -->
+    <!-- 전체 랭킹 모달 -->
     <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-6 md:p-8 max-w-xl w-full text-center shadow-2xl flex flex-col max-h-[85vh]">
             <div class="w-14 h-14 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-yellow-400 text-yellow-300 text-xl">
@@ -513,7 +522,8 @@
                     document.getElementById('final-attempts').innerText = (data.attempts || 0) + '회';
                     document.getElementById('final-score').innerText = (data.score || 0) + '점';
                     document.getElementById('report-summary-text').innerText = `완료 시간: ${(data.time || 0).toFixed(2)}초 | 시도: ${data.attempts || 0}회 | 최종 점수: ${data.score || 0}점`;
-                    document.getElementById('victory-modal').classList.remove('hidden');
+                    
+                    lockGameAfterCompletion();
                 }
             } catch (e) {}
         }
@@ -633,6 +643,7 @@
 
             updateLiveScoreAndStatus(false);
 
+            // 게임이 시작되지 않았다면 대기실(규칙 안내 창) 유지
             if (!isTeacher && !isGameActive) {
                 document.getElementById('waiting-room-overlay').classList.remove('hidden');
             } else {
@@ -781,6 +792,7 @@
             const currentUser = auth.currentUser;
             const isTeacher = currentUser && currentUser.email === TEACHER_EMAIL;
 
+            // 선생님이 게임 시작 신호를 주지 않았거나 대기실 창이 열려있으면 클릭 차단
             if (!isTeacher && (!isGameActive || !document.getElementById('waiting-room-overlay').classList.contains('hidden'))) return;
             if (isProcessing) return;
             if (cardEl.classList.contains('matched')) return;
@@ -867,6 +879,12 @@
             document.getElementById('final-score').innerText = score + '점';
             document.getElementById('report-summary-text').innerText = `완료 시간: ${elapsedTime.toFixed(2)}초 | 시도: ${attempts}회 | 최종 점수: ${score}점`;
             
+            lockGameAfterCompletion();
+            document.getElementById('victory-modal').classList.remove('hidden');
+        }
+
+        // 미션 완료 후 게임 재시작 차단 및 카드 상태 유지 처리 함수
+        function lockGameAfterCompletion() {
             const restartBtn = document.getElementById('restart-btn');
             if (restartBtn) {
                 restartBtn.style.opacity = '0.4';
@@ -874,8 +892,65 @@
                 restartBtn.innerHTML = `<i class="fa-solid fa-lock"></i> 완료됨 (재도전 불가)`;
             }
 
-            document.getElementById('victory-modal').classList.remove('hidden');
+            // 모든 카드를 맞춘 상태로 뒤집힌 채 유지하고 추가 클릭 차단
+            const board = document.getElementById('game-board');
+            if (board && board.children.length > 0) {
+                const allCards = board.querySelectorAll('.perspective-1000');
+                allCards.forEach(cardEl => {
+                    cardEl.classList.add('matched', 'cards-locked');
+                    const inner = cardEl.querySelector('.card-inner');
+                    if (inner) {
+                        inner.classList.add('rotate-y-180', 'ring-2', 'ring-emerald-400');
+                    }
+                });
+            } else {
+                generateCompletedBoard();
+            }
         }
+
+        function generateCompletedBoard() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            cards = [];
+            cardPairs.forEach(item => {
+                cards.push({ text: item.real, type: 'real', pairId: item.id, subtitle: item.category + " (현실)" });
+                cards.push({ text: item.virtual, type: 'virtual', pairId: item.id, subtitle: item.category + " (가상)" });
+            });
+
+            cards.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'perspective-1000 h-32 sm:h-36 cards-locked';
+                const isReal = card.type === 'real';
+                const badgeColor = isReal ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+                const iconClass = isReal ? 'fa-building-columns' : 'fa-globe';
+
+                cardEl.innerHTML = `
+                    <div class="relative w-full h-full transform-style-3d card-inner shadow-xl rounded-2xl rotate-y-180 ring-2 ring-emerald-400">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-2xl flex flex-col justify-between p-2.5 backface-hidden text-left opacity-90">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-0.5"></i> ${card.subtitle}
+                                </span>
+                            </div>
+                            <div class="my-auto py-1 text-center">
+                                <p class="text-xs sm:text-sm font-bold text-white whitespace-pre-line leading-snug">
+                                    ${card.text}
+                                </p>
+                            </div>
+                            <div class="text-[9px] text-gray-400 text-right italic">
+                                ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                board.appendChild(cardEl);
+            });
+        }
+
+        // 왼쪽 상단 X 버튼으로 모달 닫기
+        window.closeVictoryModal = function() {
+            document.getElementById('victory-modal').classList.add('hidden');
+        };
 
         async function updateLiveScoreAndStatus(isCompleted) {
             if (!isFirebaseInitialized || !db || !userId) return;
