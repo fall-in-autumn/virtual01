@@ -329,7 +329,7 @@
         let studentInfo = { id: "", name: "" };
         let userAnswers = {};
         
-        // 구글 앱스크립트 웹앱 URL (이 주소는 외부에 노출되어도 안전합니다!)
+        // 새로 전달해주신 정확한 구글 앱스크립트 웹앱 URL 연동
         const googleScriptUrl = "https://script.google.com/macros/s/AKfycbynEglGE63dnaHp_20z-RwAMrW-eotTyRKWuN_gWwnx7nOT_YpWyt4iQ5OrKvdStsQy_w/exec";
 
         window.onload = function() {
@@ -505,7 +505,7 @@
             }
 
             if (!textInput || textInput.length < 5) {
-                alert("자신의 생각을 최소 5글자 이상 구체적으로 작성해 주세요! (성의 없는 답변은 AI가 반려합니다.)");
+                alert("자신의 생각을 최소 5글자 이상 구체적으로 적어주세요! (성의 없는 답변은 AI가 반려합니다.)");
                 return;
             }
 
@@ -523,7 +523,7 @@
             const isCorrectOption = (selectedOpt == q.correctOption);
 
             try {
-                // 구글 앱스크립트 서버를 통해 안전하게 AI 평가 요청 (API 키 노출 차단)
+                // 구글 앱스크립트 서버를 통해 안전하게 AI 평가 요청
                 const response = await fetch(googleScriptUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -648,7 +648,7 @@
                 btnFeatures.className = "px-3.5 md:px-4.5 py-2 rounded-lg font-semibold text-sm md:text-base transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
             } else if (tab === 'activity') {
                 secActivity.classList.remove('hidden');
-                btnActivity.className, "px-3.5 md:px-4.5 py-2 rounded-lg font-semibold text-sm md:text-base transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+                btnActivity.className = "px-3.5 md:px-4.5 py-2 rounded-lg font-semibold text-sm md:text-base transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
             }
         }
 
