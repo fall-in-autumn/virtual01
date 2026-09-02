@@ -329,8 +329,8 @@
         let studentInfo = { id: "", name: "" };
         let userAnswers = {};
         
-        // 새로 전달해주신 정확한 구글 앱스크립트 웹앱 URL 연동
-        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbynEglGE63dnaHp_20z-RwAMrW-eotTyRKWuN_gWwnx7nOT_YpWyt4iQ5OrKvdStsQy_w/exec";
+        // 구글 앱스크립트 웹앱 URL 연동 (최신 배포 주소 반영)
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxgM4f2gYNrGVyoM2R71ESkjBZOl45Xz5Aff4VqBgGqhIoXRFxn9bGnBeEGJxT1R_Mmng/exec";
 
         window.onload = function() {
             renderPairsGrid();
@@ -520,10 +520,9 @@
 
             const optNames = { 1: "시공간 제약 극복", 2: "익명성", 3: "개방성" };
             const studentChoiceName = optNames[selectedOpt];
-            const isCorrectOption = (selectedOpt == q.correctOption);
 
             try {
-                // 구글 앱스크립트 서버를 통해 안전하게 AI 평가 요청
+                // 구글 앱스크립트 서버로 AI 평가 요청 전송
                 const response = await fetch(googleScriptUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -539,7 +538,7 @@
                 const jsonRes = await response.json();
                 let aiText = jsonRes.aiFeedback || "AI 응답을 불러오는 중 오류가 발생했습니다.";
 
-                const isRejected = aiText.includes("반려") || aiText.includes("다시") || aiText.includes("성의") || !isCorrectOption;
+                const isRejected = aiText.includes("반려") || aiText.includes("오류") || (selectedOpt != q.correctOption);
                 userAnswers[currentQuizIdx].aiFeedback = aiText;
                 userAnswers[currentQuizIdx].isCorrect = !isRejected;
                 userAnswers[currentQuizIdx].selectedFeature = studentChoiceName;
@@ -556,8 +555,13 @@
 
             } catch (error) {
                 console.error("AI 연동 오류:", error);
-                alert("AI 피드백 요청 중 네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-                feedbackEl.classList.add('hidden');
+                feedbackEl.className = "p-5 rounded-2xl border text-base bg-rose-950/80 border-rose-500/50 text-rose-200 shadow-md space-y-2";
+                feedbackEl.innerHTML = `
+                    <div class="flex items-center space-x-2 font-bold text-lg text-rose-300">
+                        <span>❌ 통신 오류 발생</span>
+                    </div>
+                    <p class="text-sm text-slate-100 leading-relaxed">구글 앱스크립트 서버와의 통신에 실패했습니다. 웹앱 배포 설정에서 액세스 권한이 '모든 사용자(Anyone)'로 되어 있는지 확인해주세요.</p>
+                `;
             }
         }
 
