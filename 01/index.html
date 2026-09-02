@@ -28,222 +28,218 @@
         .rotate-y-180 {
             transform: rotateY(180deg);
         }
-        /* 카드 조작 원천 차단 스타일 */
         .cards-locked {
             pointer-events: none;
         }
         ::-webkit-scrollbar {
-            width: 16px;
+            width: 12px;
         }
         ::-webkit-scrollbar-track {
             background: rgba(255,255,255,0.05);
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(255,255,255,0.3);
-            border-radius: 8px;
+            border-radius: 6px;
         }
     </style>
 </head>
-<body class="text-white flex flex-col items-center justify-between min-h-screen p-8 md:p-14 relative text-3xl">
+<body class="text-white flex flex-col items-center justify-between min-h-screen p-4 sm:p-6 md:p-8 relative text-xl sm:text-2xl">
 
     <!-- Nickname Input Modal Screen -->
-    <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-12 md:p-16 max-w-3xl w-full text-center shadow-2xl">
-            <div class="w-36 h-36 bg-gradient-to-tr from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-indigo-500/30 text-7xl text-slate-900 font-bold">
+    <div id="nickname-screen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-3xl p-8 sm:p-12 max-w-2xl w-full text-center shadow-2xl">
+            <div class="w-28 h-28 bg-gradient-to-tr from-cyan-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30 text-5xl text-slate-900 font-bold">
                 <i class="fa-solid fa-user-astronaut text-white"></i>
             </div>
-            <h2 class="text-5xl md:text-7xl font-bold text-white mb-6">디지털 도덕 짝맞추기 챌린지</h2>
-            <p class="text-indigo-200 text-2xl md:text-3xl mb-10">
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-4">디지털 도덕 짝맞추기 챌린지</h2>
+            <p class="text-indigo-200 text-lg sm:text-2xl mb-8">
                 참가할 닉네임을 입력하고 로비에 입장하세요!
             </p>
-            <div class="mb-10 text-left">
-                <label for="player-nickname" class="block text-2xl font-semibold text-indigo-300 mb-4 uppercase tracking-wider">플레이어 닉네임</label>
-                <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-2xl px-8 py-6 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-4xl">
+            <div class="mb-8 text-left">
+                <label for="player-nickname" class="block text-xl font-semibold text-indigo-300 mb-3 uppercase tracking-wider">플레이어 닉네임</label>
+                <input type="text" id="player-nickname" placeholder="예: 의리있는도덕박사" maxlength="12" class="w-full bg-white/5 border border-indigo-500/40 rounded-2xl px-6 py-4 text-white placeholder-indigo-400/50 focus:outline-none focus:border-cyan-400 transition text-center font-bold text-2xl sm:text-3xl">
             </div>
-            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-6 px-10 rounded-2xl shadow-lg transition text-3xl mb-8">
-                로비 입장하기 <i class="fa-solid fa-arrow-right ml-3"></i>
+            <button onclick="joinLobby()" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-600 hover:to-indigo-700 text-white font-bold py-4 sm:py-5 px-8 rounded-2xl shadow-lg transition text-2xl sm:text-3xl mb-6">
+                로비 입장하기 <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
             
-            <!-- 선생님 전용 구글 원클릭 로그인 버튼 -->
-            <button onclick="triggerGoogleTeacherLogin()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-bold py-5 px-8 rounded-2xl shadow transition flex items-center justify-center gap-4 text-2xl">
-                <i class="fa-brands fa-google text-red-500 text-3xl"></i> 의리T 구글 계정으로 즉시 입장
+            <button onclick="triggerGoogleTeacherLogin()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-bold py-4 px-6 rounded-2xl shadow transition flex items-center justify-center gap-3 text-xl sm:text-2xl">
+                <i class="fa-brands fa-google text-red-500 text-2xl"></i> 의리T 구글 계정으로 즉시 입장
             </button>
         </div>
     </div>
 
-    <!-- Teacher Waiting Room Notice Overlay with Rules & Score Guide (의리T 시작 신호 대기 화면) -->
-    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-8">
-        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-12 md:p-16 max-w-4xl w-full text-center shadow-2xl">
-            <div class="w-36 h-36 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-cyan-400 text-cyan-300 text-7xl animate-pulse">
+    <!-- Teacher Waiting Room Notice Overlay -->
+    <div id="waiting-room-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex items-center justify-center p-4 sm:p-6 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 sm:p-12 max-w-3xl w-full text-center shadow-2xl">
+            <div class="w-28 h-28 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-cyan-400 text-cyan-300 text-5xl animate-pulse">
                 <i class="fa-solid fa-chalkboard-user"></i>
             </div>
-            <h2 class="text-5xl md:text-6xl font-bold text-white mb-6">의리T의 시작 신호를 기다리는 중!</h2>
-            <p class="text-indigo-200 text-2xl md:text-3xl mb-10">
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-4">의리T의 시작 신호를 기다리는 중!</h2>
+            <p class="text-indigo-200 text-lg sm:text-2xl mb-8">
                 선생님이 시작 신호를 보낼 때까지 게임 규칙을 읽으며 대기해 주세요.
             </p>
 
-            <!-- 규칙 및 점수 산정 안내 박스 -->
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-3xl p-10 text-left mb-10 space-y-8">
-                <div class="flex items-start gap-6">
-                    <div class="w-16 h-16 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-3xl mt-1">
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 text-left mb-8 space-y-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 text-cyan-300 text-2xl mt-1">
                         <i class="fa-solid fa-puzzle-piece"></i>
                     </div>
                     <div>
-                        <h4 class="text-2xl md:text-3xl font-bold text-cyan-300 mb-2">어떤 게임인가요?</h4>
-                        <p class="text-xl md:text-2xl text-indigo-200/90">현실세계 특징 카드와 가상공간 특징 카드 올바른 짝꿍(총 10쌍)을 찾는 <b>짝맞추기 챌린지</b>입니다.</p>
+                        <h4 class="text-xl sm:text-2xl font-bold text-cyan-300 mb-1">어떤 게임인가요?</h4>
+                        <p class="text-lg sm:text-xl text-indigo-200/90">현실세계 특징 카드와 가상공간 특징 카드 올바른 짝꿍(총 10쌍)을 찾는 <b>짝맞추기 챌린지</b>입니다.</p>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-6">
-                    <div class="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 text-yellow-300 text-3xl mt-1">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 text-yellow-300 text-2xl mt-1">
                         <i class="fa-solid fa-calculator"></i>
                     </div>
                     <div>
-                        <h4 class="text-2xl md:text-3xl font-bold text-yellow-300 mb-2">점수는 어떻게 매겨지나요?</h4>
-                        <ul class="text-xl md:text-2xl text-indigo-200/90 space-y-3 mt-2 list-disc list-inside">
+                        <h4 class="text-xl sm:text-2xl font-bold text-yellow-300 mb-1">점수는 어떻게 매겨지나요?</h4>
+                        <ul class="text-lg sm:text-xl text-indigo-200/90 space-y-2 mt-1 list-disc list-inside">
                             <li><b>0점 출발:</b> 0점에서 시작해 맞출 때마다 <b>+30점씩</b> 획득!</li>
-                            <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점...</b> 추가 보너스가 붙습니다!</li>
+                            <li><b>완료 보너스:</b> 게임을 완료하면 순서대로 <b>1등 +100점, 2등 +90점...</b> 추가 보너스!</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="flex items-start gap-6">
-                    <div class="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0 text-rose-300 text-3xl mt-1">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0 text-rose-300 text-2xl mt-1">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <h4 class="text-2xl md:text-3xl font-bold text-rose-300 mb-2">감점 및 재도전 제한 안내</h4>
-                        <p class="text-xl md:text-2xl text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>되며, <b>완료 후에는 재도전할 수 없습니다.</b></p>
+                        <h4 class="text-xl sm:text-2xl font-bold text-rose-300 mb-1">감점 및 재도전 제한 안내</h4>
+                        <p class="text-lg sm:text-xl text-indigo-200/90">틀릴 때마다 <b>-2점씩 감점</b>되며, <b>완료 후에는 재도전할 수 없습니다.</b></p>
                     </div>
                 </div>
             </div>
 
-            <div class="inline-flex items-center gap-4 bg-cyan-500/10 text-cyan-300 px-10 py-6 rounded-2xl border border-cyan-500/30 text-2xl md:text-3xl font-bold">
-                <i class="fa-solid fa-spinner fa-spin text-3xl"></i> 의리T가 시작 버튼을 누르면 카운트다운 후 자동 시작됩니다!
+            <div class="inline-flex items-center gap-3 bg-cyan-500/10 text-cyan-300 px-8 py-5 rounded-2xl border border-cyan-500/30 text-xl sm:text-2xl font-bold">
+                <i class="fa-solid fa-spinner fa-spin text-2xl"></i> 의리T가 시작 버튼을 누르면 카운트다운 후 자동 시작됩니다!
             </div>
         </div>
     </div>
 
     <!-- 3, 2, 1 Countdown Overlay -->
-    <div id="countdown-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-8 hidden">
+    <div id="countdown-overlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-40 flex items-center justify-center p-6 hidden">
         <div class="text-center">
-            <div class="text-indigo-300 text-4xl md:text-5xl font-bold mb-8 tracking-widest uppercase">Game Starting in</div>
-            <div id="countdown-number" class="text-9xl md:text-[18rem] font-black text-cyan-400 drop-shadow-[0_0_65px_rgba(6,182,212,0.7)] animate-pulse">
+            <div class="text-indigo-300 text-3xl sm:text-4xl font-bold mb-6 tracking-widest uppercase">Game Starting in</div>
+            <div id="countdown-number" class="text-8xl sm:text-[14rem] font-black text-cyan-400 drop-shadow-[0_0_50px_rgba(6,182,212,0.7)] animate-pulse">
                 3
             </div>
         </div>
     </div>
 
     <!-- Header Section -->
-    <header class="w-full max-w-7xl text-center my-8 relative">
+    <header class="w-full max-w-7xl text-center my-4 sm:my-6 relative">
         <div class="absolute right-0 top-0">
-            <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-8 py-5 rounded-2xl text-2xl font-bold transition flex items-center gap-4 shadow-md">
-                <i class="fa-solid fa-music animate-bounce text-3xl" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
+            <button id="bgm-toggle-btn" onclick="toggleBGM()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-cyan-300 px-5 py-3 rounded-2xl text-lg sm:text-xl font-bold transition flex items-center gap-3 shadow-md">
+                <i class="fa-solid fa-music animate-bounce text-2xl" id="bgm-icon"></i> <span id="bgm-text">BGM ON</span>
             </button>
         </div>
-        <div class="inline-block bg-indigo-500/20 text-indigo-300 px-8 py-4 rounded-full text-2xl font-semibold mb-6 border border-indigo-500/30">
-            <i class="fa-solid fa-graduation-cap mr-3"></i>의리T의 도덕 교실
+        <div class="inline-block bg-indigo-500/20 text-indigo-300 px-6 py-2 rounded-full text-lg sm:text-xl font-semibold mb-3 border border-indigo-500/30">
+            <i class="fa-solid fa-graduation-cap mr-2"></i>의리T의 도덕 교실
         </div>
-        <h1 class="text-6xl md:text-8xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-indigo-200 to-pink-400 bg-clip-text text-transparent pb-4">
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 via-indigo-200 to-pink-400 bg-clip-text text-transparent pb-2">
             현실세계 vs 가상공간 특징 짝맞추기
         </h1>
-        <p class="text-indigo-200 text-2xl md:text-3xl mt-5">
+        <p class="text-indigo-200 text-lg sm:text-2xl mt-2">
             0점 출발! 맞출 때마다 +30점 | 틀릴 때마다 -2점 감점 | 완료 시 1회 제한 및 등수별 보너스!
         </p>
     </header>
 
     <!-- Main Game & Leaderboard Layout -->
-    <main class="w-full max-w-7xl flex-grow grid grid-cols-1 lg:grid-cols-4 gap-10 my-8">
+    <main class="w-full max-w-7xl flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8 my-4">
         
         <!-- Left 3 Columns: Game Board & Stats -->
         <div class="lg:col-span-3 flex flex-col items-center">
             <!-- Status Bar -->
-            <div class="w-full bg-white/10 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-xl border border-white/10 mb-8 flex flex-wrap items-center justify-between gap-8">
-                <div class="flex items-center gap-6 flex-wrap">
-                    <div class="bg-cyan-500/20 px-8 py-5 rounded-2xl border border-cyan-400/40 flex items-center gap-4">
-                        <i class="fa-solid fa-user text-cyan-300 text-3xl"></i>
-                        <span id="display-nickname" class="text-3xl font-bold text-cyan-200">플레이어</span>
+            <div class="w-full bg-white/10 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/10 mb-6 flex flex-wrap items-center justify-between gap-6">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <div class="bg-cyan-500/20 px-6 py-3 rounded-2xl border border-cyan-400/40 flex items-center gap-3">
+                        <i class="fa-solid fa-user text-cyan-300 text-2xl"></i>
+                        <span id="display-nickname" class="text-2xl font-bold text-cyan-200">플레이어</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-8 py-5 rounded-2xl border border-indigo-400/30 flex items-center gap-4">
-                        <i class="fa-solid fa-trophy text-yellow-400 text-3xl"></i>
-                        <span class="text-2xl text-indigo-200">점수:</span>
-                        <span id="score" class="text-4xl font-bold text-white">0</span>
+                    <div class="bg-indigo-600/50 px-6 py-3 rounded-2xl border border-indigo-400/30 flex items-center gap-3">
+                        <i class="fa-solid fa-trophy text-yellow-400 text-2xl"></i>
+                        <span class="text-xl text-indigo-200">점수:</span>
+                        <span id="score" class="text-3xl font-bold text-white">0</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-8 py-5 rounded-2xl border border-indigo-400/30 flex items-center gap-4">
-                        <i class="fa-solid fa-rotate-right text-cyan-400 text-3xl"></i>
-                        <span class="text-2xl text-indigo-200">시도:</span>
-                        <span id="attempts" class="text-4xl font-bold text-white">0</span>
+                    <div class="bg-indigo-600/50 px-6 py-3 rounded-2xl border border-indigo-400/30 flex items-center gap-3">
+                        <i class="fa-solid fa-rotate-right text-cyan-400 text-2xl"></i>
+                        <span class="text-xl text-indigo-200">시도:</span>
+                        <span id="attempts" class="text-3xl font-bold text-white">0</span>
                     </div>
-                    <div class="bg-indigo-600/50 px-8 py-5 rounded-2xl border border-indigo-400/30 flex items-center gap-4">
-                        <i class="fa-solid fa-stopwatch text-pink-400 text-3xl"></i>
-                        <span class="text-2xl text-indigo-200">시간:</span>
-                        <span id="timer" class="text-4xl font-bold text-white font-mono">0.00초</span>
+                    <div class="bg-indigo-600/50 px-6 py-3 rounded-2xl border border-indigo-400/30 flex items-center gap-3">
+                        <i class="fa-solid fa-stopwatch text-pink-400 text-2xl"></i>
+                        <span class="text-xl text-indigo-200">시간:</span>
+                        <span id="timer" class="text-3xl font-bold text-white font-mono">0.00초</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-5 flex-wrap">
-                    <button id="restart-btn" onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-8 py-5 rounded-2xl font-bold shadow-lg transition flex items-center gap-4 text-2xl">
-                        <i class="fa-solid fa-arrow-rotate-right text-2xl"></i> 다시 섞기
+                <div class="flex items-center gap-4 flex-wrap">
+                    <button id="restart-btn" onclick="restartGame()" class="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg transition flex items-center gap-3 text-xl">
+                        <i class="fa-solid fa-arrow-rotate-right text-xl"></i> 다시 섞기
                     </button>
-                    <!-- 완료 후 생성되는 학습 리포트 보기 버튼 -->
-                    <button id="external-report-btn" onclick="openLearningReport()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-5 rounded-2xl font-bold shadow-lg transition flex items-center gap-4 text-2xl hidden">
-                        <i class="fa-solid fa-book-open-reader text-2xl"></i> 학습 리포트 보기
+                    <button id="external-report-btn" onclick="openLearningReport()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg transition flex items-center gap-3 text-xl hidden">
+                        <i class="fa-solid fa-book-open-reader text-xl"></i> 학습 리포트 보기
                     </button>
                 </div>
             </div>
 
             <!-- 5 x 4 Grid (20 Cards Total) -->
-            <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 w-full">
+            <div id="game-board" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 w-full">
                 <!-- Cards injected dynamically -->
             </div>
         </div>
 
         <!-- Right 1 Column: Teacher Controls & Real-time Roster/Leaderboard -->
-        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-3xl p-8 border border-indigo-500/30 shadow-xl flex flex-col h-[850px] lg:h-auto">
+        <div class="lg:col-span-1 bg-slate-900/80 backdrop-blur-md rounded-3xl p-6 border border-indigo-500/30 shadow-xl flex flex-col h-[750px] lg:h-auto">
             
             <!-- Unlocked Teacher Controls -->
-            <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-7 rounded-2xl border border-emerald-400/40 mb-8 text-center shadow-md hidden">
-                <div class="text-2xl font-bold text-emerald-300 mb-4 flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i> 의리T 제어판 (선생님 전용)
+            <div id="teacher-control-panel" class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 p-5 rounded-2xl border border-emerald-400/40 mb-6 text-center shadow-md hidden">
+                <div class="text-xl font-bold text-emerald-300 mb-3 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xl"></i> 의리T 제어판 (선생님 전용)
                 </div>
-                <p class="text-lg text-indigo-200 mb-5">게임 시작 및 종료를 제어하세요!</p>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <button onclick="teacherStartGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-5 rounded-xl text-2xl shadow transition flex items-center justify-center gap-3">
+                <p class="text-base text-indigo-200 mb-4">게임 시작 및 종료를 제어하세요!</p>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <button onclick="teacherStartGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-xl shadow transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-play"></i> 게임 시작
                     </button>
-                    <button onclick="teacherEndGame()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 px-5 rounded-xl text-2xl shadow transition flex items-center justify-center gap-3">
+                    <button onclick="teacherEndGame()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-4 rounded-xl text-xl shadow transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-stop"></i> 게임 종료
                     </button>
                 </div>
-                <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-4 px-5 rounded-xl text-2xl shadow transition flex items-center justify-center gap-3 mb-4">
+                <button onclick="teacherShowFullLeaderboard()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-xl text-xl shadow transition flex items-center justify-center gap-2 mb-3">
                     <i class="fa-solid fa-trophy"></i> 전체 랭킹 보기
                 </button>
-                <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-4 px-5 rounded-xl text-xl shadow transition flex items-center justify-center gap-3 mb-4">
+                <button onclick="teacherResetLeaderboard()" class="w-full bg-amber-700/80 hover:bg-amber-800 text-white font-bold py-3 px-4 rounded-xl text-lg shadow transition flex items-center justify-center gap-2 mb-3">
                     <i class="fa-solid fa-trash-can"></i> 랭킹 초기화 (재도전 허용)
                 </button>
-                <button onclick="logoutTeacher()" class="text-xl text-indigo-300 underline hover:text-white transition">
+                <button onclick="logoutTeacher()" class="text-lg text-indigo-300 underline hover:text-white transition">
                     관리자 로그아웃
                 </button>
             </div>
 
             <!-- Connected Students Roster -->
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
-                <h3 class="font-bold text-2xl text-cyan-300 flex items-center gap-3">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                <h3 class="font-bold text-xl text-cyan-300 flex items-center gap-2">
                     <i class="fa-solid fa-users text-cyan-400"></i> 접속한 인원 목록
                 </h3>
-                <span class="text-lg bg-cyan-500/20 text-cyan-300 px-4 py-2 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
+                <span class="text-base bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full border border-cyan-400/30" id="online-count">0명 접속</span>
             </div>
-            <div id="online-students-list" class="h-52 overflow-y-auto space-y-4 pr-3 mb-8 bg-white/5 p-5 rounded-2xl border border-white/5 text-2xl text-indigo-200">
-                <div class="text-center text-xl text-indigo-300/50 py-8">접속 대기 중...</div>
+            <div id="online-students-list" class="h-44 overflow-y-auto space-y-3 pr-2 mb-6 bg-white/5 p-4 rounded-2xl border border-white/5 text-xl text-indigo-200">
+                <div class="text-center text-lg text-indigo-300/50 py-6">접속 대기 중...</div>
             </div>
 
             <!-- Leaderboard Section -->
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
-                <h3 class="font-bold text-2xl text-yellow-300 flex items-center gap-3">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                <h3 class="font-bold text-xl text-yellow-300 flex items-center gap-2">
                     <i class="fa-solid fa-ranking-star text-yellow-400"></i> 실시간 완료 랭킹
                 </h3>
             </div>
-            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-4 pr-3">
-                <div class="text-center text-2xl text-indigo-300/60 py-14">
+            <div id="leaderboard-list" class="flex-grow overflow-y-auto space-y-3 pr-2">
+                <div class="text-center text-xl text-indigo-300/60 py-10">
                     게임 시작 전에는 랭킹에 집계되지 않습니다.
                 </div>
             </div>
@@ -252,111 +248,107 @@
     </main>
 
     <!-- 🔑 우측 하단 구석의 투명한 선생님 구글 로그인 트리거 버튼 -->
-    <div onclick="triggerGoogleTeacherLogin()" class="fixed bottom-6 right-6 w-16 h-16 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-2xl" title="선생님 구글 로그인">
+    <div onclick="triggerGoogleTeacherLogin()" class="fixed bottom-6 right-6 w-14 h-14 z-50 cursor-pointer opacity-0 hover:opacity-100 bg-red-500/20 rounded-full flex items-center justify-center text-xl" title="선생님 구글 로그인">
         🔑
     </div>
 
     <!-- Victory Modal -->
-    <div id="victory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-8 hidden">
-        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-12 md:p-16 max-w-3xl w-full text-center shadow-2xl transform scale-95 transition-all duration-300 relative">
+    <div id="victory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-8 sm:p-12 max-w-2xl w-full text-center shadow-2xl relative">
             
-            <button onclick="closeVictoryModal()" class="absolute top-8 left-8 w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-3xl font-bold" title="모달 닫기">
+            <button onclick="closeVictoryModal()" class="absolute top-6 left-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-2xl font-bold" title="모달 닫기">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="w-36 h-36 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-emerald-500/30 text-7xl text-slate-900 font-bold mt-2 animate-bounce">
+            <div class="w-28 h-28 bg-gradient-to-tr from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30 text-5xl text-slate-900 font-bold mt-2 animate-bounce">
                 <i class="fa-solid fa-check-to-slot"></i>
             </div>
-            <h2 id="victory-title" class="text-5xl md:text-6xl font-bold text-white mb-4">미션 성공 완료!</h2>
-            <p id="victory-desc" class="text-indigo-200 text-2xl md:text-3xl mb-10">
+            <h2 id="victory-title" class="text-3xl sm:text-5xl font-bold text-white mb-3">미션 성공 완료!</h2>
+            <p id="victory-desc" class="text-indigo-200 text-lg sm:text-2xl mb-8">
                 성공적으로 기록이 저장되었습니다!<br>맞춘 카드들을 배경으로 확인하실 수 있습니다.
             </p>
-            <div class="bg-white/5 rounded-2xl p-8 mb-10 border border-white/10 grid grid-cols-3 gap-6">
+            <div class="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10 grid grid-cols-3 gap-4">
                 <div>
-                    <div class="text-lg text-indigo-300 mb-3">완료 시간</div>
-                    <div id="final-time" class="text-3xl font-bold text-cyan-400 font-mono">0.00초</div>
+                    <div class="text-base text-indigo-300 mb-2">완료 시간</div>
+                    <div id="final-time" class="text-2xl sm:text-3xl font-bold text-cyan-400 font-mono">0.00초</div>
                 </div>
                 <div class="border-x border-white/10">
-                    <div class="text-lg text-indigo-300 mb-3">시도 횟수</div>
-                    <div id="final-attempts" class="text-3xl font-bold text-white">0회</div>
+                    <div class="text-base text-indigo-300 mb-2">시도 횟수</div>
+                    <div id="final-attempts" class="text-2xl sm:text-3xl font-bold text-white">0회</div>
                 </div>
                 <div>
-                    <div class="text-lg text-indigo-300 mb-3">최종 총점수</div>
-                    <div id="final-score" class="text-3xl font-bold text-yellow-400">0점</div>
+                    <div class="text-base text-indigo-300 mb-2">최종 총점수</div>
+                    <div id="final-score" class="text-2xl sm:text-3xl font-bold text-yellow-400">0점</div>
                 </div>
             </div>
             
-            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-2xl font-bold py-5 px-8 rounded-2xl mb-8">
-                <i class="fa-solid fa-circle-check mr-3"></i> 랭킹 등록 완료
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xl font-bold py-4 px-6 rounded-2xl mb-6">
+                <i class="fa-solid fa-circle-check mr-2"></i> 랭킹 등록 완료
             </div>
-            <button onclick="closeVictoryModalAndOpenReport()" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-600 hover:to-cyan-700 text-white font-bold py-6 px-10 rounded-2xl shadow transition flex items-center justify-center gap-4 text-3xl">
+            <button onclick="closeVictoryModalAndOpenReport()" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-600 hover:from-indigo-600 hover:to-cyan-700 text-white font-bold py-5 px-8 rounded-2xl shadow transition flex items-center justify-center gap-3 text-2xl">
                 <i class="fa-solid fa-book-open-reader"></i> 학습 리포트 보기
             </button>
         </div>
     </div>
 
-    <!-- 학습 리포트 모달 (현실 세계 vs 가상 공간 카드 짝꿍 확인용 학습 뷰) -->
-    <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-8 hidden">
-        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-10 md:p-14 max-w-5xl w-full text-center shadow-2xl flex flex-col max-h-[92vh] relative">
+    <!-- 학습 리포트 모달 -->
+    <div id="learning-report-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-cyan-500/50 rounded-3xl p-8 sm:p-12 max-w-4xl w-full text-center shadow-2xl flex flex-col max-h-[90vh] relative">
             
-            <!-- 상단 우측 X 닫기 버튼 -->
-            <button onclick="closeLearningReport()" class="absolute top-8 right-8 w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-3xl font-bold" title="창 닫기">
+            <button onclick="closeLearningReport()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-2xl font-bold" title="창 닫기">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="w-28 h-28 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-cyan-400 text-cyan-300 text-6xl">
+            <div class="w-24 h-24 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400 text-cyan-300 text-5xl">
                 <i class="fa-solid fa-award"></i>
             </div>
-            <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">의리T의 도덕 학습 리포트</h2>
-            <p class="text-indigo-200 text-xl md:text-2xl mb-8">현실 세계와 가상 공간의 짝꿍 카드들을 살펴보며 디지털 세상의 특징을 비교 학습해 보세요!</p>
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-3">의리T의 도덕 학습 리포트</h2>
+            <p class="text-indigo-200 text-lg sm:text-xl mb-6">현실 세계와 가상 공간의 짝꿍 카드들을 살펴보며 디지털 세상의 특징을 비교 학습해 보세요!</p>
             
-            <!-- 리포트 내부 컨텐츠 영역 -->
-            <div class="flex-grow overflow-y-auto space-y-8 pr-3 mb-8 text-left bg-white/5 p-8 rounded-3xl border border-white/10 text-2xl text-indigo-100 leading-relaxed">
-                <!-- 상단 성찰 박스 -->
-                <div class="bg-indigo-950/50 p-8 rounded-2xl border border-indigo-500/30">
-                    <h4 class="font-bold text-cyan-300 mb-3 text-3xl"><i class="fa-solid fa-lightbulb mr-3"></i> 핵심 도덕적 성찰</h4>
-                    <p class="text-xl md:text-2xl text-indigo-200">가상공간(메타버스, SNS, 온라인 쇼핑 등)은 우리의 활동 영역을 무한히 넓혀주지만, 현실 세계에서의 도덕적 책임과 예절(네티켓)이 사이버 공간에서도 똑같이 적용되어야 합니다.</p>
+            <div class="flex-grow overflow-y-auto space-y-6 pr-2 mb-6 text-left bg-white/5 p-6 rounded-3xl border border-white/10 text-xl text-indigo-100 leading-relaxed">
+                <div class="bg-indigo-950/50 p-6 rounded-2xl border border-indigo-500/30">
+                    <h4 class="font-bold text-cyan-300 mb-2 text-2xl"><i class="fa-solid fa-lightbulb mr-2"></i> 핵심 도덕적 성찰</h4>
+                    <p class="text-lg sm:text-xl text-indigo-200">가상공간(메타버스, SNS, 온라인 쇼핑 등)은 우리의 활동 영역을 무한히 넓혀주지만, 현실 세계에서의 도덕적 책임과 예절(네티켓)이 사이버 공간에서도 똑같이 적용되어야 합니다.</p>
                 </div>
 
-                <!-- 10쌍의 카드 매칭 학습 카드 그리드 -->
                 <div>
-                    <h4 class="font-bold text-yellow-300 mb-6 text-3xl"><i class="fa-solid fa-handshake mr-3"></i> 현실 세계 ↔ 가상 공간 짝꿍 비교 학습장</h4>
-                    <div id="report-pairs-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h4 class="font-bold text-yellow-300 mb-4 text-2xl"><i class="fa-solid fa-handshake mr-2"></i> 현실 세계 ↔ 가상 공간 짝꿍 비교 학습장</h4>
+                    <div id="report-pairs-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- 동적으로 주입됨 -->
                     </div>
                 </div>
 
-                <div class="bg-indigo-950/50 p-8 rounded-2xl border border-indigo-500/30 text-center">
-                    <h4 class="font-bold text-emerald-300 mb-3 text-3xl"><i class="fa-solid fa-check-to-slot mr-3"></i> 나의 도전 결과 요약</h4>
-                    <p class="text-2xl md:text-3xl text-white font-bold" id="report-summary-text">성공적으로 미션을 완수했습니다!</p>
+                <div class="bg-indigo-950/50 p-6 rounded-2xl border border-indigo-500/30 text-center">
+                    <h4 class="font-bold text-emerald-300 mb-2 text-2xl"><i class="fa-solid fa-check-to-slot mr-2"></i> 나의 도전 결과 요약</h4>
+                    <p class="text-xl sm:text-2xl text-white font-bold" id="report-summary-text">성공적으로 미션을 완수했습니다!</p>
                 </div>
             </div>
 
-            <button onclick="closeLearningReport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-5 px-10 rounded-2xl transition border border-white/10 text-3xl">
+            <button onclick="closeLearningReport()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-8 rounded-2xl transition border border-white/10 text-2xl">
                 리포트 닫기
             </button>
         </div>
     </div>
 
     <!-- 전체 랭킹 모달 -->
-    <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-8 hidden">
-        <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-10 md:p-14 max-w-5xl w-full text-center shadow-2xl flex flex-col max-h-[90vh] relative">
+    <div id="full-leaderboard-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-6 hidden">
+        <div class="bg-slate-900 border border-yellow-500/50 rounded-3xl p-8 sm:p-12 max-w-4xl w-full text-center shadow-2xl flex flex-col max-h-[90vh] relative">
             
-            <button onclick="closeFullLeaderboard()" class="absolute top-8 right-8 w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-3xl font-bold" title="창 닫기">
+            <button onclick="closeFullLeaderboard()" class="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-indigo-200 hover:text-white flex items-center justify-center transition text-2xl font-bold" title="창 닫기">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="w-28 h-28 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-yellow-400 text-yellow-300 text-6xl">
+            <div class="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-400 text-yellow-300 text-5xl">
                 <i class="fa-solid fa-trophy"></i>
             </div>
-            <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">의리T의 전체 랭킹 리포트</h2>
-            <p class="text-indigo-200 text-2xl mb-8">현재까지 집계된 전체 학생들의 최종 랭킹 결과입니다.</p>
+            <h2 class="text-3xl sm:text-5xl font-bold text-white mb-3">의리T의 전체 랭킹 리포트</h2>
+            <p class="text-indigo-200 text-xl mb-6">현재까지 집계된 전체 학생들의 최종 랭킹 결과입니다.</p>
             
-            <div id="full-leaderboard-content" class="flex-grow overflow-y-auto space-y-5 pr-3 mb-8 text-left bg-white/5 p-8 rounded-3xl border border-white/10">
+            <div id="full-leaderboard-content" class="flex-grow overflow-y-auto space-y-4 pr-2 mb-6 text-left bg-white/5 p-6 rounded-3xl border border-white/10">
                 <!-- 리스트 주입 -->
             </div>
 
-            <button onclick="closeFullLeaderboard()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-6 px-10 rounded-2xl transition border border-white/10 text-3xl">
+            <button onclick="closeFullLeaderboard()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-8 rounded-2xl transition border border-white/10 text-2xl">
                 창 닫기
             </button>
         </div>
@@ -383,9 +375,9 @@
         let isFirebaseInitialized = false;
         let isGameActive = false;
         let hasCompletedGame = false;
-        let lastTriggerTimestamp = 0; // 중복 카운트다운 방지용
+        let lastTriggerTimestamp = 0;
 
-        // 🎵 배경음악 (BGM) 관련 변수 (볼륨 상향 조정)
+        // 🎵 배경음악 (BGM) 볼륨을 기존보다 더욱 키움 (0.65)
         let audioCtx = null;
         let isBgmPlaying = false;
         let bgmTimeoutId = null;
@@ -417,8 +409,8 @@
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(bgmNotes[noteIndex], ctx.currentTime);
 
-                // 볼륨을 0.45로 대폭 상향 조정하여 풍성하게 출력
-                gain.gain.setValueAtTime(0.45, ctx.currentTime);
+                // 볼륨을 0.65로 상향 조정
+                gain.gain.setValueAtTime(0.65, ctx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.005, ctx.currentTime + 0.28);
 
                 osc.connect(gain);
@@ -440,11 +432,11 @@
             if (isBgmPlaying) {
                 getAudioContext();
                 btnText.innerText = "BGM ON";
-                bgmIcon.className = "fa-solid fa-music animate-bounce text-cyan-300 text-3xl";
+                bgmIcon.className = "fa-solid fa-music animate-bounce text-cyan-300 text-2xl";
                 playBgmLoop();
             } else {
                 btnText.innerText = "BGM OFF";
-                bgmIcon.className = "fa-solid fa-volume-xmark text-gray-400 text-3xl";
+                bgmIcon.className = "fa-solid fa-volume-xmark text-gray-400 text-2xl";
                 if (bgmTimeoutId) clearTimeout(bgmTimeoutId);
             }
         };
@@ -485,7 +477,6 @@
                     osc.start(now);
                     osc.stop(now + 0.25);
                 } else if (type === 'victory') {
-                    // 미션 완료 축하 팡파레 멜로디 (도-미-솔-고음도)
                     const notes = [523.25, 659.25, 783.99, 1046.50];
                     notes.forEach((freq, i) => {
                         const noteOsc = ctx.createOscillator();
@@ -505,15 +496,15 @@
             } catch(e) {}
         }
 
-        // 카드 쌍 데이터 (요청하신 수정 사항 반영: 이모티콘 + 새 문구 적용)
+        // 🌟 카드 쌍 데이터 (이모티콘 및 요청하신 문구 수정 사항 완벽 반영)
         const cardPairs = [
             { id: 1, real: "🏫 학교에서 만나는 친구", virtual: "💬 SNS에서 만나는 친구", category: "소통 관계" },
-            { id: 2, real: "🏫 오프라인 교실 수업", virtual: "💻 줌(Zoom) 원격 수업", category: "학습 공간" },
+            { id: 2, real: "📚 오프라인 교실 수업", virtual: "💻 줌(Zoom) 원격 수업", category: "학습 공간" },
             { id: 3, real: "🏢 회사 사무실 출근", virtual: "🏠 집에서 재택 근무", category: "근무 환경" },
             { id: 4, real: "🏥 의사 대면 진료", virtual: "📱 스마트폰 원격 진료", category: "의료 서비스" },
             { id: 5, real: "👥 오프라인 동아리 모임", virtual: "🌐 온라인 커뮤니티", category: "커뮤니티" },
             { id: 6, real: "👤 현실의 내 모습", virtual: "🦊 메타버스 아바타", category: "정체성 표현" },
-            { id: 7, real: "🛒 오프라인 매장", virtual: "🛍️ 온라인 쇼핑몰", category: "상업 소비" },
+            { id: 7, real: "🛍️ 오프라인 매장", virtual: "🛒 온라인 쇼핑몰", category: "상업 소비" },
             { id: 8, real: "🎟️ 영화관과 공연장", virtual: "🍿 OTT 스트리밍 서비스", category: "문화 콘텐츠" },
             { id: 9, real: "✈️ 직접 타는 실제 여행", virtual: "🥽 가상현실 VR 탐방", category: "여가 탐방" },
             { id: 10, real: "📜 책으로 배우는 도덕", virtual: "🔒 인터넷 온라인 네티켓", category: "규범 예절" }
@@ -612,7 +603,7 @@
                     if (!isBgmPlaying) {
                         isBgmPlaying = true;
                         document.getElementById('bgm-text').innerText = "BGM ON";
-                        document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300 text-3xl";
+                        document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300 text-2xl";
                         playBgmLoop();
                     }
 
@@ -690,7 +681,7 @@
             if (!isBgmPlaying) {
                 isBgmPlaying = true;
                 document.getElementById('bgm-text').innerText = "BGM ON";
-                document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300 text-3xl";
+                document.getElementById('bgm-icon').className = "fa-solid fa-music animate-bounce text-cyan-300 text-2xl";
                 playBgmLoop();
             }
 
@@ -754,19 +745,19 @@
             if (!container) return;
 
             let html = ``;
-            cardPairs.forEach((pair, idx) => {
+            cardPairs.forEach((pair) => {
                 html += `
-                    <div class="bg-indigo-950/60 p-6 rounded-2xl border border-indigo-500/30 flex items-center justify-between gap-4">
-                        <div class="flex items-center gap-4 w-[45%] bg-amber-500/10 p-5 rounded-xl border border-amber-500/30">
-                            <span class="text-lg bg-amber-500/20 text-amber-300 px-3.5 py-1.5 rounded font-bold">현실</span>
-                            <span class="font-bold text-white text-2xl truncate">${pair.real}</span>
+                    <div class="bg-indigo-950/60 p-5 rounded-2xl border border-indigo-500/30 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 w-[46%] bg-amber-500/10 p-4 rounded-xl border border-amber-500/30">
+                            <span class="text-base bg-amber-500/20 text-amber-300 px-3 py-1 rounded font-bold">현실</span>
+                            <span class="font-bold text-white text-xl truncate">${pair.real}</span>
                         </div>
-                        <div class="text-cyan-400 font-bold text-3xl">
+                        <div class="text-cyan-400 font-bold text-2xl">
                             <i class="fa-solid fa-right-left animate-pulse"></i>
                         </div>
-                        <div class="flex items-center gap-4 w-[45%] bg-cyan-500/10 p-5 rounded-xl border border-cyan-500/30">
-                            <span class="text-lg bg-cyan-500/20 text-cyan-300 px-3.5 py-1.5 rounded font-bold">가상</span>
-                            <span class="font-bold text-white text-2xl truncate">${pair.virtual}</span>
+                        <div class="flex items-center gap-3 w-[46%] bg-cyan-500/10 p-4 rounded-xl border border-cyan-500/30">
+                            <span class="text-base bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded font-bold">가상</span>
+                            <span class="font-bold text-white text-xl truncate">${pair.virtual}</span>
                         </div>
                     </div>
                 `;
@@ -850,7 +841,7 @@
 
             cards.forEach((card, index) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'perspective-1000 h-64 sm:h-72 cursor-pointer';
+                cardEl.className = 'perspective-1000 h-56 sm:h-64 cursor-pointer';
                 cardEl.dataset.index = index;
                 cardEl.dataset.pairId = card.pairId;
                 cardEl.dataset.type = card.type;
@@ -861,24 +852,24 @@
 
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full duration-500 transform-style-3d card-inner shadow-2xl rounded-3xl">
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-3xl flex flex-col items-center justify-center p-6 backface-hidden hover:border-indigo-400/60 transition group">
-                            <div class="w-24 h-24 rounded-full bg-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
-                                <i class="fa-solid fa-puzzle-piece text-indigo-300 text-4xl"></i>
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900/80 to-slate-900/90 border border-indigo-500/30 rounded-3xl flex flex-col items-center justify-center p-5 backface-hidden hover:border-indigo-400/60 transition group">
+                            <div class="w-20 h-20 rounded-full bg-indigo-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300 border border-indigo-400/30">
+                                <i class="fa-solid fa-puzzle-piece text-indigo-300 text-3xl"></i>
                             </div>
-                            <span class="text-xl text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
+                            <span class="text-lg text-indigo-300 font-semibold tracking-wider uppercase">CARD #${index + 1}</span>
                         </div>
-                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-3xl flex flex-col justify-between p-7 backface-hidden rotate-y-180 text-left">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-3xl flex flex-col justify-between p-5 backface-hidden rotate-y-180 text-left">
                             <div class="flex justify-between items-center">
-                                <span class="text-lg px-5 py-2 rounded-full border ${badgeColor} font-bold truncate">
-                                    <i class="fa-solid ${iconClass} mr-2"></i> ${card.subtitle}
+                                <span class="text-base px-4 py-1.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-1.5"></i> ${card.subtitle}
                                 </span>
                             </div>
-                            <div class="my-auto py-3 text-center">
-                                <p class="text-3xl sm:text-4xl font-bold text-white whitespace-pre-line leading-relaxed">
+                            <div class="my-auto py-2 text-center">
+                                <p class="text-2xl sm:text-3xl font-bold text-white whitespace-pre-line leading-snug">
                                     ${card.text}
                                 </p>
                             </div>
-                            <div class="text-lg text-gray-400 text-right italic">
+                            <div class="text-base text-gray-400 text-right italic">
                                 ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
                             </div>
                         </div>
@@ -951,7 +942,7 @@
                         if (matchedPairs === cardPairs.length) {
                             hasCompletedGame = true;
                             clearInterval(timerInterval);
-                            playSound('victory'); // 미션 완료 축하 효과음 재생
+                            playSound('victory');
                             updateLiveScoreAndStatus(true);
                             setTimeout(showVictoryModal, 500);
                         }
@@ -997,7 +988,6 @@
                 restartBtn.innerHTML = `<i class="fa-solid fa-lock"></i> 완료됨 (재도전 불가)`;
             }
 
-            // 완료 후 상단 상태 바에 학습 리포트 보기 버튼 노출
             const externalReportBtn = document.getElementById('external-report-btn');
             if (externalReportBtn) {
                 externalReportBtn.classList.remove('hidden');
@@ -1027,27 +1017,27 @@
                 cards.push({ text: item.virtual, type: 'virtual', pairId: item.id, subtitle: item.category + " (가상)" });
             });
 
-            cards.forEach((card, index) => {
+            cards.forEach((card) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'perspective-1000 h-64 sm:h-72 cards-locked';
+                cardEl.className = 'perspective-1000 h-56 sm:h-64 cards-locked';
                 const isReal = card.type === 'real';
                 const badgeColor = isReal ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
                 const iconClass = isReal ? 'fa-building-columns' : 'fa-globe';
 
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full transform-style-3d card-inner shadow-2xl rounded-3xl rotate-y-180 ring-2 ring-emerald-400">
-                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-3xl flex flex-col justify-between p-7 backface-hidden text-left opacity-90">
+                        <div class="absolute inset-0 w-full h-full bg-slate-900 border-2 ${isReal ? 'border-amber-500/50' : 'border-cyan-500/50'} rounded-3xl flex flex-col justify-between p-5 backface-hidden text-left opacity-90">
                             <div class="flex justify-between items-center">
-                                <span class="text-lg px-5 py-2 rounded-full border ${badgeColor} font-bold truncate">
-                                    <i class="fa-solid ${iconClass} mr-2"></i> ${card.subtitle}
+                                <span class="text-base px-4 py-1.5 rounded-full border ${badgeColor} font-bold truncate">
+                                    <i class="fa-solid ${iconClass} mr-1.5"></i> ${card.subtitle}
                                 </span>
                             </div>
-                            <div class="my-auto py-3 text-center">
-                                <p class="text-3xl sm:text-4xl font-bold text-white whitespace-pre-line leading-relaxed">
+                            <div class="my-auto py-2 text-center">
+                                <p class="text-2xl sm:text-3xl font-bold text-white whitespace-pre-line leading-snug">
                                     ${card.text}
                                 </p>
                             </div>
-                            <div class="text-lg text-gray-400 text-right italic">
+                            <div class="text-base text-gray-400 text-right italic">
                                 ${isReal ? '🏢 현실세계' : '🌐 가상공간'}
                             </div>
                         </div>
@@ -1125,7 +1115,7 @@
             countEl.innerText = records.length + "명 접속중";
 
             if (records.length === 0) {
-                rosterEl.innerHTML = `<div class="text-center text-xl text-indigo-300/50 py-8">접속 대기 중...</div>`;
+                rosterEl.innerHTML = `<div class="text-center text-lg text-indigo-300/50 py-6">접속 대기 중...</div>`;
                 return;
             }
 
@@ -1133,16 +1123,16 @@
             records.forEach((rec) => {
                 if (rec.isTeacher) {
                     rosterHtml += `
-                        <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-6 py-4 rounded-xl border border-purple-400/50 text-2xl">
-                            <span class="font-bold text-yellow-300 truncate max-w-[190px]"><i class="fa-solid fa-crown text-yellow-400 text-xl mr-3"></i>${escapeHtml(rec.nickname)}</span>
-                            <span class="text-lg bg-purple-500/30 text-purple-200 px-4 py-1.5 rounded border border-purple-400/30 font-bold">호스트</span>
+                        <div class="flex items-center justify-between bg-gradient-to-r from-purple-900/60 to-pink-900/60 px-5 py-3 rounded-xl border border-purple-400/50 text-xl">
+                            <span class="font-bold text-yellow-300 truncate max-w-[170px]"><i class="fa-solid fa-crown text-yellow-400 text-lg mr-2"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-base bg-purple-500/30 text-purple-200 px-3 py-1 rounded border border-purple-400/30 font-bold">호스트</span>
                         </div>
                     `;
                 } else {
                     rosterHtml += `
-                        <div class="flex items-center justify-between bg-white/5 px-6 py-4 rounded-xl border border-white/5 text-2xl">
-                            <span class="font-bold text-white truncate max-w-[170px]"><i class="fa-solid fa-circle text-emerald-400 text-sm mr-3"></i>${escapeHtml(rec.nickname)}</span>
-                            <span class="text-2xl text-cyan-300 font-semibold">${rec.isCompleted ? '완료됨' : rec.score + '점'}</span>
+                        <div class="flex items-center justify-between bg-white/5 px-5 py-3 rounded-xl border border-white/5 text-xl">
+                            <span class="font-bold text-white truncate max-w-[150px]"><i class="fa-solid fa-circle text-emerald-400 text-xs mr-2"></i>${escapeHtml(rec.nickname)}</span>
+                            <span class="text-xl text-cyan-300 font-semibold">${rec.isCompleted ? '완료됨' : rec.score + '점'}</span>
                         </div>
                     `;
                 }
@@ -1155,28 +1145,28 @@
             const listEl = document.getElementById('leaderboard-list');
 
             if (!isGameActive && records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-2xl text-indigo-300/60 py-14">게임 시작 전에는 랭킹에 집계되지 않습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center text-xl text-indigo-300/60 py-10">게임 시작 전에는 랭킹에 집계되지 않습니다.</div>`;
                 return;
             }
 
             if (records.length === 0) {
-                listEl.innerHTML = `<div class="text-center text-2xl text-indigo-300/60 py-14">아직 게임을 완료한 학생이 없습니다.</div>`;
+                listEl.innerHTML = `<div class="text-center text-xl text-indigo-300/60 py-10">아직 게임을 완료한 학생이 없습니다.</div>`;
                 return;
             }
 
             let boardHtml = ``;
             records.slice(0, 5).forEach((rec, idx) => {
-                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-4xl' : idx === 1 ? 'text-slate-300 font-bold text-3xl' : idx === 2 ? 'text-amber-600 font-bold text-3xl' : 'text-indigo-300 text-3xl';
+                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-3xl' : idx === 1 ? 'text-slate-300 font-bold text-2xl' : idx === 2 ? 'text-amber-600 font-bold text-2xl' : 'text-indigo-300 text-2xl';
                 
                 boardHtml += `
-                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10 flex items-center justify-between text-2xl">
-                        <div class="flex items-center gap-5">
-                            <span class="w-12 text-center ${rankColor}">#${idx + 1}</span>
-                            <span class="font-bold text-white truncate max-w-[150px]">${escapeHtml(rec.nickname)}</span>
+                    <div class="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between text-xl">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 text-center ${rankColor}">#${idx + 1}</span>
+                            <span class="font-bold text-white truncate max-w-[130px]">${escapeHtml(rec.nickname)}</span>
                         </div>
                         <div class="text-right">
-                            <div class="text-yellow-400 font-bold text-3xl">${rec.displayScore}점 <span class="text-xl text-cyan-300">(+${rec.rankBonus})</span></div>
-                            <div class="text-lg text-indigo-300/80">${rec.time.toFixed(2)}초 완료</div>
+                            <div class="text-yellow-400 font-bold text-2xl">${rec.displayScore}점 <span class="text-base text-cyan-300">(+${rec.rankBonus})</span></div>
+                            <div class="text-sm text-indigo-300/80">${rec.time.toFixed(2)}초 완료</div>
                         </div>
                     </div>
                 `;
@@ -1189,23 +1179,23 @@
             const contentEl = document.getElementById('full-leaderboard-content');
 
             if (records.length === 0) {
-                contentEl.innerHTML = `<div class="text-center text-2xl text-indigo-300/60 py-14">완료된 기록이 아직 존재하지 않습니다.</div>`;
+                contentEl.innerHTML = `<div class="text-center text-xl text-indigo-300/60 py-10">완료된 기록이 아직 존재하지 않습니다.</div>`;
                 return;
             }
 
             let html = ``;
             records.forEach((rec, idx) => {
-                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-4xl' : idx === 1 ? 'text-slate-300 font-bold text-3xl' : idx === 2 ? 'text-amber-600 font-bold text-3xl' : 'text-white text-3xl';
+                const rankColor = idx === 0 ? 'text-yellow-400 font-bold text-3xl' : idx === 1 ? 'text-slate-300 font-bold text-2xl' : idx === 2 ? 'text-amber-600 font-bold text-2xl' : 'text-white text-2xl';
                 
                 html += `
-                    <div class="bg-white/5 p-7 rounded-2xl border border-white/10 flex items-center justify-between text-3xl">
-                        <div class="flex items-center gap-6">
-                            <span class="w-16 text-center ${rankColor}">#${idx + 1}</span>
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/10 flex items-center justify-between text-2xl">
+                        <div class="flex items-center gap-4">
+                            <span class="w-12 text-center ${rankColor}">#${idx + 1}</span>
                             <span class="font-bold text-white">${escapeHtml(rec.nickname)}</span>
                         </div>
-                        <div class="text-right flex items-center gap-10">
-                            <div class="text-xl text-indigo-200">기본 ${rec.score}점 + 보너스 <span class="text-cyan-300 font-bold">+${rec.rankBonus}점</span></div>
-                            <div class="text-yellow-400 font-bold text-4xl">${rec.displayScore}점 <span class="text-xl text-indigo-300 font-normal">(${rec.time.toFixed(2)}초)</span></div>
+                        <div class="text-right flex items-center gap-6">
+                            <div class="text-lg text-indigo-200">기본 ${rec.score}점 + 보너스 <span class="text-cyan-300 font-bold">+${rec.rankBonus}점</span></div>
+                            <div class="text-yellow-400 font-bold text-3xl">${rec.displayScore}점 <span class="text-base text-indigo-300 font-normal">(${rec.time.toFixed(2)}초)</span></div>
                         </div>
                     </div>
                 `;
