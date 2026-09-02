@@ -164,15 +164,41 @@
                 <div>
                     <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-sm font-bold rounded-full border border-emerald-500/30">의리T의 도덕 교실 퀴즈</span>
                     <h2 class="text-2xl font-bold mt-2 text-white">가상공간 상황 판별 퀴즈</h2>
-                    <p class="text-base text-slate-300 mt-1">문제를 풀고 <strong>'도덕박사 AI'</strong>의 피드백을 받아 정답을 맞혀야 다음 문제로 넘어갈 수 있습니다. 마지막 문제까지 완료하면 구글 시트에 답안이 저장됩니다!</p>
+                    <p class="text-base text-slate-300 mt-1">학번과 이름을 입력하고 문제를 풀면, <strong>'도덕박사 AI'</strong>가 학생의 생각을 엄격하고 깊이 있게 분석하여 피드백을 제공합니다!</p>
                 </div>
                 <div class="text-right">
-                    <span id="quiz-step-indicator" class="text-base font-bold bg-indigo-950 text-indigo-300 px-3.5 py-1.5 rounded-xl border border-indigo-500/30">문제 1 / 4</span>
+                    <span id="quiz-step-indicator" class="text-base font-bold bg-indigo-950 text-indigo-300 px-3.5 py-1.5 rounded-xl border border-indigo-500/30 hidden">문제 1 / 4</span>
                 </div>
             </div>
 
-            <!-- Quiz Card Container -->
-            <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 transition-all duration-300">
+            <!-- Student Info Gate / Modal Card -->
+            <div id="student-info-card" class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold text-indigo-400 bg-indigo-950 px-3.5 py-1 rounded-md border border-indigo-500/30">STEP 0. 학습자 정보 입력</span>
+                    <h3 class="text-xl font-bold text-white mt-1">퀴즈를 시작하기 전에 학번과 이름을 적어주세요!</h3>
+                    <p class="text-sm text-slate-300">작성하신 학번과 이름은 퀴즈 결과와 함께 구글 시트에 안전하게 기록됩니다.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-300 block">학번 (예: 30115)</label>
+                        <input type="text" id="student-id" placeholder="학번을 입력하세요 (예: 30115)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-base text-slate-200 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-slate-300 block">이름 (예: 홍길동)</label>
+                        <input type="text" id="student-name" placeholder="이름을 입력하세요" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-base text-slate-200 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex justify-end">
+                    <button onclick="startQuizFlow()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-base transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                        <span>🚀 퀴즈 시작하기</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Card Container (Hidden initially until student info is entered) -->
+            <div id="quiz-main-container" class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 transition-all duration-300 hidden">
                 
                 <!-- Quiz Header / Scenario -->
                 <div class="space-y-3">
@@ -197,7 +223,7 @@
                 <!-- Explanation & Reflection Input -->
                 <div class="space-y-2">
                     <label id="q-textarea-label" class="text-sm font-bold text-slate-300 block">그렇게 생각한 이유나 나의 다짐을 적어보세요:</label>
-                    <textarea id="q-user-input" placeholder="생각을 구체적으로 작성해 보세요..." class="w-full h-32 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-base text-slate-200 focus:outline-none focus:border-indigo-500 resize-none shadow-inner"></textarea>
+                    <textarea id="q-user-input" placeholder="성의 없이 작성하거나 관련 없는 내용을 적으면 AI가 엄격하게 반려합니다. 구체적으로 작성해 주세요!" class="w-full h-32 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-base text-slate-200 focus:outline-none focus:border-indigo-500 resize-none shadow-inner"></textarea>
                 </div>
 
                 <!-- Feedback Area (Hidden by default) -->
@@ -280,7 +306,7 @@
                 subtitle: "시공간 제약 극복",
                 scenario: "중학생 수민이는 감기 기운이 심해 병원에 직접 가기 어려운 상황이었지만, 컴퓨터를 통해 원격 진료를 받고 약을 처방받았다. 또한, 집에서 실시간 온라인 원격 수업에 참여하여 교육 과정을 편리하게 이수했다.",
                 correctOption: 1,
-                labelPrompt: "위 상황이 가상공간의 어떤 특징을 보여주는지 나의 생각을 적어보세요:"
+                labelPrompt: "위 상황이 가상공간의 어떤 특징을 보여주며 왜 그렇게 생각하는지 구체적으로 적어보세요:"
             },
             {
                 step: 2,
@@ -289,7 +315,7 @@
                 subtitle: "익명성",
                 scenario: "평소 수업 시간에 발표하기를 극도로 부끄러워하던 민호는 온라인 토론 게시판에서 자신의 신분이나 정체성을 드러내지 않은 채, 아바타와 익명을 활용해 자기 생각을 자유롭게 제시하고 학급 친구들과 평등하게 소통했다.",
                 correctOption: 2,
-                labelPrompt: "익명성을 활용해 소통할 때 우리가 지켜야 할 태도나 다짐을 적어보세요:"
+                labelPrompt: "익명성을 활용해 소통할 때 장점과 함께 우리가 주의해야 할 태도나 다짐을 구체적으로 적어보세요:"
             },
             {
                 step: 3,
@@ -298,7 +324,7 @@
                 subtitle: "개방성",
                 scenario: "지혜는 평소 지구 환경 보호에 관심이 많았는데, 누구나 정보를 이용하고 직접 생산하여 유통할 수 있는 온라인 플랫폼을 통해 자신이 만든 환경보호 포스터를 전 세계에 공유했다. 아울러 현실에서 쉽게 만나기 어려운 지구 반대편의 환경 운동가들과 소통하며 풍부한 인간관계를 맺었다.",
                 correctOption: 3,
-                labelPrompt: "개방성이 주는 장점과 내가 유통하고 싶은 정보에 대해 적어보세요:"
+                labelPrompt: "개방성이 주는 장점과 내가 앞으로 유통하고 싶은 정보 및 올바른 태도를 구체적으로 적어보세요:"
             },
             {
                 step: 4,
@@ -307,21 +333,41 @@
                 subtitle: "종합 및 디지털 시민성",
                 scenario: "현우는 시간과 공간의 제약 없이 온라인 커뮤니티를 통해 전 세계 사람들과 실시간으로 취미 정보를 나누고 있다. 이 과정에서 다른 사람의 의견을 존중하고 올바른 네티켓을 지키는 것이 중요함을 느꼈다.",
                 correctOption: 3, 
-                labelPrompt: "온라인 커뮤니티 활동에서 개방성과 올바른 태도가 왜 중요한지 적어보세요:"
+                labelPrompt: "온라인 커뮤니티 활동에서 개방성과 올바른 디지털 시민 태도가 왜 중요한지 나의 생각을 구체적으로 적어보세요:"
             }
         ];
 
         let currentQuizIdx = 0;
+        let studentInfo = { id: "", name: "" };
         let userAnswers = {};
         const geminiApiKey = "";
         
-        // 구글 스크립트 웹앱 URL 연동 완료
-        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbyKTfGpOs1MD1iiEHED2egOH59ILJ7_nKaaCjr5rhDHB6igzPUYuVCk_Inlx5ogHwdZmw/exec";
+        // 제공해주신 구글 스크립트 웹앱 URL 연동 완료
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbyWmE2OzY-im4HMa3plyw94BI5F9qP5o7V_ia1u7QLvsMxiHxwr4GT2y-PZZENa_Mj65g/exec";
 
         window.onload = function() {
             renderPairsGrid();
             renderFeatureCardsList();
         };
+
+        function startQuizFlow() {
+            const idInput = document.getElementById('student-id').value.trim();
+            const nameInput = document.getElementById('student-name').value.trim();
+
+            if (!idInput || !nameInput) {
+                alert("학번과 이름을 모두 입력해 주세요!");
+                return;
+            }
+
+            studentInfo.id = idInput;
+            studentInfo.name = nameInput;
+
+            document.getElementById('student-info-card').classList.add('hidden');
+            document.getElementById('quiz-main-container').classList.remove('hidden');
+            document.getElementById('quiz-step-indicator').classList.remove('hidden');
+
+            loadQuiz(currentQuizIdx);
+        }
 
         function renderPairsGrid() {
             const grid = document.getElementById('pairs-grid');
@@ -426,7 +472,7 @@
                 feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${isCorrectStyle ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
                 feedbackEl.innerHTML = `
                     <div class="flex items-center space-x-2 font-bold text-lg ${isCorrectStyle ? 'text-emerald-300' : 'text-rose-300'}">
-                        <span>${isCorrectStyle ? '🎉 정답입니다!' : '🤔 다시 생각해보세요!'}</span>
+                        <span>${isCorrectStyle ? '🎉 승인 및 정답입니다!' : '🤔 반려됨 (다시 작성해 주세요!)'}</span>
                     </div>
                     <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${saved.aiFeedback}</p>
                 `;
@@ -436,7 +482,6 @@
 
             document.getElementById('btn-prev').disabled = idx === 0;
             
-            // Next button is enabled ONLY IF the student has submitted and answered correctly
             const nextBtn = document.getElementById('btn-next');
             if (idx === quizData.length - 1) {
                 nextBtn.innerText = "💾 구글 시트에 답안 제출하기";
@@ -474,8 +519,8 @@
                 return;
             }
 
-            if (!textInput) {
-                alert("자신의 생각을 구체적으로 작성해 주세요!");
+            if (!textInput || textInput.length < 5) {
+                alert("자신의 생각을 최소 5글자 이상 구체적으로 작성해 주세요! (성의 없는 답변은 AI가 반려합니다.)");
                 return;
             }
 
@@ -484,33 +529,36 @@
             feedbackEl.className = "p-5 rounded-2xl border text-base bg-slate-900 border-indigo-500/50 text-indigo-200 shadow-md space-y-2";
             feedbackEl.innerHTML = `
                 <div class="flex items-center space-x-2 font-bold text-lg text-indigo-300 animate-pulse">
-                    <span>⏳ 도덕박사 AI가 답변을 분석하고 피드백을 작성 중입니다...</span>
+                    <span>⏳ 도덕박사 AI가 답변을 엄격하고 정밀하게 분석하고 있습니다...</span>
                 </div>
             `;
 
             const optNames = { 1: "시공간 제약 극복", 2: "익명성", 3: "개방성" };
             const studentChoiceName = optNames[selectedOpt];
-            const isCorrect = (selectedOpt == q.correctOption);
+            const isCorrectOption = (selectedOpt == q.correctOption);
 
-            userAnswers[currentQuizIdx].isCorrect = isCorrect;
-            userAnswers[currentQuizIdx].selectedFeature = studentChoiceName;
+            const systemPrompt = `너는 중학교 도덕 교과를 엄격하고 전문적으로 지도하는 '도덕박사 AI'야. 학생들이 가상공간 특징 학습 퀴즈를 풀고 작성한 객관식 선택과 주관식 서술 내용을 종합적으로 분석하여 피드백을 제공해야 해.
 
-            const systemPrompt = `너는 중학교 도덕 교과를 지도하는 전문 '도덕박사 AI'야. 학생들이 가상공간 특징 수업에서 퀴즈를 풀고 작성한 답변을 분석해 다정한 선생님 톤으로 3~4문장의 피드백을 작성해 줘.
+[매우 중요한 평가 및 피드백 엄격 규정]
+1. 먼저 학생이 고른 객관식 선택지가 정답(${optNames[q.correctOption]})과 일치하는지 엄격하게 검증하라.
+2. 만약 틀렸거나, 정답을 골랐더라도 학생이 작성한 주관식 답변(이유/다짐)이 너무 성의 없거나(예: "몰라요", "그냥요", "테스트", 아무말 대잔치 등 무성의한 텍스트), 혹은 위 상황 제시문 및 해당 가상공간 특징과 전혀 관련이 없는 엉뚱한 내용이라면:
+   - 반드시 **[반려]** 판정을 내려라.
+   - 피드백 첫머리에 [반려]라고 명시하고, 학생이 무엇을 잘못 생각했거나 왜 불성실한지 따끔하게 지적하며 스스로 구체적이고 성의 있게 다시 작성하도록 유도하라. (절대 정답을 바로 알려주지 말 것)
+3. 만약 정답을 정확히 맞혔고, 주관식 답변도 상황과 특징에 맞추어 충실하고 구체적으로 작성했다면:
+   - **[승인]** 판정을 내려라.
+   - 칭찬과 함께 도덕적 시민성의 관점에서 가상공간의 특징이 가지는 의미를 깊이 있게 확장해 주는 전문적이고 따뜻한 피드백을 3~4문장으로 작성해 줘.
+4. 항상 신뢰감 있고 전문적인 중학교 도덕 교사의 어조를 유지할 것.`;
 
-[매우 중요한 규칙]
-1. 학생이 정답을 맞혔다면, 따뜻한 칭찬과 함께 왜 이 특징이 알맞은지 그 이유를 짚어줘.
-2. 학생이 오답을 골랐다면, 절대 정답을 직접적으로 알려주거나 답을 유출하지 마! 대신 학생들이 스스로 고민하고 다시 생각해 볼 수 있도록 유도하는 다정한 질문이나 힌트를 제공하고, 다시 풀 수 있도록 안내해 줘.
-3. 항상 다정하고 친근한 도덕 선생님의 어조를 유지해 줘.`;
-
-            const userQuery = `[학습 상황]
+            const userQuery = `[학습 상황 정보]
+- 학생 정보: 학번 ${studentInfo.id}, 이름 ${studentInfo.name}
 - 문제 번호: ${q.step}
 - 상황 주제: ${q.subtitle}
 - 상황 설명: ${q.scenario}
 - 정답 특징: ${optNames[q.correctOption]}
-- 학생이 선택한 특징: ${studentChoiceName} (정답 여부: ${isCorrect ? '정답' : '오답'})
-- 학생이 작성한 생각: "${textInput}"
+- 학생이 선택한 특징: ${studentChoiceName} (선택지 일치 여부: ${isCorrectOption ? '일치' : '불일치'})
+- 학생이 작성한 서술 내용: "${textInput}"
 
-위 학생의 답변을 바탕으로 규칙에 따라 피드백을 작성해줘.`;
+위 학생의 답변을 규칙에 따라 철저히 평가하고 피드백을 작성해줘.`;
 
             try {
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${geminiApiKey}`;
@@ -531,40 +579,45 @@
                 if (candidate && candidate.content?.parts?.[0]?.text) {
                     const aiText = candidate.content.parts[0].text;
                     userAnswers[currentQuizIdx].aiFeedback = aiText;
-                    userAnswers[currentQuizIdx].isSubmitted = true;
                     
-                    feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${isCorrect ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
+                    // Check if AI text contains rejection keywords or if selection was wrong
+                    const isRejected = aiText.includes("반려") || aiText.includes("다시") || aiText.includes("성의") || !isCorrectOption;
+                    userAnswers[currentQuizIdx].isCorrect = !isRejected;
+                    userAnswers[currentQuizIdx].selectedFeature = studentChoiceName;
+                    
+                    feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${!isRejected ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
                     feedbackEl.innerHTML = `
-                        <div class="flex items-center space-x-2 font-bold text-lg ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">
-                            <span>${isCorrect ? '🎉 정답입니다!' : '🤔 다시 생각해보세요!'}</span>
+                        <div class="flex items-center space-x-2 font-bold text-lg ${!isRejected ? 'text-emerald-300' : 'text-rose-300'}">
+                            <span>${!isRejected ? '🎉 승인 및 정답입니다!' : '🤔 반려됨 (다시 작성해 주세요!)'}</span>
                         </div>
                         <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${aiText}</p>
                     `;
                     
-                    // Enable next button only if correct
-                    document.getElementById('btn-next').disabled = !isCorrect;
+                    document.getElementById('btn-next').disabled = isRejected;
                 } else {
                     throw new Error("API 응답이 올바르지 않습니다.");
                 }
 
             } catch (error) {
                 console.error(error);
-                const fallbackText = isCorrect 
-                    ? `참 잘했어요! '${studentChoiceName}'의 특징을 정확하게 파악했네요. 작성해 준 내용을 보니 가상공간이 주는 특징을 아주 잘 이해하고 있군요!`
-                    : `아쉽네요! 조금만 더 고민해 볼까요? 이 상황이 시간과 공간의 한계, 익명성, 개방성 중 어디에 해당할지 특징을 다시 한번 읽어보고 수정해 보아요!`;
+                const isRejected = !isCorrectOption || textInput.length < 10;
+                const fallbackText = isRejected 
+                    ? `[반려] 작성하신 답변이 너무 짧거나 가상공간의 특징과 일치하지 않습니다. 질문의 내용을 다시 읽고 구체적인 이유나 다짐을 정성껏 다시 작성해 주세요!`
+                    : `[승인] 참 잘했어요! '${studentChoiceName}'의 특징을 정확하게 파악하고 구체적인 생각을 잘 작성해 주었습니다. 디지털 시민성이 돋보이는 훌륭한 답변입니다!`;
                 
                 userAnswers[currentQuizIdx].aiFeedback = fallbackText;
-                userAnswers[currentQuizIdx].isSubmitted = true;
+                userAnswers[currentQuizIdx].isCorrect = !isRejected;
+                userAnswers[currentQuizIdx].selectedFeature = studentChoiceName;
                 
-                feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${isCorrect ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
+                feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${!isRejected ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
                 feedbackEl.innerHTML = `
-                    <div class="flex items-center space-x-2 font-bold text-lg ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">
-                        <span>${isCorrect ? '🎉 정답입니다!' : '🤔 오답입니다!'}</span>
+                    <div class="flex items-center space-x-2 font-bold text-lg ${!isRejected ? 'text-emerald-300' : 'text-rose-300'}">
+                        <span>${!isRejected ? '🎉 승인 및 정답입니다!' : '🤔 반려됨 (다시 작성해 주세요!)'}</span>
                     </div>
-                    <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${userAnswers[currentQuizIdx].aiFeedback}</p>
+                    <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${fallbackText}</p>
                 `;
                 
-                document.getElementById('btn-next').disabled = !isCorrect;
+                document.getElementById('btn-next').disabled = isRejected;
             }
         }
 
@@ -574,9 +627,8 @@
                 userAnswers[currentQuizIdx].text = textInput;
             }
 
-            // Ensure student cannot proceed if not correct
             if (!userAnswers[currentQuizIdx] || !userAnswers[currentQuizIdx].isCorrect) {
-                alert("정답을 맞혀야 다음 문제로 넘어갈 수 있습니다!");
+                alert("정답을 맞히고 AI 승인을 받아야 다음 문제로 넘어갈 수 있습니다!");
                 return;
             }
 
@@ -604,31 +656,38 @@
         // Submit answers to Google Apps Script
         async function submitAllToGoogleSheets() {
             if (!googleScriptUrl) {
-                alert("🎉 모든 학습 정리를 완료했습니다! (구글 스크립트 URL이 설정되지 않아 브라우저에만 저장되었습니다.)");
+                alert("🎉 모든 학습 정리를 완료했습니다! (구글 스크립트 URL이 설정되지 않았습니다.)");
                 return;
             }
 
-            let submissionData = [];
+            let submissionPayload = {
+                studentId: studentInfo.id,
+                studentName: studentInfo.name,
+                quizResults: []
+            };
+
             for (let i = 0; i < quizData.length; i++) {
                 let ans = userAnswers[i] || {};
-                submissionData.push({
+                submissionPayload.quizResults.push({
                     step: i + 1,
                     selectedFeature: ans.selectedFeature || "미선택",
-                    reason: ans.text || ""
+                    reason: ans.text || "",
+                    aiFeedback: ans.aiFeedback || ""
                 });
             }
 
             try {
-                const response = await fetch(googleScriptUrl, {
+                // Submit using no-cors mode to prevent CORS blocking
+                await fetch(googleScriptUrl, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(submissionData)
+                    body: JSON.stringify(submissionPayload)
                 });
-                alert("✨ 모든 답안이 구글 시트에 성공적으로 제출되었습니다!");
+                alert(`✨ [학번: ${studentInfo.id} ${studentInfo.name}] 학생의 모든 퀴즈 답안과 AI 피드백이 구글 시트에 성공적으로 제출되었습니다!`);
             } catch (err) {
                 console.error(err);
-                alert("답안 전송 중 오류가 발생했습니다. 다시 시도해 주세요.");
+                alert("답안 전송 중 오류가 발생했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.");
             }
         }
 
@@ -658,7 +717,6 @@
             } else if (tab === 'activity') {
                 secActivity.classList.remove('hidden');
                 btnActivity.className = "px-4.5 py-2 rounded-lg font-semibold text-base transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
-                loadQuiz(currentQuizIdx);
             }
         }
 
