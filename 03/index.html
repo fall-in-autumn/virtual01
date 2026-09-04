@@ -154,13 +154,13 @@
             </div>
         </section>
 
-        <!-- TAB 3: 학습 정리하기 (Quiz Form with Secure Apps Script AI Proxy & Sheet Sync) -->
+        <!-- TAB 3: 학습 정리하기 (Quiz Form with Secure Apps Script Sheet Sync) -->
         <section id="sec-activity" class="hidden space-y-6">
             <div class="bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-2xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-sm font-bold rounded-full border border-emerald-500/30">의리T의 도덕 교실 퀴즈</span>
                     <h2 class="text-2xl font-bold mt-2 text-white">가상공간 상황 판별 퀴즈</h2>
-                    <p class="text-base text-slate-300 mt-1">학번과 이름을 입력하고 문제를 풀면, <strong>'도덕박사 AI'</strong>가 학생의 생각을 엄격하고 깊이 있게 분석하여 피드백을 제공합니다!</p>
+                    <p class="text-base text-slate-300 mt-1">학번과 이름을 입력하고 문제를 풀면, 정답을 맞춘 후 생각한 이유를 적는 모달창이 나타납니다!</p>
                 </div>
                 <div class="w-full md:w-auto text-left md:text-right">
                     <span id="quiz-step-indicator" class="text-base font-bold bg-indigo-950 text-indigo-300 px-3.5 py-1.5 rounded-xl border border-indigo-500/30 hidden inline-block">문제 1 / 4</span>
@@ -214,27 +214,14 @@
                     <div id="q-options" class="space-y-2.5"></div>
                 </div>
 
-                <!-- Explanation & Reflection Input -->
-                <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-300 block">위 상황에서 잘 드러나는 가상공간 특징을 왜 그것으로 선택했는지 그 이유를 구체적으로 적어보세요:</label>
-                    <textarea id="q-user-input" placeholder="성의 없이 작성하거나 관련 없는 내용을 적으면 AI가 엄격하게 반려합니다. 구체적으로 작성해 주세요!" class="w-full h-32 bg-slate-900 border border-slate-700 rounded-2xl p-4 text-base text-slate-200 focus:outline-none focus:border-indigo-500 resize-none shadow-inner"></textarea>
-                </div>
-
-                <!-- Feedback Area -->
-                <div id="q-feedback" class="hidden p-5 rounded-2xl border text-base space-y-2 shadow-md"></div>
-
                 <!-- Navigation Controls -->
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4 border-t border-slate-700/60">
                     <button onclick="prevQuiz()" id="btn-prev" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-base bg-slate-700 hover:bg-slate-600 text-slate-300 transition disabled:opacity-40 disabled:cursor-not-allowed">
                         ⬅️ 이전 문제
                     </button>
                     
-                    <button onclick="checkAnswerWithAI()" id="btn-check" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-base bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2">
-                        <span>✨ 도덕박사 AI 피드백 받기</span>
-                    </button>
-                    
-                    <button onclick="nextQuiz()" id="btn-next" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-semibold text-base bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30 disabled:opacity-40 disabled:cursor-not-allowed">
-                        다음 문제 ➡️
+                    <button onclick="nextQuiz()" id="btn-next" class="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-base bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2">
+                        <span id="btn-next-text">다음 문제 ➡️</span>
                     </button>
                 </div>
 
@@ -242,6 +229,29 @@
         </section>
 
     </main>
+
+    <!-- Reason Input Modal (Shown after getting correct answer) -->
+    <div id="reason-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl space-y-6">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl">✨</div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">정답입니다!</h3>
+                    <p class="text-xs text-emerald-400">왜 그렇게 생각했나요? 생각을 성의 있게 적어주세요.</p>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <label id="reason-modal-label" class="text-sm font-bold text-slate-300 block">선택한 특징에 대한 이유를 적어주세요 (5글자 이상):</label>
+                <textarea id="modal-reason-input" placeholder="예: 시공간의 제약 없이 편리하게 활동할 수 있기 때문입니다." class="w-full h-36 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-base text-slate-200 focus:outline-none focus:border-indigo-500 resize-none shadow-inner"></textarea>
+                <span id="reason-error-msg" class="text-xs text-rose-400 hidden">⚠️ 5글자 이상 성의 있게 작성해 주세요!</span>
+            </div>
+
+            <button onclick="submitReasonAndProceed()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-base transition shadow-lg shadow-emerald-600/30">
+                입력 완료 및 다음으로 ➡️
+            </button>
+        </div>
+    </div>
 
     <!-- Modal for Detailed Comparison -->
     <div id="detail-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -266,6 +276,25 @@
                 </div>
             </div>
             <button onclick="closeModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-base transition">확인</button>
+        </div>
+    </div>
+
+    <!-- Submission Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl space-y-6 text-center">
+            <div class="w-16 h-16 bg-emerald-500/20 border border-emerald-500/40 rounded-full flex items-center justify-center text-3xl mx-auto shadow-lg shadow-emerald-500/20">
+                🎉
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-2xl font-bold text-white">퀴즈 제출 완료!</h3>
+                <p id="success-modal-desc" class="text-base text-slate-300 leading-relaxed"></p>
+            </div>
+            <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 text-sm text-slate-400">
+                수고하셨습니다! 제출된 답안은 의리T의 구글 시트에 안전하게 저장되었습니다.
+            </div>
+            <button onclick="closeSuccessModal()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-base transition shadow-lg shadow-emerald-600/30">
+                확인 및 학습 종료
+            </button>
         </div>
     </div>
 
@@ -328,9 +357,10 @@
         let currentQuizIdx = 0;
         let studentInfo = { id: "", name: "" };
         let userAnswers = {};
+        let isSubmitted = false;
         
         // 구글 앱스크립트 웹앱 URL 연동
-        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbw6w-01DVswqKmvEcHq4XOjlZq4vgWTZo4VfqgwnCG7etavKwIKBo-hhganV3qHQWG0iw/exec";
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxgM4f2gYNrGVyoM2R71ESkjBZOl45Xz5Aff4VqBgGqhIoXRFxn9bGnBeEGJxT1R_Mmng/exec";
 
         window.onload = function() {
             renderPairsGrid();
@@ -428,8 +458,20 @@
             document.getElementById('q-subtitle').innerText = q.subtitle;
             document.getElementById('q-scenario').innerText = q.scenario;
 
-            const saved = userAnswers[idx] || { selected: null, text: "", aiFeedback: "", isSubmitted: false, isCorrect: false };
-            document.getElementById('q-user-input').value = saved.text;
+            const saved = userAnswers[idx] || { selected: null, text: "", isCorrect: false };
+
+            const feedbackContainer = document.getElementById('q-feedback-container') || createFeedbackContainer();
+            if (saved.isCorrect) {
+                feedbackContainer.className = "p-4 rounded-xl border bg-emerald-950/60 border-emerald-500/50 text-emerald-300 font-bold flex items-center justify-between";
+                feedbackContainer.innerHTML = `<span>✅ 정답을 맞춘 문제입니다! (작성한 이유: "${saved.text}")</span> <button onclick="openReasonModalForEdit()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg">이유 수정하기</button>`;
+                feedbackContainer.classList.remove('hidden');
+            } else if (saved.selected !== null) {
+                feedbackContainer.className = "p-4 rounded-xl border bg-rose-950/60 border-rose-500/50 text-rose-300 font-bold flex items-center space-x-2";
+                feedbackContainer.innerHTML = `<span>❌</span> <span>오답입니다. 올바른 특징을 다시 골라주세요!</span>`;
+                feedbackContainer.classList.remove('hidden');
+            } else {
+                feedbackContainer.classList.add('hidden');
+            }
 
             const optionsContainer = document.getElementById('q-options');
             optionsContainer.innerHTML = '';
@@ -450,36 +492,47 @@
                 optionsContainer.appendChild(label);
             });
 
-            const feedbackEl = document.getElementById('q-feedback');
-            if (saved.aiFeedback) {
-                feedbackEl.classList.remove('hidden');
-                const isCorrectStyle = saved.isCorrect;
-                feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${isCorrectStyle ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
-                feedbackEl.innerHTML = `
-                    <div class="flex items-center space-x-2 font-bold text-lg ${isCorrectStyle ? 'text-emerald-300' : 'text-rose-300'}">
-                        <span>${isCorrectStyle ? '🎉 승인 및 정답입니다!' : '🤔 반려됨 (다시 작성해 주세요!)'}</span>
-                    </div>
-                    <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${saved.aiFeedback}</p>
-                `;
-            } else {
-                feedbackEl.classList.add('hidden');
-            }
-
             document.getElementById('btn-prev').disabled = idx === 0;
             
-            const nextBtn = document.getElementById('btn-next');
+            const nextBtnText = document.getElementById('btn-next-text');
             if (idx === quizData.length - 1) {
-                nextBtn.innerText = "💾 구글 시트에 답안 제출하기";
+                nextBtnText.innerText = "💾 구글 시트에 답안 제출하기";
             } else {
-                nextBtn.innerText = "다음 문제 ➡️";
+                nextBtnText.innerText = "다음 문제 ➡️";
             }
-            nextBtn.disabled = !saved.isCorrect;
+        }
+
+        function createFeedbackContainer() {
+            const container = document.createElement('div');
+            container.id = 'q-feedback-container';
+            container.className = 'hidden';
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.parentNode.insertBefore(container, optionsContainer);
+            return container;
         }
 
         function selectOption(optId) {
+            const correctOpt = quizData[currentQuizIdx].correctOption;
+            const isCorrect = (optId === correctOpt);
+
             if (!userAnswers[currentQuizIdx]) userAnswers[currentQuizIdx] = {};
             userAnswers[currentQuizIdx].selected = optId;
-            
+            userAnswers[currentQuizIdx].isCorrect = isCorrect;
+
+            const feedbackContainer = document.getElementById('q-feedback-container');
+            if (isCorrect) {
+                feedbackContainer.className = "p-4 rounded-xl border bg-emerald-950/60 border-emerald-500/50 text-emerald-300 font-bold flex items-center justify-between";
+                feedbackContainer.innerHTML = `<span>✅ 정답입니다!</span> <button onclick="openReasonModalForEdit()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg">이유 수정하기</button>`;
+                feedbackContainer.classList.remove('hidden');
+
+                // 정답 맞춘 경우 즉시 이유 입력 모달 띄우기
+                openReasonModal();
+            } else {
+                feedbackContainer.className = "p-4 rounded-xl border bg-rose-950/60 border-rose-500/50 text-rose-300 font-bold flex items-center space-x-2";
+                feedbackContainer.innerHTML = `<span>❌</span> <span>오답입니다. 올바른 특징을 다시 골라주세요!</span>`;
+                feedbackContainer.classList.remove('hidden');
+            }
+
             const radios = document.querySelectorAll('input[name="quiz-opt"]');
             radios.forEach(r => {
                 const parent = r.parentElement;
@@ -491,88 +544,58 @@
             });
         }
 
-        async function checkAnswerWithAI() {
-            const q = quizData[currentQuizIdx];
-            const textInput = document.getElementById('q-user-input').value.trim();
+        function openReasonModal() {
+            const saved = userAnswers[currentQuizIdx] || {};
+            document.getElementById('modal-reason-input').value = saved.text || "";
+            document.getElementById('reason-error-msg').classList.add('hidden');
+            document.getElementById('reason-modal').classList.remove('hidden');
+        }
 
-            if (!userAnswers[currentQuizIdx]) userAnswers[currentQuizIdx] = {};
-            userAnswers[currentQuizIdx].text = textInput;
+        function openReasonModalForEdit() {
+            openReasonModal();
+        }
 
-            let selectedOpt = userAnswers[currentQuizIdx].selected;
-            if (!selectedOpt) {
+        function submitReasonAndProceed() {
+            const reasonText = document.getElementById('modal-reason-input').value.trim();
+            const errorMsg = document.getElementById('reason-error-msg');
+
+            if (reasonText.length < 5) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            errorMsg.classList.add('hidden');
+
+            const optNames = { 1: "시공간 제약 극복", 2: "익명성", 3: "개방성" };
+            const selectedOpt = userAnswers[currentQuizIdx].selected;
+
+            userAnswers[currentQuizIdx] = {
+                selected: selectedOpt,
+                text: reasonText,
+                selectedFeature: optNames[selectedOpt],
+                isCorrect: true
+            };
+
+            document.getElementById('reason-modal').classList.add('hidden');
+            loadQuiz(currentQuizIdx);
+        }
+
+        function nextQuiz() {
+            if (isSubmitted) return;
+
+            const ans = userAnswers[currentQuizIdx] || {};
+
+            if (!ans.selected) {
                 alert("가상공간의 특징을 먼저 선택해주세요!");
                 return;
             }
 
-            if (!textInput || textInput.length < 5) {
-                alert("자신의 생각을 최소 5글자 이상 구체적으로 적어주세요! (성의 없는 답변은 AI가 반려합니다.)");
+            if (!ans.isCorrect) {
+                alert("정답이 아닙니다! 올바른 특징을 다시 선택하여 정답을 맞혀야 다음 문제로 넘어갈 수 있습니다.");
                 return;
             }
 
-            const feedbackEl = document.getElementById('q-feedback');
-            feedbackEl.classList.remove('hidden');
-            feedbackEl.className = "p-5 rounded-2xl border text-base bg-slate-900 border-indigo-500/50 text-indigo-200 shadow-md space-y-2";
-            feedbackEl.innerHTML = `
-                <div class="flex items-center space-x-2 font-bold text-lg text-indigo-300 animate-pulse">
-                    <span>⏳ 도덕박사 AI 서버가 답변을 분석하고 있습니다...</span>
-                </div>
-            `;
-
-            const optNames = { 1: "시공간 제약 극복", 2: "익명성", 3: "개방성" };
-            const studentChoiceName = optNames[selectedOpt];
-
-            try {
-                // 구글 앱스크립트 서버로 AI 평가 요청 전송
-                const response = await fetch(googleScriptUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        action: "aiEvaluate",
-                        studentInfo: studentInfo,
-                        quiz: q,
-                        textInput: textInput,
-                        selectedOpt: selectedOpt
-                    })
-                });
-
-                const jsonRes = await response.json();
-                let aiText = jsonRes.aiFeedback || "AI 응답을 불러오는 중 오류가 발생했습니다.";
-
-                const isRejected = aiText.includes("반려") || aiText.includes("오류") || (selectedOpt != q.correctOption);
-                userAnswers[currentQuizIdx].aiFeedback = aiText;
-                userAnswers[currentQuizIdx].isCorrect = !isRejected;
-                userAnswers[currentQuizIdx].selectedFeature = studentChoiceName;
-
-                feedbackEl.className = `p-5 rounded-2xl border text-base shadow-md space-y-2 ${!isRejected ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/80 border-rose-500/50 text-rose-200'}`;
-                feedbackEl.innerHTML = `
-                    <div class="flex items-center space-x-2 font-bold text-lg ${!isRejected ? 'text-emerald-300' : 'text-rose-300'}">
-                        <span>${!isRejected ? '🎉 승인 및 정답입니다!' : '🤔 반려됨 (다시 작성해 주세요!)'}</span>
-                    </div>
-                    <p class="text-sm text-slate-100 leading-relaxed whitespace-pre-line">${aiText}</p>
-                `;
-                
-                document.getElementById('btn-next').disabled = isRejected;
-
-            } catch (error) {
-                console.error("AI 연동 오류:", error);
-                feedbackEl.className = "p-5 rounded-2xl border text-base bg-rose-950/80 border-rose-500/50 text-rose-200 shadow-md space-y-2";
-                feedbackEl.innerHTML = `
-                    <div class="flex items-center space-x-2 font-bold text-lg text-rose-300">
-                        <span>❌ 통신 오류 발생</span>
-                    </div>
-                    <p class="text-sm text-slate-100 leading-relaxed">구글 앱스크립트 서버와의 통신에 실패했습니다. 웹앱 배포 설정에서 액세스 권한이 '모든 사용자(Anyone)'로 되어 있는지 확인해주세요.</p>
-                `;
-            }
-        }
-
-        function nextQuiz() {
-            const textInput = document.getElementById('q-user-input').value;
-            if (userAnswers[currentQuizIdx]) {
-                userAnswers[currentQuizIdx].text = textInput;
-            }
-
-            if (!userAnswers[currentQuizIdx] || !userAnswers[currentQuizIdx].isCorrect) {
-                alert("정답을 맞히고 AI 승인을 받아야 다음 문제로 넘어갈 수 있습니다!");
+            if (!ans.text || ans.text.length < 5) {
+                openReasonModal();
                 return;
             }
 
@@ -585,11 +608,7 @@
         }
 
         function prevQuiz() {
-            const textInput = document.getElementById('q-user-input').value;
-            if (userAnswers[currentQuizIdx]) {
-                userAnswers[currentQuizIdx].text = textInput;
-            }
-
+            if (isSubmitted) return;
             if (currentQuizIdx > 0) {
                 currentQuizIdx--;
                 loadQuiz(currentQuizIdx);
@@ -597,6 +616,8 @@
         }
 
         async function submitAllToGoogleSheets() {
+            if (isSubmitted) return;
+
             let submissionPayload = {
                 studentId: studentInfo.id,
                 studentName: studentInfo.name,
@@ -609,9 +630,15 @@
                     step: i + 1,
                     selectedFeature: ans.selectedFeature || "미선택",
                     reason: ans.text || "",
-                    aiFeedback: ans.aiFeedback || ""
+                    isCorrect: ans.isCorrect ? "정답" : "오답"
                 });
             }
+
+            const nextBtn = document.getElementById('btn-next');
+            const prevBtn = document.getElementById('btn-prev');
+            nextBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.innerText = "전송 중...";
 
             try {
                 await fetch(googleScriptUrl, {
@@ -620,11 +647,24 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(submissionPayload)
                 });
-                alert(`✨ [학번: ${studentInfo.id} ${studentInfo.name}] 학생의 모든 퀴즈 답안과 AI 피드백이 구글 시트에 성공적으로 제출되었습니다!`);
+
+                isSubmitted = true;
+                document.getElementById('success-modal-desc').innerText = `[학번: ${studentInfo.id} ${studentInfo.name}] 학생의 모든 퀴즈 답안이 구글 시트에 안전하게 제출되었습니다!`;
+                document.getElementById('success-modal').classList.remove('hidden');
+
+                nextBtn.innerText = "제출 완료됨 ✅";
+                nextBtn.className = "w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-base bg-slate-700 text-slate-400 cursor-not-allowed flex items-center justify-center space-x-2";
             } catch (err) {
                 console.error(err);
                 alert("답안 전송 중 오류가 발생했습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.");
+                nextBtn.disabled = false;
+                prevBtn.disabled = false;
+                nextBtn.innerText = "💾 구글 시트에 답안 제출하기";
             }
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
         }
 
         function switchTab(tab) {
